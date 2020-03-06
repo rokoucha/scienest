@@ -1,0 +1,10 @@
+{
+  "name": "scienest",
+  "version": "0.0.0",
+  "description": "Scientia est potentia",
+  "main": "dist/index.js",
+  "repository": "ssh://git@github.com/rokoucha/scienest.git",
+  "author": "Roucha <dev@rokoucha.net>",
+  "license": "Apache-2.0",
+  "private": true
+}
