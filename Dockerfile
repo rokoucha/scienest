@@ -11,14 +11,17 @@ RUN yarn install
 
 FROM install-packages as build
 
+COPY tsconfig.json ./
 COPY src ./src
 RUN yarn run build
 
 
 FROM base
 
-COPY --from=install-packages /app/node_modules ./node_modules
+COPY LICENSE ormconfig.js package.json tsconfig.json yarn.lock ./
+COPY src ./src
 COPY --from=build /app/dist ./dist
+COPY --from=install-packages /app/node_modules ./node_modules
 
 EXPOSE 3000
 
