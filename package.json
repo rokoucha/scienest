@@ -13,7 +13,7 @@
   },
   "description": "Scientia est potentia",
   "devDependencies": {
-    "@types/koa": "^2.11.2",
+    "@types/koa": "^2.11.3",
     "@types/koa-logger": "^3.1.1",
     "@types/koa__router": "^8.0.2",
     "@types/log4js": "^2.3.5",
