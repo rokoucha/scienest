@@ -6,7 +6,7 @@
     "koa": "^2.11.0",
     "koa-logger": "^3.2.1",
     "log4js": "^6.2.1",
-    "pg": "^8.2.0",
+    "pg": "^8.2.1",
     "reflect-metadata": "^0.1.13",
     "transform-ts": "^0.3.0",
     "typeorm": "^0.2.25"
