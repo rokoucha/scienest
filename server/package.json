@@ -2,6 +2,7 @@
   "name": "scienest-server",
   "description": "Scientia est potentia",
   "private": true,
+  "types": "module",
   "dependencies": {
     "@fastify/cors": "^8.0.0",
     "@prisma/client": "^3.13.0",
