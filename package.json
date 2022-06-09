@@ -1,0 +1,23 @@
+{
+  "name": "scienest",
+  "description": "Scientia est potentia",
+  "packageManager": "yarn@3.2.1",
+  "private": true,
+  "devDependencies": {
+    "npm-run-all": "4.1.5",
+    "prettier": "2.6.2",
+    "prisma": "3.15.0",
+    "typescript": "4.7.3"
+  },
+  "scripts": {
+    "build": "yarn run foreach run build",
+    "dev": "yarn run foreach run dev",
+    "foreach": "yarn workspaces foreach -p -i -v -j unlimited --exclude scienest",
+    "start": "yarn run foreach run start"
+  },
+  "workspaces": [
+    "client",
+    "common",
+    "server"
+  ]
+}
