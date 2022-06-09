@@ -1,0 +1,33 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./client"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./database.db"
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  slug      String   @unique
+  content   Content  @relation(fields: [contentId], references: [id])
+  contentId String
+  scope     String
+}
+
+model Content {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  text      String
+  parentId  String?
+  parent    Content?  @relation("ContentChain", fields: [parentId], references: [id])
+  children  Content[] @relation("ContentChain")
+  slugs     Post[]
+  scope     String
+}
