@@ -162,6 +162,8 @@ dist
 # End of https://www.toptal.com/developers/gitignore/api/node,yarn
 
 server/prisma/client/
-server/prisma/database.db
+
+*.db
+*.db-journal
 
 .vscode/
