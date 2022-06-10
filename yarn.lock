@@ -190,10 +190,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prisma/engines@npm:3.15.0-29.b9297dc3a59307060c1c39d7e4f5765066f38372":
-  version: 3.15.0-29.b9297dc3a59307060c1c39d7e4f5765066f38372
-  resolution: "@prisma/engines@npm:3.15.0-29.b9297dc3a59307060c1c39d7e4f5765066f38372"
-  checksum: c1b44ecd295c976f2399f66ac382d8cf281918203daee002c5cd6d676a7d708ff0c8f8969d9f883d9a582f2cf3981d05b73028967dedd43c0b4f59a89a749f8d
+"@prisma/engines@npm:3.15.1-1.461d6a05159055555eb7dfb337c9fb271cbd4d7e":
+  version: 3.15.1-1.461d6a05159055555eb7dfb337c9fb271cbd4d7e
+  resolution: "@prisma/engines@npm:3.15.1-1.461d6a05159055555eb7dfb337c9fb271cbd4d7e"
+  checksum: 4be65608ab55f17e16791143dcdb7578f5461efb3de211e75cc256eb1b8282ffa7ed50a91c098d0267b6e5b47ad90d4aaeb1600958b1667652ee17bb75b16b8c
   languageName: node
   linkType: hard
 
@@ -1930,15 +1930,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prisma@npm:3.15.0":
-  version: 3.15.0
-  resolution: "prisma@npm:3.15.0"
+"prisma@npm:3.15.1":
+  version: 3.15.1
+  resolution: "prisma@npm:3.15.1"
   dependencies:
-    "@prisma/engines": 3.15.0-29.b9297dc3a59307060c1c39d7e4f5765066f38372
+    "@prisma/engines": 3.15.1-1.461d6a05159055555eb7dfb337c9fb271cbd4d7e
   bin:
     prisma: build/index.js
     prisma2: build/index.js
-  checksum: 20ddf5a1dd874ab17da08aa238efed8b46fc7994524f8edcf5bcf16e45d35382a3bc1d86a73a59cdb4d379e4027745139292ce18502f4fd274624faa48eb3682
+  checksum: 75f74ff1134115aa3094d8ae5aae5154ccb8834f55da59297d88c393013db202ba1e4dc798ad3f487ef68d588e5130284b467da414be95424e368725731fcf69
   languageName: node
   linkType: hard
 
@@ -2211,7 +2211,7 @@ __metadata:
     "@yarnpkg/pnpify": ^4.0.0-rc.4
     fastify: 4.0.0
     fastify-plugin: 3.0.1
-    prisma: 3.15.0
+    prisma: 3.15.1
     scienest-common: "workspace:*"
     tsc-watch: 5.0.3
     typescript: 4.7.3
@@ -2225,7 +2225,6 @@ __metadata:
   dependencies:
     npm-run-all: 4.1.5
     prettier: 2.6.2
-    prisma: 3.15.0
     typescript: 4.7.3
   languageName: unknown
   linkType: soft
