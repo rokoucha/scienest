@@ -1,8 +1,8 @@
 import type { FastifyPluginAsync } from 'fastify'
 import { ContentService } from '../services/content.mjs'
 import { PageService } from '../services/page.mjs'
-import { contents } from './contents.mjs'
 
+import { contents } from './contents.mjs'
 import { pages } from './pages.mjs'
 
 export const routes: FastifyPluginAsync = async (app) => {
