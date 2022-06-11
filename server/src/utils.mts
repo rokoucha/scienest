@@ -1,4 +1,5 @@
 import { Scope } from 'scienest-common'
+import { z } from 'zod'
 import { API_PREFIX } from './constants.js'
 
 export function toScope(scope: string): Scope {

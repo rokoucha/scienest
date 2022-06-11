@@ -5,7 +5,7 @@ import {
   type PrismaClient,
   type Tag,
 } from '../../prisma/client/index.js'
-import { Page, PageBase, Scope } from 'scienest-common'
+import { Page, PageBase, Scope, ScopeLevel } from 'scienest-common'
 import { toScope } from '../utils.mjs'
 import { z } from 'zod'
 
@@ -122,19 +122,16 @@ export class PageService {
     return pages
   }
 
-  public async findBySlug(slug: string): Promise<Page | undefined> {
-    const post = await this.#prisma.post.findUnique({
-      where: { slug },
+  public async findBySlug({
+    scope,
+    slug,
+  }: {
+    scope?: keyof typeof Scope | undefined
+    slug: string
+  }): Promise<Page | undefined> {
+    const post = await this.#prisma.post.findFirst({
       include: { content: { include: { parent: true } }, tags: true },
-    })
-
-    return post ? this.#postToPage(post) : undefined
-  }
-
-  public async findById(id: string): Promise<Page | undefined> {
-    const post = await this.#prisma.post.findUnique({
-      where: { id },
-      include: { content: { include: { parent: true } }, tags: true },
+      where: { scope, slug },
     })
 
     return post ? this.#postToPage(post) : undefined
@@ -178,12 +175,8 @@ export class PageService {
     parent?: string | undefined
     slug: string
   }): Promise<string | undefined> {
-    const currentPost = await this.findBySlug(slug)
+    const currentPost = await this.findBySlug({ slug })
     if (!currentPost) throw new Error(`Post not found: "${slug}"`)
-
-    if (!parent) {
-      parent = currentPost.contentId
-    }
 
     let post: Post | undefined
     try {
@@ -192,7 +185,7 @@ export class PageService {
           slug: input.slug,
           content: {
             create: {
-              parentId: parent,
+              parentId: parent ?? currentPost.contentId,
               scope: input.scope,
               text: input.content,
             },

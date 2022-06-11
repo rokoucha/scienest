@@ -8,6 +8,14 @@ export const Scope = {
 
 export type Scope = keyof typeof Scope
 
+export const ScopeLevel = {
+  [Scope.private]: [Scope.public, Scope.protected, Scope.private],
+  [Scope.protected]: [Scope.public, Scope.protected],
+  [Scope.public]: [Scope.public],
+}
+
+export type ScopeLevel = typeof ScopeLevel
+
 export const ZPageBase = z.object({
   content: z.string(),
   scope: z.nativeEnum(Scope),
@@ -48,3 +56,15 @@ export const ZPageJson = z.object({
 export type PageJson = z.infer<typeof ZPageJson>
 
 export const toPageJson = (data: unknown): PageJson => ZPageJson.parse(data)
+
+export const ZContent = z.object({
+  id: z.string(),
+  createdAt: z.string().transform((v) => new Date(v)),
+  text: z.string(),
+  parentId: z.nullable(z.string()),
+  scope: z.nativeEnum(Scope),
+})
+
+export type Content = z.infer<typeof ZContent>
+
+export const toContent = (data: unknown): Content => ZContent.parse(data)

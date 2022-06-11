@@ -1,7 +1,7 @@
 import { fastify } from 'fastify'
 import cors from '@fastify/cors'
 import { prismaPlugin } from './plugins/prisma.mjs'
-import { routes } from './routes.mjs'
+import { routes } from './routes/index.mjs'
 import { API_PREFIX } from './constants.js'
 
 const app = fastify({
