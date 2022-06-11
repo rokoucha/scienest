@@ -167,3 +167,5 @@ server/prisma/client/
 *.db-journal
 
 .vscode/
+
+next-env.d.ts
