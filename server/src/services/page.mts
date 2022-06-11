@@ -5,7 +5,13 @@ import {
   type PrismaClient,
   type Tag,
 } from '../../prisma/client/index.js'
-import { Page, PageBase, Scope, ScopeLevel } from 'scienest-common'
+import {
+  Scope,
+  ScopeLevel,
+  type MatchMode,
+  type Page,
+  type PageBase,
+} from 'scienest-common'
 import { toScope } from '../utils.mjs'
 import { z } from 'zod'
 
@@ -49,6 +55,7 @@ export class PageService {
   public async findMany(
     params?:
       | {
+          matchMode?: MatchMode | undefined
           scope?: Scope | undefined
           slug?: string | undefined
           tag?: string | undefined
@@ -60,7 +67,15 @@ export class PageService {
         ? Prisma.sql`Post.scope in (${Prisma.join(ScopeLevel[params.scope])})`
         : undefined,
       params?.slug !== undefined
-        ? Prisma.sql`Post.slug LIKE ${`%${params.slug}%`}`
+        ? Prisma.sql`Post.slug LIKE ${[
+            params.matchMode === 'backward' || params.matchMode === 'fuzzy'
+              ? '%'
+              : '',
+            params.slug,
+            params.matchMode === 'forward' || params.matchMode === 'fuzzy'
+              ? '%'
+              : '',
+          ].join('')}`
         : undefined,
       params?.tag !== undefined
         ? Prisma.sql`Tag.name = ${params.tag}`

@@ -16,6 +16,14 @@ export const ScopeLevel = {
 
 export type ScopeLevel = typeof ScopeLevel
 
+export const MatchMode = {
+  forward: 'forward',
+  backward: 'backward',
+  fuzzy: 'fuzzy',
+} as const
+
+export type MatchMode = keyof typeof MatchMode
+
 export const ZPageBase = z.object({
   content: z.string(),
   scope: z.nativeEnum(Scope),

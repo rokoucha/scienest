@@ -1,5 +1,5 @@
 import type { FastifyPluginAsync } from 'fastify'
-import { toPageBase } from 'scienest-common'
+import { MatchMode, toPageBase } from 'scienest-common'
 import { type PageService } from '../services/page.mjs'
 import { z } from 'zod'
 import { getPath } from '../utils.mjs'
@@ -12,6 +12,7 @@ export const pages =
     app.get('/', async (req) => {
       const params = z
         .object({
+          matchMode: z.optional(z.nativeEnum(MatchMode)),
           slug: z.optional(z.string()),
           tag: z.optional(z.string()),
         })
