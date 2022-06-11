@@ -29,20 +29,27 @@ export class PageService {
     }
   }
 
-  public async exists({
+  public async count({
+    scope,
     slug,
-  }: { slug?: string | undefined } = {}): Promise<boolean> {
+  }: {
+    scope?: Scope | undefined
+    slug?: string | undefined
+  } = {}): Promise<number> {
     const count = await this.#prisma.post.count({
-      where: { slug },
+      where: {
+        scope: scope ? { in: ScopeLevel[scope] } : undefined,
+        slug,
+      },
     })
 
-    return count > 0
+    return count
   }
 
   public async findMany(
     params?:
       | {
-          scope?: string | undefined
+          scope?: Scope | undefined
           slug?: string | undefined
           tag?: string | undefined
         }
@@ -50,7 +57,7 @@ export class PageService {
   ): Promise<Page[]> {
     const where = [
       params?.scope !== undefined
-        ? Prisma.sql`Post.scope = ${params.scope}`
+        ? Prisma.sql`Post.scope in (${Prisma.join(ScopeLevel[params.scope])})`
         : undefined,
       params?.slug !== undefined
         ? Prisma.sql`Post.slug LIKE ${`%${params.slug}%`}`
@@ -126,12 +133,12 @@ export class PageService {
     scope,
     slug,
   }: {
-    scope?: keyof typeof Scope | undefined
+    scope?: Scope | undefined
     slug: string
   }): Promise<Page | undefined> {
     const post = await this.#prisma.post.findFirst({
       include: { content: { include: { parent: true } }, tags: true },
-      where: { scope, slug },
+      where: { scope: scope ? { in: ScopeLevel[scope] } : undefined, slug },
     })
 
     return post ? this.#postToPage(post) : undefined
@@ -142,8 +149,8 @@ export class PageService {
   }: {
     input: PageBase
   }): Promise<string | undefined> {
-    const exists = await this.exists({ slug: input.slug })
-    if (exists) throw new Error(`Post already found: "${input.slug}"`)
+    const count = await this.count({ slug: input.slug })
+    if (count > 0) throw new Error(`Post already found: "${input.slug}"`)
 
     let post: Post | undefined
     try {
