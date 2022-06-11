@@ -12,8 +12,15 @@ export const routes: FastifyPluginAsync = async (app) => {
     return { hello: 'world' }
   })
 
-  app.get('/pages', async () => {
-    return { pages: await pageService.findMany() }
+  app.get('/pages', async (req) => {
+    const params = z
+      .object({
+        slug: z.optional(z.string()),
+        tag: z.optional(z.string()),
+      })
+      .parse(req.query)
+
+    return { pages: await pageService.findMany(params) }
   })
 
   app.post('/pages', async (req, res) => {

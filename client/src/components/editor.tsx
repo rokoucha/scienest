@@ -27,7 +27,7 @@ export const Editor: React.FC<EditorProps> = ({
   )
 
   const onSubmit = useCallback(async () => {
-    const page: PageBase = { slug, content, scope: 'private' }
+    const page: PageBase = { slug, content, scope: 'private', tags: [] }
 
     const res = isExists ? await update(currentSlug, page) : await create(page)
 

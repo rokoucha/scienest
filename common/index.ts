@@ -12,6 +12,7 @@ export const ZPageBase = z.object({
   content: z.string(),
   scope: z.nativeEnum(Scope),
   slug: z.string(),
+  tags: z.array(z.string()),
 })
 
 export type PageBase = z.infer<typeof ZPageBase>
@@ -25,6 +26,7 @@ export const ZPage = z.object({
   id: z.string(),
   scope: z.nativeEnum(Scope),
   slug: z.string(),
+  tags: z.array(z.string()),
   updatedAt: z.union([z.string(), z.date()]).transform((v) => new Date(v)),
 })
 
@@ -39,6 +41,7 @@ export const ZPageJson = z.object({
   id: z.string(),
   scope: z.nativeEnum(Scope),
   slug: z.string(),
+  tags: z.array(z.string()),
   updatedAt: z.union([z.string(), z.date()]).transform((v) => v.toString()),
 })
 

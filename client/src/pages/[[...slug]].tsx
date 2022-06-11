@@ -39,6 +39,7 @@ export const getServerSideProps: GetServerSideProps<ViewerPageProps> = async (
         id: '',
         scope: 'private',
         slug: slug.join('/'),
+        tags: [],
         updatedAt: new Date().toISOString(),
       },
     },

@@ -13,12 +13,13 @@ datasource db {
 
 model Post {
   id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  slug      String   @unique
   content   Content  @relation(fields: [contentId], references: [id])
   contentId String
+  createdAt DateTime @default(now())
+  slug      String   @unique
   scope     String
+  tags      Tag[]
+  updatedAt DateTime @updatedAt
 }
 
 model Content {
@@ -30,4 +31,9 @@ model Content {
   children  Content[] @relation("ContentChain")
   slugs     Post[]
   scope     String
+}
+
+model Tag {
+  name  String @id
+  posts Post[]
 }

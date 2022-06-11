@@ -1,6 +1,13 @@
-import type { Content, Post, PrismaClient } from '../../prisma/client/index.js'
-import type { Page, PageBase } from 'scienest-common'
+import {
+  Prisma,
+  type Content,
+  type Post,
+  type PrismaClient,
+  type Tag,
+} from '../../prisma/client/index.js'
+import { Page, PageBase, Scope } from 'scienest-common'
 import { toScope } from '../utils.mjs'
+import { z } from 'zod'
 
 export class PageService {
   #prisma: PrismaClient
@@ -9,40 +16,112 @@ export class PageService {
     this.#prisma = prisma
   }
 
-  #postToPage(post: Post & { content: Content }): Page {
+  #postToPage(post: Post & { content: Content; tags: Tag[] }): Page {
     return {
-      id: post.id,
-      createdAt: post.createdAt,
-      updatedAt: post.updatedAt,
-      slug: post.slug,
-      scope: toScope(post.scope),
-      contentId: post.contentId,
       content: post.content.text,
+      contentId: post.contentId,
+      createdAt: post.createdAt,
+      id: post.id,
+      scope: toScope(post.scope),
+      slug: post.slug,
+      tags: post.tags.map((t) => t.name),
+      updatedAt: post.updatedAt,
     }
   }
 
-  public async count({
+  public async exists({
     slug,
-  }: { slug?: string | undefined } = {}): Promise<number> {
+  }: { slug?: string | undefined } = {}): Promise<boolean> {
     const count = await this.#prisma.post.count({
       where: { slug },
     })
 
-    return count
+    return count > 0
   }
 
-  public async findMany(): Promise<Page[]> {
-    const posts = await this.#prisma.post.findMany({
-      include: { content: true },
-    })
+  public async findMany(
+    params?:
+      | {
+          slug?: string | undefined
+          tag?: string | undefined
+        }
+      | undefined,
+  ): Promise<Page[]> {
+    const where = [
+      params?.slug !== undefined
+        ? Prisma.sql`Post.slug LIKE ${`%${params.slug}%`}`
+        : undefined,
+      params?.tag !== undefined
+        ? Prisma.sql`Tag.name = ${params.tag}`
+        : undefined,
+    ].filter((w): w is Prisma.Sql => w !== undefined)
 
-    return posts.map(this.#postToPage)
+    const posts = await this.#prisma.$queryRaw`
+      SELECT
+        Content.text AS content,
+        Content.id AS contentId,
+        Post.createdAt AS createdAt,
+        Post.id AS id,
+        Post.scope AS scope,
+        Post.slug AS slug,
+        TagList.Tags AS tags,
+        Post.updatedAt AS updatedAt
+      FROM
+        Post
+      INNER JOIN Content
+        ON Post.contentId = Content.id
+      LEFT OUTER JOIN _PostToTag
+        ON Post.id = _PostToTag.A
+      LEFT OUTER JOIN Tag
+        ON _PostToTag.B = Tag.name
+      INNER JOIN (
+        SELECT
+          Post.id AS id,
+        GROUP_CONCAT(Tag.name, "	") AS tags
+        FROM
+          Post
+        LEFT OUTER JOIN _PostToTag
+          ON Post.id = _PostToTag.A
+        LEFT OUTER JOIN Tag
+          ON _PostToTag.B = Tag.name
+        GROUP BY
+          Post.id
+      ) AS TagList
+        ON TagList.id = Post.id
+      ${
+        where.length > 0
+          ? Prisma.sql`
+            WHERE
+              ${where.reduce((p, c) => Prisma.sql`${p} AND ${c}`)}
+          `
+          : Prisma.empty
+      }
+      GROUP BY
+        Post.id
+    `
+
+    const pages = z
+      .array(
+        z.object({
+          content: z.string(),
+          contentId: z.string(),
+          createdAt: z.string().transform((v) => new Date(v)),
+          id: z.string(),
+          scope: z.nativeEnum(Scope),
+          slug: z.string(),
+          tags: z.string().transform((v) => v.split('\t')),
+          updatedAt: z.string().transform((v) => new Date(v)),
+        }),
+      )
+      .parse(posts)
+
+    return pages
   }
 
   public async findBySlug(slug: string): Promise<Page | undefined> {
     const post = await this.#prisma.post.findUnique({
       where: { slug },
-      include: { content: { include: { parent: true } } },
+      include: { content: { include: { parent: true } }, tags: true },
     })
 
     return post ? this.#postToPage(post) : undefined
@@ -51,7 +130,7 @@ export class PageService {
   public async findById(id: string): Promise<Page | undefined> {
     const post = await this.#prisma.post.findUnique({
       where: { id },
-      include: { content: { include: { parent: true } } },
+      include: { content: { include: { parent: true } }, tags: true },
     })
 
     return post ? this.#postToPage(post) : undefined
@@ -62,8 +141,8 @@ export class PageService {
   }: {
     input: PageBase
   }): Promise<string | undefined> {
-    const count = await this.count({ slug: input.slug })
-    if (count > 0) throw new Error(`Post already found: "${input.slug}"`)
+    const exists = await this.exists({ slug: input.slug })
+    if (exists) throw new Error(`Post already found: "${input.slug}"`)
 
     let post: Post | undefined
     try {
