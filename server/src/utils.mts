@@ -1,4 +1,5 @@
 import { Scope } from 'scienest-common'
+import { API_PREFIX } from './constants.js'
 
 export function toScope(scope: string): Scope {
   switch (scope) {
@@ -18,4 +19,8 @@ export function toScope(scope: string): Scope {
       throw new Error(`"${scope}" is not valid scope`)
     }
   }
+}
+
+export function getPath(path: string) {
+  return [API_PREFIX, path].join('/')
 }

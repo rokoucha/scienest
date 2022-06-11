@@ -2,6 +2,7 @@ import type { FastifyPluginAsync } from 'fastify'
 import { toPageBase } from 'scienest-common'
 import { PageService } from './services/page.mjs'
 import { z } from 'zod'
+import { getPath } from './utils.mjs'
 
 const paramsToSlug = z.object({ slug: z.string() })
 
@@ -34,7 +35,7 @@ export const routes: FastifyPluginAsync = async (app) => {
     }
 
     res.statusCode = 201
-    res.header('Location', `/pages/${page}`)
+    res.header('Location', getPath(`/pages/${page}`))
     return {}
   })
 
@@ -66,7 +67,7 @@ export const routes: FastifyPluginAsync = async (app) => {
       res.statusCode = 204
     } else {
       res.statusCode = 201
-      res.header('Location', `/pages/${page}`)
+      res.header('Location', getPath(`/pages/${page}`))
     }
     return {}
   })

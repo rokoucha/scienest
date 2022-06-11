@@ -1,7 +1,7 @@
 import { ZPageJson, type PageBase, type PageJson } from 'scienest-common'
 import { z } from 'zod'
 
-const APP_URL = 'http://shizuka.dns.ggrel.net:3300'
+const APP_URL = 'http://shizuka.dns.ggrel.net:3300/api'
 
 export async function findMany(): Promise<PageJson[]> {
   const res = await fetch(`${APP_URL}/pages`)

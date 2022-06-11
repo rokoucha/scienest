@@ -2,6 +2,7 @@ import { fastify } from 'fastify'
 import cors from '@fastify/cors'
 import { prismaPlugin } from './plugins/prisma.mjs'
 import { routes } from './routes.mjs'
+import { API_PREFIX } from './constants.js'
 
 const app = fastify({
   logger: true,
@@ -9,7 +10,7 @@ const app = fastify({
 
 app.register(prismaPlugin)
 app.register(cors.default)
-app.register(routes)
+app.register(routes, { prefix: API_PREFIX })
 
 const start = async () => {
   try {
