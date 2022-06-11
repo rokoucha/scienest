@@ -42,12 +42,16 @@ export class PageService {
   public async findMany(
     params?:
       | {
+          scope?: string | undefined
           slug?: string | undefined
           tag?: string | undefined
         }
       | undefined,
   ): Promise<Page[]> {
     const where = [
+      params?.scope !== undefined
+        ? Prisma.sql`Post.scope = ${params.scope}`
+        : undefined,
       params?.slug !== undefined
         ? Prisma.sql`Post.slug LIKE ${`%${params.slug}%`}`
         : undefined,
