@@ -4,5 +4,7 @@ import { Renderer } from './renderer'
 export type ViewerProps = { content: string; slug: string }
 
 export const Viewer: React.FC<ViewerProps> = ({ content, slug }) => (
-  <Renderer content={content} />
+  <main>
+    <Renderer content={content} />
+  </main>
 )

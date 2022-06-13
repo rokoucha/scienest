@@ -37,7 +37,7 @@ export const Editor: React.FC<EditorProps> = ({
   }, [slug, content, isExists])
 
   return (
-    <>
+    <main>
       <div>
         <input type="text" value={slug} onChange={onSlugChange} />
       </div>
@@ -52,6 +52,6 @@ export const Editor: React.FC<EditorProps> = ({
           <Renderer content={content} />
         </div>
       </div>
-    </>
+    </main>
   )
 }

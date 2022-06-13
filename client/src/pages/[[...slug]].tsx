@@ -1,16 +1,12 @@
 import type { GetServerSideProps, NextPage } from 'next'
 import type React from 'react'
-import {
-  type Page,
-  toPage,
-  type PageBase,
-  type PageJson,
-} from 'scienest-common'
+import { toPage, type PageJson } from 'scienest-common'
 import { findBySlug } from '../api'
-import { Container } from '../components/container'
 import { Viewer } from '../components/viewer'
 import { queryToSlug } from '../utils'
 import { Editor } from '../components/editor'
+import { Header } from '../components/header'
+import { Footer } from '../components/footer'
 
 type ViewerPageProps = {
   editorMode: boolean
@@ -53,7 +49,8 @@ const ViewerPage: NextPage<ViewerPageProps> = ({
   const page = toPage(rawPage)
 
   return (
-    <Container>
+    <div>
+      <Header />
       {editorMode ? (
         <Editor
           content={page.content}
@@ -63,7 +60,9 @@ const ViewerPage: NextPage<ViewerPageProps> = ({
       ) : (
         <Viewer content={page.content} slug={page.slug} />
       )}
-    </Container>
+      <Footer />
+    </div>
   )
 }
+
 export default ViewerPage
