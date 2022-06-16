@@ -12,25 +12,27 @@ datasource db {
 }
 
 model Post {
-  id        String   @id @default(cuid())
-  content   Content  @relation(fields: [contentId], references: [id])
-  contentId String
-  createdAt DateTime @default(now())
-  slug      String   @unique
-  scope     String
-  tags      Tag[]
-  updatedAt DateTime @updatedAt
+  content     Content  @relation(fields: [contentId], references: [id])
+  contentId   String
+  createdAt   DateTime @default(now())
+  description String
+  id          String   @id @default(cuid())
+  scope       String
+  slug        String   @unique
+  tags        Tag[]
+  title       String
+  updatedAt   DateTime @updatedAt
 }
 
 model Content {
-  id        String    @id @default(cuid())
-  createdAt DateTime  @default(now())
-  text      String
-  parentId  String?
-  parent    Content?  @relation("ContentChain", fields: [parentId], references: [id])
   children  Content[] @relation("ContentChain")
-  slugs     Post[]
+  createdAt DateTime  @default(now())
+  id        String    @id @default(cuid())
+  parent    Content?  @relation("ContentChain", fields: [parentId], references: [id])
+  parentId  String?
   scope     String
+  slugs     Post[]
+  text      String
 }
 
 model Tag {

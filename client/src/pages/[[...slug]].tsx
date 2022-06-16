@@ -32,10 +32,12 @@ export const getServerSideProps: GetServerSideProps<ViewerPageProps> = async (
         content: '',
         contentId: '',
         createdAt: new Date().toISOString(),
+        description: '',
         id: '',
         scope: 'private',
         slug: slug.join('/'),
         tags: [],
+        title: '',
         updatedAt: new Date().toISOString(),
       },
     },
@@ -58,7 +60,7 @@ const ViewerPage: NextPage<ViewerPageProps> = ({
           slug={page.slug}
         />
       ) : (
-        <Viewer content={page.content} slug={page.slug} />
+        <Viewer content={page.content} slug={page.slug} title={page.title} />
       )}
       <Footer />
     </div>

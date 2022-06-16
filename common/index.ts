@@ -39,10 +39,12 @@ export const ZPage = z.object({
   content: z.string(),
   contentId: z.string(),
   createdAt: z.union([z.string(), z.date()]).transform((v) => new Date(v)),
+  description: z.string(),
   id: z.string(),
   scope: z.nativeEnum(Scope),
   slug: z.string(),
   tags: z.array(z.string()),
+  title: z.string(),
   updatedAt: z.union([z.string(), z.date()]).transform((v) => new Date(v)),
 })
 
@@ -54,10 +56,12 @@ export const ZPageJson = z.object({
   content: z.string(),
   contentId: z.string(),
   createdAt: z.union([z.string(), z.date()]).transform((v) => v.toString()),
+  description: z.string(),
   id: z.string(),
   scope: z.nativeEnum(Scope),
   slug: z.string(),
   tags: z.array(z.string()),
+  title: z.string(),
   updatedAt: z.union([z.string(), z.date()]).transform((v) => v.toString()),
 })
 

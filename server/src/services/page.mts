@@ -14,6 +14,8 @@ import {
 } from 'scienest-common'
 import { toScope } from '../utils.mjs'
 import { z } from 'zod'
+import { remark } from 'remark'
+import strip from 'strip-markdown'
 
 export class PageService {
   #prisma: PrismaClient
@@ -27,10 +29,12 @@ export class PageService {
       content: post.content.text,
       contentId: post.contentId,
       createdAt: post.createdAt,
+      description: post.description,
       id: post.id,
       scope: toScope(post.scope),
       slug: post.slug,
       tags: post.tags.map((t) => t.name),
+      title: post.title,
       updatedAt: post.updatedAt,
     }
   }
@@ -84,14 +88,16 @@ export class PageService {
 
     const posts = await this.#prisma.$queryRaw`
       SELECT
-        Content.text AS content,
         Content.id AS contentId,
+        Content.text AS content,
         Post.createdAt AS createdAt,
+        Post.description AS description,
         Post.id AS id,
         Post.scope AS scope,
         Post.slug AS slug,
-        TagList.Tags AS tags,
-        Post.updatedAt AS updatedAt
+        Post.title AS title,
+        Post.updatedAt AS updatedAt,
+        TagList.Tags AS tags
       FROM
         Post
       INNER JOIN Content
@@ -132,10 +138,12 @@ export class PageService {
           content: z.string(),
           contentId: z.string(),
           createdAt: z.string().transform((v) => new Date(v)),
+          description: z.string(),
           id: z.string(),
           scope: z.nativeEnum(Scope),
           slug: z.string(),
           tags: z.string().transform((v) => v.split('\t')),
+          title: z.string(),
           updatedAt: z.string().transform((v) => new Date(v)),
         }),
       )
@@ -167,18 +175,17 @@ export class PageService {
     const count = await this.count({ slug: input.slug })
     if (count > 0) throw new Error(`Post already found: "${input.slug}"`)
 
+    const metadata = await this.parseMarkdown(input.content)
+
     let post: Post | undefined
     try {
       post = await this.#prisma.post.create({
         data: {
-          slug: input.slug,
-          content: {
-            create: {
-              text: input.content,
-              scope: input.scope,
-            },
-          },
+          content: { create: { text: input.content, scope: input.scope } },
+          description: metadata.description ?? '',
           scope: input.scope,
+          slug: input.slug,
+          title: metadata.title ?? input.slug,
         },
       })
     } catch (e) {
@@ -200,11 +207,12 @@ export class PageService {
     const currentPost = await this.findBySlug({ slug })
     if (!currentPost) throw new Error(`Post not found: "${slug}"`)
 
+    const metadata = await this.parseMarkdown(input.content)
+
     let post: Post | undefined
     try {
       post = await this.#prisma.post.update({
         data: {
-          slug: input.slug,
           content: {
             create: {
               parentId: parent ?? currentPost.contentId,
@@ -212,7 +220,10 @@ export class PageService {
               text: input.content,
             },
           },
-          scope: input.scope,
+          description: metadata.description,
+          scope: input.scope ?? input.slug,
+          slug: input.slug,
+          title: metadata.title,
         },
         where: {
           slug,
@@ -235,5 +246,16 @@ export class PageService {
     }
 
     return true
+  }
+
+  public async parseMarkdown(
+    content: string,
+  ): Promise<{ title: string | undefined; description: string | undefined }> {
+    const plain = await remark()
+      .use(strip)
+      .process(content)
+      .then((f) => String(f).split('\n'))
+
+    return { title: plain.at(0), description: plain.at(2) }
   }
 }
