@@ -157,15 +157,10 @@ dist
 #!.yarn/cache
 
 # and uncomment the following lines
-.pnp.*
+#.pnp.*
 
 # End of https://www.toptal.com/developers/gitignore/api/node,yarn
 
-server/prisma/client/
-
-*.db
-*.db-journal
-
-.vscode/
-
-next-env.d.ts
+functions/
+public/build/
+.wrangler/
