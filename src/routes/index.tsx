@@ -27,6 +27,7 @@ export default function Index() {
           </li>
         ))}
       </ul>
+      <Link to='/new'>new</Link>
     </div>
   )
 }

@@ -4,8 +4,6 @@ import { Post } from '../models/post'
 import { PostService } from '../services/post'
 
 export const action = async ({ request, context }: ActionArgs) => {
-  const service = new PostService(context.DB)
-
   const body = await request.formData()
   const input = Post.pick({
     slug: true,
@@ -13,9 +11,17 @@ export const action = async ({ request, context }: ActionArgs) => {
     text: true,
   }).parse(Object.fromEntries(body.entries()))
 
-  const { id } = await service.create(input)
+  if (context.EDIT_PASSWORD !== body.get('password')) {
+    throw new Response('Authroization Required', {
+      status: 401,
+    })
+  }
 
-  return redirect(`/${id}`)
+  const service = new PostService(context.DB)
+
+  const { slug } = await service.create(input)
+
+  return redirect(`/${slug}`)
 }
 
 export default function Index() {
@@ -31,6 +37,7 @@ export default function Index() {
             <option value="Public">公開</option>
           </select>
           <textarea name="text" />
+          <input type="password" name="password" />
           <button type="submit">Post</button>
         </Form>
       </div>

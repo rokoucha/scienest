@@ -7,5 +7,6 @@ export {}
 declare module '@remix-run/server-runtime' {
   interface AppLoadContext {
     DB: D1Database
+    EDIT_PASSWORD: string
   }
 }
