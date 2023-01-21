@@ -3,15 +3,6 @@ import { Scope } from '../constants'
 import { Post } from '../models/post'
 import { nanoid } from '../nanoid'
 
-const PostFromPostsAndContents = z.object({
-  id: z.string(),
-  slug: z.string(),
-  scope: z.nativeEnum(Scope),
-  text: z.string(),
-  created_at: z.coerce.date(),
-  updated_at: z.coerce.date(),
-})
-
 export class PostsDAO {
   readonly #db: D1Database
 
@@ -27,6 +18,8 @@ export class PostsDAO {
           posts.id AS id,
           posts.slug AS slug,
           posts.scope AS scope,
+          posts.title AS title,
+          posts.description AS description,
           contents.text AS text,
           posts.created_at AS created_at,
           posts.updated_at AS updated_at
@@ -44,7 +37,7 @@ export class PostsDAO {
       .bind(id)
 
     return z
-      .union([z.undefined().transform(() => null), PostFromPostsAndContents])
+      .union([z.undefined().transform(() => null), Post])
       .parse(await stmt.first())
   }
 
@@ -56,6 +49,8 @@ export class PostsDAO {
           posts.id AS id,
           posts.slug AS slug,
           posts.scope AS scope,
+          posts.title AS title,
+          posts.description AS description,
           contents.text AS text,
           posts.created_at AS created_at,
           posts.updated_at AS updated_at
@@ -73,7 +68,7 @@ export class PostsDAO {
       .bind(slug)
 
     return z
-      .union([z.undefined().transform(() => null), PostFromPostsAndContents])
+      .union([z.undefined().transform(() => null), Post])
       .parse(await stmt.first())
   }
 
@@ -85,6 +80,8 @@ export class PostsDAO {
           posts.id AS id,
           posts.slug AS slug,
           posts.scope AS scope,
+          posts.title AS title,
+          posts.description AS description,
           contents.text AS text,
           posts.created_at AS created_at,
           posts.updated_at AS updated_at
@@ -103,12 +100,14 @@ export class PostsDAO {
       )
       .bind(...scopes)
 
-    return z.array(PostFromPostsAndContents).parse((await stmt.all()).results)
+    return z.array(Post).parse((await stmt.all()).results)
   }
 
   public async create(
     slug: string,
     scope: Scope,
+    title: string,
+    description: string | null,
     text: string,
   ): Promise<string> {
     const postId = nanoid()
@@ -123,6 +122,8 @@ export class PostsDAO {
             id,
             slug,
             scope,
+            title,
+            description,
             latest_content_id,
             updated_at
           )
@@ -131,11 +132,13 @@ export class PostsDAO {
             ?,
             ?,
             ?,
+            ?,
+            ?,
             CURRENT_TIMESTAMP
           )
         `,
         )
-        .bind(postId, slug, scope, contentId),
+        .bind(postId, slug, scope, title, description, contentId),
       this.#db
         .prepare(
           `
@@ -168,6 +171,8 @@ export class PostsDAO {
     id: string,
     slug: string,
     scope: Scope,
+    title: string,
+    description: string | null,
     text: string,
   ): Promise<void> {
     const contentId = nanoid()
@@ -181,13 +186,15 @@ export class PostsDAO {
           SET
             slug = ?,
             scope = ?,
+            title = ?,
+            description = ?,
             latest_content_id = ?,
             updated_at = CURRENT_TIMESTAMP
           WHERE
             id = ?
         `,
         )
-        .bind(slug, scope, contentId, id),
+        .bind(slug, scope, title, description, contentId, id),
       this.#db
         .prepare(
           `

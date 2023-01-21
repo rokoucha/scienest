@@ -1,0 +1,26 @@
+diff --git a/dist/config.d.ts b/dist/config.d.ts
+index 2733c29d2505fce8f1d3d5aa8de807814f636f0f..1db6f782b0d62f5a02618eef740ab867fa1f1966 100644
+--- a/dist/config.d.ts
++++ b/dist/config.d.ts
+@@ -7,7 +7,7 @@ export interface RemixMdxConfig {
+ export declare type RemixMdxConfigFunction = (filename: string) => Promise<RemixMdxConfig | undefined> | RemixMdxConfig | undefined;
+ export declare type ServerBuildTarget = "node-cjs" | "arc" | "netlify" | "vercel" | "cloudflare-pages" | "cloudflare-workers" | "deno";
+ export declare type ServerModuleFormat = "esm" | "cjs";
+-export declare type ServerPlatform = "node" | "neutral";
++export declare type ServerPlatform = "node" | "neutral" | "browser";
+ interface FutureConfig {
+     unstable_cssModules: boolean;
+     unstable_cssSideEffectImports: boolean;
+diff --git a/dist/config.js b/dist/config.js
+index 498697c4f8d9817c66e6c7a6afc01bc0749f2de5..1efc7f583ad632a99d97c79a2cd613f736132290 100644
+--- a/dist/config.js
++++ b/dist/config.js
+@@ -90,7 +90,7 @@ async function readConfig(remixRoot, serverMode = serverModes.ServerMode.Product
+     case "cloudflare-workers":
+     case "deno":
+       serverModuleFormat = "esm";
+-      serverPlatform = "neutral";
++      serverPlatform = "browser";
+       break;
+   }
+   let mdx = appConfig.mdx;

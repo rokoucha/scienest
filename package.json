@@ -12,6 +12,8 @@
     "nanoid-dictionary": "^4.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "remark": "^14.0.2",
+    "strip-markdown": "^5.0.0",
     "zod": "^3.20.2"
   },
   "devDependencies": {
@@ -33,9 +35,13 @@
     "dev:remix": "remix watch",
     "dev:wrangler": "NODE_ENV=development NO_D1_WARNING=true wrangler pages dev ./public --compatibility-date=2023-01-14 --ip ::0 --ip 0.0.0.0 --d1 DB --live-reload --persist",
     "dev": "yarn run build && run-p -s \"dev:*\"",
+    "migration:apply:local": "yarn run migration:apply --local",
+    "migration:apply": "wrangler d1 migrations apply scienest",
     "migration:create": "wrangler d1 migrations create scienest",
-    "migration:local": "yarn run wrangler d1 migrations apply scienest --local",
     "typecheck": "tsc --noEmit",
     "wrangler": "NO_D1_WARNING=true wrangler"
+  },
+  "resolutions": {
+    "@remix-run/dev@^1.11.1": "patch:@remix-run/dev@npm%3A1.11.1#./.yarn/patches/@remix-run-dev-npm-1.11.1-3bb1dd4346.patch"
   }
 }

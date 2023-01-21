@@ -5,6 +5,8 @@ export const Post = z.object({
   id: z.string(),
   slug: z.string(),
   scope: z.nativeEnum(Scope),
+  title: z.string(),
+  description: z.string().nullable(),
   text: z.string(),
   created_at: z.coerce.date(),
   updated_at: z.coerce.date(),

@@ -1,6 +1,6 @@
 import { json, LoaderArgs } from '@remix-run/cloudflare'
 import { useLoaderData } from '@remix-run/react'
-import { Renderer } from '../components/renderer'
+import { Viewer } from 'src/components/viewer'
 import { Post } from '../models/post'
 import { PostService } from '../services/post'
 import { toJSONCompatible } from '../utils/json'
@@ -24,7 +24,6 @@ export default function Index() {
 
   return (
     <div style={{ fontFamily: 'system-ui, sans-serif', lineHeight: '1.4' }}>
-      <h1>{post.slug}</h1>
       <ul>
         <li>
           <code>{post.id}</code>
@@ -39,7 +38,7 @@ export default function Index() {
           <code>{post.scope}</code>
         </li>
       </ul>
-      <Renderer content={post.text} />
+      <Viewer slug={post.slug} text={post.text} title={post.title} />
     </div>
   )
 }
