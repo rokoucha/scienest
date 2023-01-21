@@ -1,9 +1,11 @@
 import { ActionArgs, redirect } from '@remix-run/cloudflare'
 import { Form } from '@remix-run/react'
-import { PostsDAO } from '../dao/posts'
 import { Post } from '../models/post'
+import { PostService } from '../services/post'
 
 export const action = async ({ request, context }: ActionArgs) => {
+  const service = new PostService(context.DB)
+
   const body = await request.formData()
   const input = Post.pick({
     slug: true,
@@ -11,10 +13,9 @@ export const action = async ({ request, context }: ActionArgs) => {
     text: true,
   }).parse(Object.fromEntries(body.entries()))
 
-  const dao = new PostsDAO(context.DB)
-  await dao.create(input)
+  const { id } = await service.create(input)
 
-  return redirect('/')
+  return redirect(`/${id}`)
 }
 
 export default function Index() {

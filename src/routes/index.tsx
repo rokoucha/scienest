@@ -1,11 +1,14 @@
 import { json, LoaderArgs } from '@remix-run/cloudflare'
 import { useLoaderData } from '@remix-run/react'
-import { PostsDAO } from '../dao/posts'
+import { PostService } from '../services/post'
+import { toJSONCompatible } from '../utils/json'
 
 export const loader = async ({ context }: LoaderArgs) => {
-  const dao = new PostsDAO(context.DB)
+  const service = new PostService(context.DB)
 
-  return json(await dao.findMany())
+  const posts = await service.findMany()
+
+  return json(toJSONCompatible(posts))
 }
 
 export default function Index() {

@@ -1,13 +1,14 @@
 import { json, LoaderArgs } from '@remix-run/cloudflare'
 import { useLoaderData } from '@remix-run/react'
 import { Renderer } from '../components/renderer'
-import { PostsDAO } from '../dao/posts'
 import { Post } from '../models/post'
+import { PostService } from '../services/post'
+import { toJSONCompatible } from '../utils/json'
 
 export const loader = async ({ context, params }: LoaderArgs) => {
-  const dao = new PostsDAO(context.DB)
+  const service = new PostService(context.DB)
 
-  const post = await dao.findBySlug(params['*'] ?? '')
+  const post = await service.findBySlug(params['*'] ?? '')
 
   if (!post) {
     throw new Response('Not Found', {
@@ -15,7 +16,7 @@ export const loader = async ({ context, params }: LoaderArgs) => {
     })
   }
 
-  return json(post)
+  return json(toJSONCompatible(post))
 }
 
 export default function Index() {

@@ -13,10 +13,14 @@ const PostFromPostsAndContents = z.object({
 })
 
 export class PostsDAO {
-  constructor(private readonly db: D1Database) {}
+  readonly #db: D1Database
+
+  constructor(db: D1Database) {
+    this.#db = db
+  }
 
   public async findOne(id: string): Promise<Post | null> {
-    const stmt = this.db
+    const stmt = this.#db
       .prepare(
         `
         SELECT
@@ -45,7 +49,7 @@ export class PostsDAO {
   }
 
   public async findBySlug(slug: string): Promise<Post | null> {
-    const stmt = this.db
+    const stmt = this.#db
       .prepare(
         `
         SELECT
@@ -73,15 +77,8 @@ export class PostsDAO {
       .parse(await stmt.first())
   }
 
-  public async findMany(scope?: Scope | undefined): Promise<Post[]> {
-    const scopes: Scope[] =
-      scope === 'Private'
-        ? ['Public', 'Protected', 'Private']
-        : scope === 'Protected'
-        ? ['Public', 'Protected']
-        : ['Public']
-
-    const stmt = this.db
+  public async findMany(scopes: Scope[]): Promise<Post[]> {
+    const stmt = this.#db
       .prepare(
         `
         SELECT
@@ -110,13 +107,15 @@ export class PostsDAO {
   }
 
   public async create(
-    data: Pick<Post, 'slug' | 'scope' | 'text'>,
-  ): Promise<Post> {
+    slug: string,
+    scope: Scope,
+    text: string,
+  ): Promise<string> {
     const postId = nanoid()
     const contentId = nanoid()
 
-    await this.db.batch([
-      this.db
+    const res = await this.#db.batch([
+      this.#db
         .prepare(
           `
           INSERT
@@ -136,8 +135,8 @@ export class PostsDAO {
           )
         `,
         )
-        .bind(postId, data.slug, data.scope, contentId),
-      this.db
+        .bind(postId, slug, scope, contentId),
+      this.#db
         .prepare(
           `
           INSERT
@@ -155,23 +154,26 @@ export class PostsDAO {
           )
         `,
         )
-        .bind(contentId, postId, data.scope, data.text),
+        .bind(contentId, postId, scope, text),
     ])
 
-    const post = await this.findOne(postId)
-    if (!post) throw new Error('Failed to fetch inserted post')
+    if (res.some((r) => !r.success)) {
+      throw new Error('Failed to create new post')
+    }
 
-    return post
+    return postId
   }
 
   public async update(
     id: string,
-    input: Pick<Post, 'slug' | 'scope' | 'text'>,
-  ): Promise<Post> {
+    slug: string,
+    scope: Scope,
+    text: string,
+  ): Promise<void> {
     const contentId = nanoid()
 
-    await this.db.batch([
-      this.db
+    const res = await this.#db.batch([
+      this.#db
         .prepare(
           `
           UPDATE
@@ -185,8 +187,8 @@ export class PostsDAO {
             id = ?
         `,
         )
-        .bind(input.slug, input.scope, contentId, id),
-      this.db
+        .bind(slug, scope, contentId, id),
+      this.#db
         .prepare(
           `
           INSERT
@@ -204,12 +206,11 @@ export class PostsDAO {
           )
         `,
         )
-        .bind(contentId, id, input.scope, input.text),
+        .bind(contentId, id, scope, text),
     ])
 
-    const post = await this.findOne(id)
-    if (!post) throw new Error('Failed to fetch inserted post')
-
-    return post
+    if (res.some((r) => !r.success)) {
+      throw new Error('Failed to create new post')
+    }
   }
 }
