@@ -4,5 +4,5 @@ compatibility_date = "2023-01-14"
 [[ d1_databases ]]
 binding = "DB"
 database_name = "scienest"
-database_id = "e08f419b-bde8-4d57-95d0-7bd3b395be61"
-preview_database_id = "e08f419b-bde8-4d57-95d0-7bd3b395be61"
+database_id = "f349fbf4-5838-482c-beec-706115dc80a7"
+preview_database_id = "f349fbf4-5838-482c-beec-706115dc80a7"

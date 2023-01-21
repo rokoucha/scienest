@@ -35,9 +35,6 @@
     "dev:remix": "remix watch",
     "dev:wrangler": "NODE_ENV=development NO_D1_WARNING=true wrangler pages dev ./public --compatibility-date=2023-01-14 --ip ::0 --ip 0.0.0.0 --binding EDIT_PASSWORD=hogepiyo --d1 DB --live-reload --persist",
     "dev": "yarn run build && run-p -s \"dev:*\"",
-    "migration:apply:local": "yarn run migration:apply --local",
-    "migration:apply": "wrangler d1 migrations apply scienest",
-    "migration:create": "wrangler d1 migrations create scienest",
     "typecheck": "tsc --noEmit",
     "wrangler": "NO_D1_WARNING=true wrangler"
   },
