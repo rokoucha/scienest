@@ -1,7 +1,7 @@
 import { ActionArgs, redirect } from '@remix-run/cloudflare'
 import { Form } from '@remix-run/react'
 import { PostsDAO } from '../dao/posts'
-import { Post } from '../models'
+import { Post } from '../models/post'
 
 export const action = async ({ request, context }: ActionArgs) => {
   const body = await request.formData()

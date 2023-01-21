@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { Scope } from '../constants'
-import { Post } from '../models'
+import { Post } from '../models/post'
 import { nanoid } from '../nanoid'
 
 const PostFromPostsAndContents = z.object({

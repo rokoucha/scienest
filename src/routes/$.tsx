@@ -2,7 +2,7 @@ import { json, LoaderArgs } from '@remix-run/cloudflare'
 import { useLoaderData } from '@remix-run/react'
 import { Renderer } from '../components/renderer'
 import { PostsDAO } from '../dao/posts'
-import { Post } from '../models'
+import { Post } from '../models/post'
 
 export const loader = async ({ context, params }: LoaderArgs) => {
   const dao = new PostsDAO(context.DB)

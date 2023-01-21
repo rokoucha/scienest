@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { Scope } from './constants'
+import { Scope } from '../constants'
 
 export const Post = z.object({
   id: z.string(),
