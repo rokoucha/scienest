@@ -10,24 +10,28 @@ export const loader = async ({ context }: LoaderArgs) => {
 
   const posts = await service.findMany()
 
-  return json(toJSONCompatible(posts))
+  return json(toJSONCompatible({ posts: posts }))
 }
 
 export default function Index() {
-  const result = z.array(Post).parse(useLoaderData<typeof loader>())
+  const { posts } = z
+    .object({ posts: z.array(Post) })
+    .parse(useLoaderData<typeof loader>())
 
   return (
     <div style={{ fontFamily: 'system-ui, sans-serif', lineHeight: '1.4' }}>
       <h1>Scienest</h1>
       <ul>
-        {result.map((r) => (
-          <li key={r.id}>
-            <Link to={`/${r.slug}`}>{r.title}</Link>
-            <p>{r.description ?? ''}</p>
+        {posts.map((p) => (
+          <li key={p.id}>
+            <Link to={`/${p.slug}`}>{p.title}</Link>
+            <p>{p.description ?? ''}</p>
           </li>
         ))}
       </ul>
-      <Link to='/new'>new</Link>
+      <div>
+        <Link to="/new">new</Link>
+      </div>
     </div>
   )
 }

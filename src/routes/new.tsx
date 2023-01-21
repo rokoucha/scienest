@@ -1,5 +1,5 @@
 import { ActionArgs, redirect } from '@remix-run/cloudflare'
-import { Form } from '@remix-run/react'
+import { Form, Link } from '@remix-run/react'
 import { Post } from '../models/post'
 import { PostService } from '../services/post'
 
@@ -30,16 +30,34 @@ export default function Index() {
       <h1>Add new Post</h1>
       <div>
         <Form method="post">
-          <input type="text" name="slug" />
-          <select name="scope">
-            <option value="Private">非公開</option>
-            <option value="Protected">限定公開</option>
-            <option value="Public">公開</option>
-          </select>
-          <textarea name="text" />
-          <input type="password" name="password" />
-          <button type="submit">Post</button>
+          <input type="hidden" name="id" />
+          <div>
+            <label htmlFor="slug">slug</label>
+            <input type="text" name="slug" id="slug" />
+          </div>
+          <div>
+            <label htmlFor="scope">scope</label>
+            <select name="scope" id="scope">
+              <option value="Private">非公開</option>
+              <option value="Protected">限定公開</option>
+              <option value="Public">公開</option>
+            </select>
+          </div>
+          <div>
+            <label htmlFor="text">text</label>
+            <textarea name="text" id="text" />
+          </div>
+          <div>
+            <label htmlFor="password">password</label>
+            <input type="password" name="password" id="password" />
+          </div>
+          <div>
+            <button type="submit">Post</button>
+          </div>
         </Form>
+      </div>
+      <div>
+        <Link to="/">cancel</Link>
       </div>
     </div>
   )
