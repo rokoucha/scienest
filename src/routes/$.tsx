@@ -27,9 +27,15 @@ export const loader = async ({ context, params, request }: LoaderArgs) => {
 
 export const action = async ({ context, request }: ActionArgs) => {
   const body = await request.formData()
-  const { id } = z
-    .object({ id: z.string() })
+  const { id, password } = z
+    .object({ id: z.string(), password: z.string() })
     .parse(Object.fromEntries(body.entries()))
+
+  if (context.EDIT_PASSWORD !== password) {
+    throw new Response('Authroization Required', {
+      status: 401,
+    })
+  }
 
   const service = new PostService(context.DB)
 
@@ -40,12 +46,6 @@ export const action = async ({ context, request }: ActionArgs) => {
         scope: true,
         text: true,
       }).parse(Object.fromEntries(body.entries()))
-
-      if (context.EDIT_PASSWORD !== body.get('password')) {
-        throw new Response('Authroization Required', {
-          status: 401,
-        })
-      }
 
       await service.update(id, input)
 
@@ -100,10 +100,17 @@ export default function Index() {
           </div>
         </Form>
       </div>
+      <br />
       <div>
         <Form method="delete" action={`/${post.slug}`}>
           <input type="hidden" name="id" value={post.id} />
-          <button type="submit">delete</button>
+          <div>
+            <label htmlFor="password">password</label>
+            <input type="password" name="password" id="password" />
+          </div>
+          <div>
+            <button type="submit">delete</button>
+          </div>
         </Form>
       </div>
       <div>
