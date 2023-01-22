@@ -27,24 +27,41 @@ export const loader = async ({ context, params, request }: LoaderArgs) => {
 
 export const action = async ({ context, request }: ActionArgs) => {
   const body = await request.formData()
-  const { id, ...input } = Post.pick({
-    id: true,
-    slug: true,
-    scope: true,
-    text: true,
-  }).parse(Object.fromEntries(body.entries()))
-
-  if (context.EDIT_PASSWORD !== body.get('password')) {
-    throw new Response('Authroization Required', {
-      status: 401,
-    })
-  }
+  const { id } = z
+    .object({ id: z.string() })
+    .parse(Object.fromEntries(body.entries()))
 
   const service = new PostService(context.DB)
 
-  await service.update(id, input)
+  switch (request.method) {
+    case 'PUT': {
+      const input = Post.pick({
+        slug: true,
+        scope: true,
+        text: true,
+      }).parse(Object.fromEntries(body.entries()))
 
-  return redirect(`/${input.slug}`)
+      if (context.EDIT_PASSWORD !== body.get('password')) {
+        throw new Response('Authroization Required', {
+          status: 401,
+        })
+      }
+
+      await service.update(id, input)
+
+      return redirect(`/${input.slug}`)
+    }
+
+    case 'DELETE': {
+      await service.delete(id)
+
+      return redirect('/')
+    }
+
+    default: {
+      throw new Response('Method Not Allowed', { status: 405 })
+    }
+  }
 }
 
 export default function Index() {
@@ -56,7 +73,7 @@ export default function Index() {
     <div style={{ fontFamily: 'system-ui, sans-serif', lineHeight: '1.4' }}>
       <h1>Edit Post</h1>
       <div>
-        <Form method="post" action={`/${post.slug}`}>
+        <Form method="put" action={`/${post.slug}`}>
           <input type="hidden" name="id" defaultValue={post.id} />
           <div>
             <label htmlFor="slug">slug</label>
@@ -81,6 +98,12 @@ export default function Index() {
           <div>
             <button type="submit">Post</button>
           </div>
+        </Form>
+      </div>
+      <div>
+        <Form method="delete" action={`/${post.slug}`}>
+          <input type="hidden" name="id" value={post.id} />
+          <button type="submit">delete</button>
         </Form>
       </div>
       <div>

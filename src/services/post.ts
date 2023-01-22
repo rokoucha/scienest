@@ -83,4 +83,8 @@ export class PostService {
 
     return post
   }
+
+  async delete(id: string): Promise<void> {
+    await this.#posts.delete(id)
+  }
 }

@@ -220,4 +220,35 @@ export class PostsDAO {
       throw new Error('Failed to create new post')
     }
   }
+
+  public async delete(id: string): Promise<void> {
+    const res = await this.#db.batch([
+      this.#db
+        .prepare(
+          `
+          DELETE
+          FROM
+            contents
+          WHERE
+            post_id = ?
+          `,
+        )
+        .bind(id),
+      this.#db
+        .prepare(
+          `
+          DELETE
+          FROM
+            posts
+          WHERE
+            id = ?
+          `,
+        )
+        .bind(id),
+    ])
+
+    if (res.some((r) => !r.success)) {
+      throw new Error('Failed to delete post')
+    }
+  }
 }
