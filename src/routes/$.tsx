@@ -4,7 +4,6 @@ import { Viewer } from 'src/components/viewer'
 import { z } from 'zod'
 import { Post } from '../models/post'
 import { PostService } from '../services/post'
-import { toJSONCompatible } from '../utils/json'
 
 export const loader = async ({ context, params, request }: LoaderArgs) => {
   const url = new URL(request.url)
@@ -22,7 +21,7 @@ export const loader = async ({ context, params, request }: LoaderArgs) => {
     })
   }
 
-  return json(toJSONCompatible({ isEditMode, post }))
+  return json({ isEditMode, post })
 }
 
 export const action = async ({ context, request }: ActionArgs) => {

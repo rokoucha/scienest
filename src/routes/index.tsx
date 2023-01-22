@@ -3,14 +3,13 @@ import { Link, useLoaderData } from '@remix-run/react'
 import { z } from 'zod'
 import { Post } from '../models/post'
 import { PostService } from '../services/post'
-import { toJSONCompatible } from '../utils/json'
 
 export const loader = async ({ context }: LoaderArgs) => {
   const service = new PostService(context.DB)
 
   const posts = await service.findMany()
 
-  return json(toJSONCompatible({ posts: posts }))
+  return json({ posts: posts })
 }
 
 export default function Index() {
