@@ -2,11 +2,10 @@
 /// <reference types="@remix-run/cloudflare" />
 /// <reference types="@cloudflare/workers-types" />
 
+import { Env } from './src/env'
+
 export {}
 
 declare module '@remix-run/server-runtime' {
-  interface AppLoadContext {
-    DB: D1Database
-    EDIT_PASSWORD: string
-  }
+  interface AppLoadContext extends Env {}
 }
