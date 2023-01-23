@@ -5,27 +5,11 @@ import { Post } from '../models/post'
 import { PostService } from '../services/post'
 
 export const loader = async ({ context, request }: LoaderArgs) => {
-  const session = await context.sessionStorage.getSession(
-    request.headers.get('Cookie'),
-  )
-
-  let headers = {}
-
-  if (!session.has('userId')) {
-    console.log('session not found!')
-    session.set('userId', `user:${Math.random()}`)
-    headers = {
-      'Set-Cookie': await context.sessionStorage.commitSession(session),
-    }
-  } else {
-    console.log(session.get('userId'))
-  }
-
   const service = new PostService(context.DB)
 
   const posts = await service.findMany()
 
-  return json({ posts: posts }, { headers })
+  return json({ posts: posts })
 }
 
 export default function Index() {
