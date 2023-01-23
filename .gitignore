@@ -164,3 +164,4 @@ dist
 functions/
 public/build/
 .wrangler/
+.dev.vars
