@@ -2,10 +2,11 @@
 /// <reference types="@remix-run/cloudflare" />
 /// <reference types="@cloudflare/workers-types" />
 
+import { SessionStorage } from '@remix-run/cloudflare'
 import { Env } from './src/env'
 
-export {}
-
 declare module '@remix-run/server-runtime' {
-  interface AppLoadContext extends Env {}
+  interface AppLoadContext extends Env {
+    sessionStorage: SessionStorage
+  }
 }
