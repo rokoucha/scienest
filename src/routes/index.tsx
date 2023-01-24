@@ -5,16 +5,19 @@ import { Post } from '../models/post'
 import { PostService } from '../services/post'
 
 export const loader = async ({ context, request }: LoaderArgs) => {
+  const loggedIn =
+    (await context.authenticator.isAuthenticated(request)) === true
+
   const service = new PostService(context.DB)
 
   const posts = await service.findMany()
 
-  return json({ posts: posts })
+  return json({ posts: posts, loggedIn })
 }
 
 export default function Index() {
-  const { posts } = z
-    .object({ posts: z.array(Post) })
+  const { posts, loggedIn } = z
+    .object({ posts: z.array(Post), loggedIn: z.boolean() })
     .parse(useLoaderData<typeof loader>())
 
   return (
@@ -28,9 +31,21 @@ export default function Index() {
           </li>
         ))}
       </ul>
-      <div>
-        <Link to="/new">new</Link>
-      </div>
+
+      {loggedIn ? (
+        <>
+          <div>
+            <Link to="/new">new</Link>
+          </div>
+          <div>
+            <Link to="/auth/logout">Logout</Link>
+          </div>
+        </>
+      ) : (
+        <div>
+          <Link to="/auth/login">Login</Link>
+        </div>
+      )}
     </div>
   )
 }

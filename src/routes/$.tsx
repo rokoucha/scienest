@@ -6,8 +6,15 @@ import { Post } from '../models/post'
 import { PostService } from '../services/post'
 
 export const loader = async ({ context, params, request }: LoaderArgs) => {
+  const loggedIn =
+    (await context.authenticator.isAuthenticated(request)) === true
+
   const url = new URL(request.url)
   const isEditMode = url.searchParams.get('edit') !== null
+
+  if (!loggedIn && isEditMode) {
+    return redirect('/auth/login')
+  }
 
   const slug = params['*'] ?? ''
 
@@ -21,20 +28,20 @@ export const loader = async ({ context, params, request }: LoaderArgs) => {
     })
   }
 
-  return json({ isEditMode, post })
+  return json({ isEditMode, loggedIn, post })
 }
 
 export const action = async ({ context, request }: ActionArgs) => {
-  const body = await request.formData()
-  const { id, password } = z
-    .object({ id: z.string(), password: z.string() })
-    .parse(Object.fromEntries(body.entries()))
-
-  if (context.EDIT_PASSWORD !== password) {
+  if (!(await context.authenticator.isAuthenticated(request))) {
     throw new Response('Authroization Required', {
       status: 401,
     })
   }
+
+  const body = await request.formData()
+  const { id } = z
+    .object({ id: z.string() })
+    .parse(Object.fromEntries(body.entries()))
 
   const service = new PostService(context.DB)
 
@@ -64,8 +71,8 @@ export const action = async ({ context, request }: ActionArgs) => {
 }
 
 export default function Index() {
-  const { isEditMode, post } = z
-    .object({ isEditMode: z.boolean(), post: Post })
+  const { isEditMode, loggedIn, post } = z
+    .object({ isEditMode: z.boolean(), loggedIn: z.boolean(), post: Post })
     .parse(useLoaderData<typeof loader>())
 
   return isEditMode ? (
@@ -91,10 +98,6 @@ export default function Index() {
             <textarea name="text" defaultValue={post.text} id="text" />
           </div>
           <div>
-            <label htmlFor="password">password</label>
-            <input type="password" name="password" id="password" />
-          </div>
-          <div>
             <button type="submit">Post</button>
           </div>
         </Form>
@@ -103,10 +106,6 @@ export default function Index() {
       <div>
         <Form method="delete" action={`/${post.slug}`}>
           <input type="hidden" name="id" value={post.id} />
-          <div>
-            <label htmlFor="password">password</label>
-            <input type="password" name="password" id="password" />
-          </div>
           <div>
             <button type="submit">delete</button>
           </div>
@@ -136,9 +135,11 @@ export default function Index() {
       <div>
         <Link to="/">top</Link>
       </div>
-      <div>
-        <Link to="?edit">edit</Link>
-      </div>
+      {loggedIn && (
+        <div>
+          <Link to="?edit">edit</Link>
+        </div>
+      )}
     </div>
   )
 }

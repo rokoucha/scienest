@@ -1,21 +1,30 @@
-import { ActionArgs, redirect } from '@remix-run/cloudflare'
+import { ActionArgs, LoaderArgs, redirect } from '@remix-run/cloudflare'
 import { Form, Link } from '@remix-run/react'
 import { Post } from '../models/post'
 import { PostService } from '../services/post'
 
+export const loader = async ({ context, request }: LoaderArgs) => {
+  const loggedIn =
+    (await context.authenticator.isAuthenticated(request)) === true
+
+  if (!loggedIn) {
+    return redirect('/auth/login')
+  }
+}
+
 export const action = async ({ request, context }: ActionArgs) => {
+  if (!(await context.authenticator.isAuthenticated(request))) {
+    throw new Response('Authroization Required', {
+      status: 401,
+    })
+  }
+
   const body = await request.formData()
   const input = Post.pick({
     slug: true,
     scope: true,
     text: true,
   }).parse(Object.fromEntries(body.entries()))
-
-  if (context.EDIT_PASSWORD !== body.get('password')) {
-    throw new Response('Authroization Required', {
-      status: 401,
-    })
-  }
 
   const service = new PostService(context.DB)
 
