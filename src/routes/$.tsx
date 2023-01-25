@@ -1,7 +1,7 @@
 import { ActionArgs, json, LoaderArgs, redirect } from '@remix-run/cloudflare'
 import { Form, Link, useLoaderData } from '@remix-run/react'
-import { Viewer } from 'src/components/viewer'
 import { z } from 'zod'
+import { Viewer } from '../components/Viewer'
 import { Post } from '../models/post'
 import { PostService } from '../services/post'
 
@@ -28,7 +28,9 @@ export const loader = async ({ context, params, request }: LoaderArgs) => {
     })
   }
 
-  return json({ isEditMode, loggedIn, post })
+  const posts = await service.findMany()
+
+  return json({ isEditMode, loggedIn, post, posts })
 }
 
 export const action = async ({ context, request }: ActionArgs) => {
@@ -71,8 +73,13 @@ export const action = async ({ context, request }: ActionArgs) => {
 }
 
 export default function Index() {
-  const { isEditMode, loggedIn, post } = z
-    .object({ isEditMode: z.boolean(), loggedIn: z.boolean(), post: Post })
+  const { isEditMode, loggedIn, post, posts } = z
+    .object({
+      isEditMode: z.boolean(),
+      loggedIn: z.boolean(),
+      post: Post,
+      posts: z.array(Post),
+    })
     .parse(useLoaderData<typeof loader>())
 
   return isEditMode ? (
@@ -117,29 +124,20 @@ export default function Index() {
     </div>
   ) : (
     <div style={{ fontFamily: 'system-ui, sans-serif', lineHeight: '1.4' }}>
-      <ul>
-        <li>
-          <code>{post.id}</code>
-        </li>
-        <li>
-          <code>{post.created_at.toISOString()}</code>
-        </li>
-        <li>
-          <code>{post.updated_at.toISOString()}</code>
-        </li>
-        <li>
-          <code>{post.scope}</code>
-        </li>
-      </ul>
-      <Viewer slug={post.slug} text={post.text} title={post.title} />
+      <Viewer componentData={{ posts }} post={post} />
       <div>
-        <Link to="/">top</Link>
+        <p>
+          <Link to="/">Top</Link>{' '}
+          {loggedIn ? (
+            <>
+              <Link to="/new">New</Link> <Link to="?edit">Edit</Link>{' '}
+              <Link to="/auth/logout">Logout</Link>
+            </>
+          ) : (
+            <Link to="/auth/login">Login</Link>
+          )}
+        </p>
       </div>
-      {loggedIn && (
-        <div>
-          <Link to="?edit">edit</Link>
-        </div>
-      )}
     </div>
   )
 }
