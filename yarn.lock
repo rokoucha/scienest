@@ -6252,16 +6252,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mdast-util-phrasing@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "mdast-util-phrasing@npm:3.0.0"
-  dependencies:
-    "@types/mdast": ^3.0.0
-    unist-util-is: ^5.0.0
-  checksum: 3cf0812c7f1a2a7f58d30df42b6172c3e79e3dacda34db216ee6e12e3caa7abfb9801626274e41627321cd0fcfc8e526c999fd96e1c0c086055a83ca7e9dddf7
-  languageName: node
-  linkType: hard
-
 "mdast-util-to-hast@npm:^11.0.0":
   version: 11.3.0
   resolution: "mdast-util-to-hast@npm:11.3.0"
@@ -6279,19 +6269,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mdast-util-to-markdown@npm:^1.0.0":
-  version: 1.5.0
-  resolution: "mdast-util-to-markdown@npm:1.5.0"
+"mdast-util-to-markdown@npm:~1.4.0":
+  version: 1.4.0
+  resolution: "mdast-util-to-markdown@npm:1.4.0"
   dependencies:
     "@types/mdast": ^3.0.0
     "@types/unist": ^2.0.0
     longest-streak: ^3.0.0
-    mdast-util-phrasing: ^3.0.0
     mdast-util-to-string: ^3.0.0
     micromark-util-decode-string: ^1.0.0
     unist-util-visit: ^4.0.0
     zwitch: ^2.0.0
-  checksum: 64338eb33e49bb0aea417591fd986f72fdd39205052563bb7ce9eb9ecc160824509bfacd740086a05af355c6d5c36353aafe95cab9e6927d674478757cee6259
+  checksum: 68fb241ab63a4120e5b20ea2aa03342758235f3a833b3e248d52b6a6b2e4693ad04297b9d0cd558899e340b1bf74a4e3f503a8b6037c4d407d744ac6bce75a42
   languageName: node
   linkType: hard
 

@@ -41,6 +41,7 @@
     "wrangler": "NO_D1_WARNING=true wrangler"
   },
   "resolutions": {
-    "@remix-run/dev@^1.11.1": "patch:@remix-run/dev@npm%3A1.11.1#./.yarn/patches/@remix-run-dev-npm-1.11.1-3bb1dd4346.patch"
+    "@remix-run/dev@^1.11.1": "patch:@remix-run/dev@npm%3A1.11.1#./.yarn/patches/@remix-run-dev-npm-1.11.1-3bb1dd4346.patch",
+    "mdast-util-to-markdown": "~1.4.0"
   }
 }
