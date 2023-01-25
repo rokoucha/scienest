@@ -10,6 +10,8 @@ export const loader = async ({ context, request }: LoaderArgs) => {
   if (!loggedIn) {
     return redirect('/auth/login')
   }
+
+  return null
 }
 
 export const action = async ({ request, context }: ActionArgs) => {
