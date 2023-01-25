@@ -59,10 +59,6 @@ export default function Index() {
             <textarea name="text" id="text" />
           </div>
           <div>
-            <label htmlFor="password">password</label>
-            <input type="password" name="password" id="password" />
-          </div>
-          <div>
             <button type="submit">Post</button>
           </div>
         </Form>

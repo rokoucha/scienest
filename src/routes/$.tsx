@@ -6,6 +6,8 @@ import { Post } from '../models/post'
 import { PostService } from '../services/post'
 
 export const loader = async ({ context, params, request }: LoaderArgs) => {
+  const slug = params['*'] ?? 'index'
+
   const loggedIn =
     (await context.authenticator.isAuthenticated(request)) === true
 
@@ -15,8 +17,6 @@ export const loader = async ({ context, params, request }: LoaderArgs) => {
   if (!loggedIn && isEditMode) {
     return redirect('/auth/login')
   }
-
-  const slug = params['*'] ?? ''
 
   const service = new PostService(context.DB)
 
@@ -57,7 +57,7 @@ export const action = async ({ context, request }: ActionArgs) => {
 
       await service.update(id, input)
 
-      return redirect(`/${input.slug}`)
+      return redirect(`/${input.slug === 'index' ? '' : input.slug}`)
     }
 
     case 'DELETE': {
