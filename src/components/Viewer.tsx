@@ -21,7 +21,7 @@ export const Viewer: React.FC<ViewerProps> = ({ componentData, post }) => {
         <h1>{post.title}</h1>
         <ul>
           <li>
-            <code>/{post.slug}</code>
+            <code>/{`/${post.slug === 'index' ? '' : post.slug}`}</code>
           </li>
           <li>
             <code>{post.id}</code>

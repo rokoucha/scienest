@@ -10,7 +10,7 @@ export const PageList: React.FC<PageListProps> = ({ posts }) => (
   <ul>
     {posts.map((p) => (
       <li key={p.id}>
-        <Link to={`/${p.slug}`}>{p.title}</Link>
+        <Link to={`/${p.slug === 'index' ? '' : p.slug}`}>{p.title}</Link>
         <p>{p.description ?? ''}</p>
       </li>
     ))}
