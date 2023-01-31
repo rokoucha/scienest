@@ -2030,7 +2030,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@remix-run/dev@npm:^1.12.0":
+"@remix-run/dev@npm:1.12.0":
   version: 1.12.0
   resolution: "@remix-run/dev@npm:1.12.0"
   dependencies:
@@ -2092,6 +2092,71 @@ __metadata:
   bin:
     remix: dist/cli.js
   checksum: 318a9aa0f6074500fd049133008da171e6b2dd7be0c38d4590dcedf6d58d3abc7d9eaf38d6acbc88d402d5d2a1fb3c396e3f0c36ebd1fe46652122e9cb81de2c
+  languageName: node
+  linkType: hard
+
+"@remix-run/dev@patch:@remix-run/dev@npm%3A1.12.0#./.yarn/patches/@remix-run-dev-npm-1.12.0-4cb56cd8f7.patch::locator=scienest%40workspace%3A.":
+  version: 1.12.0
+  resolution: "@remix-run/dev@patch:@remix-run/dev@npm%3A1.12.0#./.yarn/patches/@remix-run-dev-npm-1.12.0-4cb56cd8f7.patch::version=1.12.0&hash=638ed7&locator=scienest%40workspace%3A."
+  dependencies:
+    "@babel/core": ^7.18.6
+    "@babel/generator": ^7.18.6
+    "@babel/parser": ^7.18.6
+    "@babel/plugin-syntax-jsx": ^7.18.6
+    "@babel/plugin-syntax-typescript": ^7.20.0
+    "@babel/preset-env": ^7.18.6
+    "@babel/preset-typescript": ^7.18.6
+    "@babel/traverse": ^7.18.6
+    "@babel/types": ^7.20.2
+    "@esbuild-plugins/node-modules-polyfill": ^0.1.4
+    "@npmcli/package-json": ^2.0.0
+    "@remix-run/server-runtime": 1.12.0
+    "@vanilla-extract/integration": ^6.0.2
+    arg: ^5.0.1
+    cacache: ^15.0.5
+    chalk: ^4.1.2
+    chokidar: ^3.5.1
+    dotenv: ^16.0.0
+    esbuild: 0.16.3
+    execa: 5.1.1
+    exit-hook: 2.2.1
+    express: ^4.17.1
+    fast-glob: 3.2.11
+    fs-extra: ^10.0.0
+    get-port: ^5.1.1
+    gunzip-maybe: ^1.4.2
+    inquirer: ^8.2.1
+    jsesc: 3.0.2
+    json5: ^2.2.1
+    lodash: ^4.17.21
+    lodash.debounce: ^4.0.8
+    lru-cache: ^7.14.1
+    minimatch: ^3.0.4
+    node-fetch: ^2.6.7
+    ora: ^5.4.1
+    postcss: ^8.4.19
+    postcss-discard-duplicates: ^5.1.0
+    postcss-modules: ^6.0.0
+    prettier: 2.7.1
+    pretty-ms: ^7.0.1
+    proxy-agent: ^5.0.0
+    recast: ^0.21.5
+    remark-frontmatter: 4.0.1
+    remark-mdx-frontmatter: ^1.0.1
+    semver: ^7.3.7
+    sort-package-json: ^1.55.0
+    tar-fs: ^2.1.1
+    tsconfig-paths: ^4.0.0
+    ws: ^7.4.5
+    xdm: ^2.0.0
+  peerDependencies:
+    "@remix-run/serve": ^1.12.0
+  peerDependenciesMeta:
+    "@remix-run/serve":
+      optional: true
+  bin:
+    remix: dist/cli.js
+  checksum: 35dd54f230e1d001ce8ba21d05ae39ce6c8e8dc5e4a60fb8f5b12eb7d3db4cadeae3b23c3a4b87c04628360cd3fc67f10f6ad57ce4822e7f37065ebde39eefc2
   languageName: node
   linkType: hard
 
