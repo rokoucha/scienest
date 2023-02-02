@@ -1,4 +1,4 @@
-import type { MetaFunction } from '@remix-run/cloudflare'
+import { json, LoaderArgs, MetaFunction } from '@remix-run/cloudflare'
 import {
   Links,
   LiveReload,
@@ -8,9 +8,13 @@ import {
   ScrollRestoration,
 } from '@remix-run/react'
 
-export const meta: MetaFunction = () => ({
+export const loader = async ({ context }: LoaderArgs) => {
+  return json({ siteName: context.SITE_NAME })
+}
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => ({
   charset: 'utf-8',
-  title: 'Scienest',
+  title: data.siteName,
   viewport: 'width=device-width,initial-scale=1',
 })
 

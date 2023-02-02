@@ -2379,7 +2379,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*":
+"@types/node@npm:*, @types/node@npm:^18.11.18":
   version: 18.11.18
   resolution: "@types/node@npm:18.11.18"
   checksum: 03f17f9480f8d775c8a72da5ea7e9383db5f6d85aa5fefde90dd953a1449bd5e4ffde376f139da4f3744b4c83942166d2a7603969a6f8ea826edfb16e6e3b49d
@@ -5458,6 +5458,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jpeg-js@npm:^0.4.1":
+  version: 0.4.4
+  resolution: "jpeg-js@npm:0.4.4"
+  checksum: bd7cb61aa8df40a9ee2c2106839c3df6054891e56cfc22c0ac581402e06c6295f962a4754b0b2ac50a401789131b1c6dc9df8d24400f1352168be1894833c590
+  languageName: node
+  linkType: hard
+
 "js-tokens@npm:^3.0.0 || ^4.0.0, js-tokens@npm:^4.0.0":
   version: 4.0.0
   resolution: "js-tokens@npm:4.0.0"
@@ -6863,6 +6870,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"opentype.js@npm:^0.4.3":
+  version: 0.4.11
+  resolution: "opentype.js@npm:0.4.11"
+  bin:
+    ot: ./bin/ot
+  checksum: bd5292c83051017b90d0669d656557623248339279f364217ad80a9498eed7b5ef0047ba7c639fa2e5d907e5170b2d8677adbf0288fde004f806416a488f7cc3
+  languageName: node
+  linkType: hard
+
 "optionator@npm:^0.8.1":
   version: 0.8.3
   resolution: "optionator@npm:0.8.3"
@@ -7147,6 +7163,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pngjs@npm:^3.3.1":
+  version: 3.4.0
+  resolution: "pngjs@npm:3.4.0"
+  checksum: 8bd40bd698abd16b72c97b85cb858c80894fbedc76277ce72a784aa441e14795d45d9856e97333ca469b34b67528860ffc8a7317ca6beea349b645366df00bcd
+  languageName: node
+  linkType: hard
+
 "postcss-discard-duplicates@npm:^5.1.0":
   version: 5.1.0
   resolution: "postcss-discard-duplicates@npm:5.1.0"
@@ -7385,6 +7408,28 @@ __metadata:
     inherits: ^2.0.3
     pump: ^2.0.0
   checksum: 26ca412ec8d665bd0d5e185c1b8f627728eff603440d75d22a58e421e3c66eaf86ec6fc6a6efc54808ecef65979279fa8e99b109a23ec1fa8d79f37e6978c9bd
+  languageName: node
+  linkType: hard
+
+"pureimage@npm:0.3.15":
+  version: 0.3.15
+  resolution: "pureimage@npm:0.3.15"
+  dependencies:
+    jpeg-js: ^0.4.1
+    opentype.js: ^0.4.3
+    pngjs: ^3.3.1
+  checksum: a650918d18145ff8c5d79fdbadb97501d5177ba323bcf685ff34cffe087e4acd51d841743dafca65cc6767cd191510ed0a3d9a9bf195fd8cc653cbccad231ca4
+  languageName: node
+  linkType: hard
+
+"pureimage@patch:pureimage@npm%3A0.3.15#./.yarn/patches/pureimage-npm-0.3.15-06cff99363.patch::locator=scienest%40workspace%3A.":
+  version: 0.3.15
+  resolution: "pureimage@patch:pureimage@npm%3A0.3.15#./.yarn/patches/pureimage-npm-0.3.15-06cff99363.patch::version=0.3.15&hash=553047&locator=scienest%40workspace%3A."
+  dependencies:
+    jpeg-js: ^0.4.1
+    opentype.js: ^0.4.3
+    pngjs: ^3.3.1
+  checksum: 00427feb4d2625b9d5e1562026f0a4b7dc2d55a8238431ea49bb8d538fd122fa866bb84f594d8d269eeeb91eb0f617245510b172d69f28f0aa92df5d7a8cd648
   languageName: node
   linkType: hard
 
@@ -7949,6 +7994,7 @@ __metadata:
     "@remix-run/dev": ^1.12.0
     "@remix-run/react": ^1.12.0
     "@types/nanoid-dictionary": ^4.2.0
+    "@types/node": ^18.11.18
     "@types/react": ^18.0.27
     "@types/react-dom": ^18.0.10
     better-sqlite3: ^8.0.1
@@ -7957,6 +8003,7 @@ __metadata:
     nanoid-dictionary: ^4.3.0
     node-gyp: ^9.3.1
     npm-run-all: ^4.1.5
+    pureimage: ^0.3.15
     react: ^18.2.0
     react-dom: ^18.2.0
     remark: ^14.0.2

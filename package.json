@@ -10,6 +10,7 @@
     "markdown-to-jsx": "^7.1.8",
     "nanoid": "^4.0.0",
     "nanoid-dictionary": "^4.3.0",
+    "pureimage": "^0.3.15",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "remark": "^14.0.2",
@@ -22,6 +23,7 @@
     "@cloudflare/workers-types": "^4.20230115.0",
     "@remix-run/dev": "^1.12.0",
     "@types/nanoid-dictionary": "^4.2.0",
+    "@types/node": "^18.11.18",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "better-sqlite3": "^8.0.1",
@@ -35,13 +37,14 @@
     "build": "remix build",
     "clean": "rimraf .cache functions public/build",
     "dev:remix": "remix watch",
-    "dev:wrangler": "NODE_ENV=development NO_D1_WARNING=true wrangler pages dev ./public --compatibility-date=2023-01-21 --ip ::0 --ip 0.0.0.0 --d1 DB --live-reload --persist",
+    "dev:wrangler": "NODE_ENV=development NO_D1_WARNING=true wrangler pages dev ./public --compatibility-date=2023-01-21 --ip ::0 --ip 0.0.0.0 --d1 DB --r2 FILES --live-reload --persist",
     "dev": "yarn run build && run-p -s \"dev:*\"",
     "typecheck": "tsc --noEmit",
     "wrangler": "NO_D1_WARNING=true wrangler"
   },
   "resolutions": {
     "@remix-run/dev@^1.12.0": "patch:@remix-run/dev@npm%3A1.12.0#./.yarn/patches/@remix-run-dev-npm-1.12.0-4cb56cd8f7.patch",
-    "mdast-util-to-markdown": "~1.4.0"
+    "mdast-util-to-markdown": "~1.4.0",
+    "pureimage@^0.3.15": "patch:pureimage@npm%3A0.3.15#./.yarn/patches/pureimage-npm-0.3.15-06cff99363.patch"
   }
 }

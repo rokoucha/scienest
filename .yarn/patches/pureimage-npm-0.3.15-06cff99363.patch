@@ -1,0 +1,39 @@
+diff --git a/package.json b/package.json
+index 85bd20c231d280cc3a1e38de5396f30aeef1515c..cc0150404f708a484841dc60d852bbf8b237fcc1 100644
+--- a/package.json
++++ b/package.json
+@@ -10,8 +10,8 @@
+   "type": "module",
+   "types": "./types/index.d.ts",
+   "module": "./src/index.js",
+-  "main": "./dist/pureimage-umd.cjs",
+-  "browser": "./src/browser.js",
++  "main": "./src/index.js",
++  "browser": "./src/index.js",
+   "repository": {
+     "type": "git",
+     "url": "https://github.com/joshmarinacci/node-pureimage.git"
+diff --git a/src/bitmap.js b/src/bitmap.js
+index 8b3ab0628593ae2aaeb2693264f37932e1d7eeef..2870ed57982af4e5cc9f7bbcd923cb429bd6d085 100644
+--- a/src/bitmap.js
++++ b/src/bitmap.js
+@@ -33,7 +33,7 @@ export class Bitmap {
+         /**
+          * @type {ArrayBuffer}
+          */
+-        this.data = Buffer.alloc(w*h*4);
++        this.data = new Uint8Array(w*h*4);
+ 
+         const fillval = NAMED_COLORS.transparent
+         for(let j=0; j<h; j++) {
+diff --git a/src/index.js b/src/index.js
+index a6b46d05815541dde711d39bf7bb81d7eedd704a..01393030e44a49f56861cc5ea426254a10389477 100644
+--- a/src/index.js
++++ b/src/index.js
+@@ -1,5 +1,5 @@
+ import {Bitmap} from './bitmap.js'
+-import {PNG} from "pngjs"
++import {PNG} from "pngjs/browser"
+ import * as JPEG from "jpeg-js"
+ import {getBytesBigEndian} from './uint32.js'
+ 
