@@ -32,7 +32,7 @@ export const action = async ({ request, context }: ActionArgs) => {
 
   const { slug } = await service.create(input)
 
-  return redirect(`/${slug}`)
+  return redirect(`/${slug === 'index' ? '' : slug}`)
 }
 
 export default function Index() {

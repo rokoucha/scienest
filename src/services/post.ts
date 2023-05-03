@@ -1,5 +1,3 @@
-import { remark } from 'remark'
-import strip from 'strip-markdown'
 import { Scope } from '../constants'
 import { PostsDAO } from '../dao/posts'
 import { Post } from '../models/post'
@@ -22,10 +20,7 @@ export class PostService {
   async #parseMarkdown(
     text: string,
   ): Promise<{ title: string | undefined; description: string | undefined }> {
-    const plain = await remark()
-      .use(strip)
-      .process(text)
-      .then((f) => String(f).split('\n'))
+    const plain = text.split('\n')
 
     return { title: plain.at(0), description: plain.at(2) }
   }

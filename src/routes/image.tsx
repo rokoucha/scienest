@@ -5,6 +5,7 @@ import {
 } from '@remix-run/cloudflare'
 import { Form } from '@remix-run/react'
 import * as PImage from 'pureimage'
+import { Bitmap } from 'pureimage/types/bitmap'
 import { Stream, toReadableStream } from '../stream'
 
 export const action = async ({ request }: ActionArgs) => {
@@ -13,22 +14,40 @@ export const action = async ({ request }: ActionArgs) => {
     unstable_createMemoryUploadHandler(),
   )
 
-  const image = formData.get('img')
-  if (!image || !(image instanceof File)) {
+  const file = formData.get('img')
+  if (!file || !(file instanceof File)) {
     throw new Response('Bad Request', {
       status: 400,
     })
   }
 
-  const hoge = await PImage.decodePNGFromStream(
-    new Stream({ data: new Uint8Array(await image.arrayBuffer()) }),
-  )
+  console.log(file)
+
+  let image: Bitmap
+  switch (file.type) {
+    case 'image/png': {
+      image = await PImage.decodePNGFromStream(
+        new Stream({ data: new Uint8Array(await file.arrayBuffer()) }),
+      )
+      break
+    }
+
+    case 'image/jpeg': {
+      image = await PImage.decodeJPEGFromStream(
+        new Stream({ data: new Uint8Array(await file.arrayBuffer()) }),
+      )
+      break
+    }
+
+    default:
+      throw new Error('Invalid file type')
+  }
 
   const canvas = PImage.make(100, 100, {})
 
   const ctx = canvas.getContext('2d')
 
-  ctx.drawImage(hoge, 0, 0, hoge.width, hoge.height, 0, 0, 100, 100)
+  ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, 100, 100)
 
   const { from, to } = toReadableStream()
 

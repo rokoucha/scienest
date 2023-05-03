@@ -36,9 +36,7 @@ export class PostsDAO {
       )
       .bind(id)
 
-    return z
-      .union([z.undefined().transform(() => null), Post])
-      .parse(await stmt.first())
+    return z.union([z.null(), Post]).parse(await stmt.first())
   }
 
   public async findBySlug(slug: string): Promise<Post | null> {
@@ -67,9 +65,7 @@ export class PostsDAO {
       )
       .bind(slug)
 
-    return z
-      .union([z.undefined().transform(() => null), Post])
-      .parse(await stmt.first())
+    return z.union([z.null(), Post]).parse(await stmt.first())
   }
 
   public async findMany(scopes: Scope[]): Promise<Post[]> {
