@@ -1,6 +1,5 @@
-
-# Created by https://www.toptal.com/developers/gitignore/api/node,yarn
-# Edit at https://www.toptal.com/developers/gitignore?templates=node,yarn
+# Created by https://www.toptal.com/developers/gitignore/api/node
+# Edit at https://www.toptal.com/developers/gitignore?templates=node
 
 ### Node ###
 # Logs
@@ -142,24 +141,7 @@ dist
 # SvelteKit build / generate output
 .svelte-kit
 
-### yarn ###
-# https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
-
-.yarn/*
-!.yarn/releases
-!.yarn/patches
-!.yarn/plugins
-!.yarn/sdks
-!.yarn/versions
-
-# if you are NOT using Zero-installs, then:
-# comment the following lines
-#!.yarn/cache
-
-# and uncomment the following lines
-#.pnp.*
-
-# End of https://www.toptal.com/developers/gitignore/api/node,yarn
+# End of https://www.toptal.com/developers/gitignore/api/node
 
 functions/
 public/build/

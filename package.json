@@ -1,17 +1,16 @@
 {
   "name": "scienest",
-  "packageManager": "yarn@3.5.0",
+  "packageManager": "pnpm@8.6.5",
   "private": true,
   "type": "module",
   "dependencies": {
-    "@remix-run/cloudflare": "^1.15.0",
-    "@remix-run/cloudflare-pages": "^1.15.0",
-    "@remix-run/react": "^1.15.0",
+    "@remix-run/cloudflare": "^1.16.0",
+    "@remix-run/cloudflare-pages": "^1.16.0",
+    "@remix-run/react": "^1.16.0",
     "markdown-to-jsx": "^7.2.0",
-    "marked": "^4.3.0",
+    "marked": "^5.0.1",
     "nanoid": "^4.0.2",
     "nanoid-dictionary": "^4.3.0",
-    "pureimage": "^0.3.17",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "remix-auth": "^3.4.0",
@@ -19,30 +18,27 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20230404.0",
-    "@remix-run/dev": "^1.15.0",
-    "@types/marked": "^4.0.8",
+    "@cloudflare/workers-types": "^4.20230419.0",
+    "@remix-run/dev": "^1.16.0",
+    "@types/marked": "^4.3.0",
     "@types/nanoid-dictionary": "^4.2.0",
-    "@types/node": "^18.15.11",
-    "@types/react": "^18.0.37",
-    "@types/react-dom": "^18.0.11",
+    "@types/node": "^20.1.0",
+    "@types/react": "^18.2.6",
+    "@types/react-dom": "^18.2.4",
     "better-sqlite3": "^8.3.0",
     "node-gyp": "^9.3.1",
     "npm-run-all": "^4.1.5",
     "rimraf": "^5.0.0",
     "typescript": "^5.0.4",
-    "wrangler": "^2.16.0"
+    "wrangler": "^2.19.0"
   },
   "scripts": {
     "build": "remix build",
     "clean": "rimraf .cache functions public/build",
     "dev:remix": "remix watch",
-    "dev:wrangler": "NODE_ENV=development NO_D1_WARNING=true wrangler pages dev ./public --compatibility-date=2023-01-21 --ip ::0 --ip 0.0.0.0 --d1 DB --r2 FILES --live-reload --persist",
-    "dev": "yarn run build && run-p -s \"dev:*\"",
+    "dev:wrangler": "NODE_ENV=development wrangler pages dev ./public --compatibility-date=2023-05-08 --ip ::0 --ip 0.0.0.0 --d1 DB --r2 FILES --live-reload --persist",
+    "dev": "pnpm run build && run-p -s \"dev:*\"",
     "typecheck": "tsc --noEmit",
-    "wrangler": "NO_D1_WARNING=true wrangler"
-  },
-  "resolutions": {
-    "pureimage@^0.3.17": "patch:pureimage@npm%3A0.3.17#./.yarn/patches/pureimage-npm-0.3.17-b44b66da87.patch"
+    "wrangler": "wrangler"
   }
 }

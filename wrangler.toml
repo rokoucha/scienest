@@ -1,5 +1,5 @@
 name = "scienest"
-compatibility_date = "2023-01-14"
+compatibility_date = "2023-05-08"
 
 [[ d1_databases ]]
 binding = "DB"
