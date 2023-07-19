@@ -8,7 +8,7 @@ export type ViewerProps = Readonly<{
 }>
 
 export const Viewer: React.FC<ViewerProps> = ({ componentData, post }) => {
-  const contentLines = post.text.split('\n')
+  const contentLines = post.content.split('\n')
 
   const content =
     contentLines.length > 2
@@ -18,11 +18,8 @@ export const Viewer: React.FC<ViewerProps> = ({ componentData, post }) => {
   return (
     <main>
       <header>
-        <h1>{post.title}</h1>
+        <h1>{post.slug}</h1>
         <ul>
-          <li>
-            <code>{`/${post.slug === 'index' ? '' : post.slug}`}</code>
-          </li>
           <li>
             <code>{post.id}</code>
           </li>

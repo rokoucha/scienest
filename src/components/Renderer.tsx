@@ -1,7 +1,7 @@
 import Markdown from 'markdown-to-jsx'
+import Link from 'next/link'
 import type React from 'react'
 import { Post } from '../models/post'
-import { ALink } from './ALink'
 import { PageList } from './PageList'
 
 export type RendererProps = Readonly<{
@@ -18,7 +18,7 @@ export const Renderer: React.FC<RendererProps> = ({
     options={{
       forceBlock: true,
       overrides: {
-        a: { component: ALink },
+        a: { component: Link },
         PageList: { component: () => <PageList posts={componentData.posts} /> },
       },
       slugify: (s) => s,

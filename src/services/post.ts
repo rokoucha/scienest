@@ -3,10 +3,10 @@ import { PostsDAO } from '../dao/posts'
 import { Post } from '../models/post'
 
 export class PostService {
-  readonly #posts: PostsDAO
+  readonly #postsDao: PostsDAO
 
-  constructor(db: D1Database | undefined, posts?: PostsDAO | undefined) {
-    this.#posts = posts ?? new PostsDAO(db!)
+  constructor(db: D1Database | undefined, postsDao?: PostsDAO | undefined) {
+    this.#postsDao = postsDao ?? new PostsDAO(db!)
   }
 
   #accessableScopes(scope: Scope): Scope[] {
@@ -19,33 +19,34 @@ export class PostService {
 
   async #parseMarkdown(
     text: string,
-  ): Promise<{ title: string | undefined; description: string | undefined }> {
+  ): Promise<{ slug: string; description: string | undefined }> {
     const plain = text.split('\n')
 
-    return { title: plain.at(0), description: plain.at(2) }
+    return { slug: plain.at(0)!, description: plain.at(2) }
   }
 
   async findOne(id: string): Promise<Post | null> {
-    return this.#posts.findOne(id)
+    return this.#postsDao.findOne(id)
   }
 
   async findBySlug(slug: string): Promise<Post | null> {
-    return this.#posts.findBySlug(slug)
+    return this.#postsDao.findBySlug(slug)
   }
 
   async findMany(scope?: Scope | undefined): Promise<Post[]> {
-    return this.#posts.findMany(this.#accessableScopes(scope ?? Scope.Public))
+    return this.#postsDao.findMany(
+      this.#accessableScopes(scope ?? Scope.Public),
+    )
   }
 
-  async create(data: Pick<Post, 'slug' | 'scope' | 'text'>): Promise<Post> {
-    const { title, description } = await this.#parseMarkdown(data.text)
+  async create(data: Pick<Post, 'scope' | 'content'>): Promise<Post> {
+    const { slug, description } = await this.#parseMarkdown(data.content)
 
-    const postId = await this.#posts.create(
-      data.slug,
+    const postId = await this.#postsDao.create(
+      slug,
       data.scope,
-      title ?? data.slug,
       description ?? null,
-      data.text,
+      data.content,
     )
 
     const post = await this.findOne(postId)
@@ -58,17 +59,16 @@ export class PostService {
 
   async update(
     id: string,
-    data: Pick<Post, 'slug' | 'scope' | 'text'>,
+    data: Pick<Post, 'scope' | 'content'>,
   ): Promise<Post> {
-    const { title, description } = await this.#parseMarkdown(data.text)
+    const { slug, description } = await this.#parseMarkdown(data.content)
 
-    await this.#posts.update(
+    await this.#postsDao.update(
       id,
-      data.slug,
+      slug,
       data.scope,
-      title ?? data.slug,
       description ?? null,
-      data.text,
+      data.content,
     )
 
     const post = await this.findOne(id)
@@ -80,6 +80,6 @@ export class PostService {
   }
 
   async delete(id: string): Promise<void> {
-    await this.#posts.delete(id)
+    await this.#postsDao.delete(id)
   }
 }

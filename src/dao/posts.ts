@@ -18,9 +18,8 @@ export class PostsDAO {
           posts.id AS id,
           posts.slug AS slug,
           posts.scope AS scope,
-          posts.title AS title,
           posts.description AS description,
-          contents.text AS text,
+          contents.text AS content,
           posts.created_at AS created_at,
           posts.updated_at AS updated_at
         FROM
@@ -47,9 +46,8 @@ export class PostsDAO {
           posts.id AS id,
           posts.slug AS slug,
           posts.scope AS scope,
-          posts.title AS title,
           posts.description AS description,
-          contents.text AS text,
+          contents.text AS content,
           posts.created_at AS created_at,
           posts.updated_at AS updated_at
         FROM
@@ -76,9 +74,8 @@ export class PostsDAO {
           posts.id AS id,
           posts.slug AS slug,
           posts.scope AS scope,
-          posts.title AS title,
           posts.description AS description,
-          contents.text AS text,
+          contents.text AS content,
           posts.created_at AS created_at,
           posts.updated_at AS updated_at
         FROM
@@ -102,9 +99,8 @@ export class PostsDAO {
   public async create(
     slug: string,
     scope: Scope,
-    title: string,
     description: string | null,
-    text: string,
+    content: string,
   ): Promise<string> {
     const postId = nanoid()
     const contentId = nanoid()
@@ -118,7 +114,6 @@ export class PostsDAO {
             id,
             slug,
             scope,
-            title,
             description,
             latest_content_id,
             updated_at
@@ -134,7 +129,7 @@ export class PostsDAO {
           )
         `,
         )
-        .bind(postId, slug, scope, title, description, contentId),
+        .bind(postId, slug, scope, description, contentId),
       this.#db
         .prepare(
           `
@@ -153,7 +148,7 @@ export class PostsDAO {
           )
         `,
         )
-        .bind(contentId, postId, scope, text),
+        .bind(contentId, postId, scope, content),
     ])
 
     if (res.some((r) => !r.success)) {
@@ -167,9 +162,8 @@ export class PostsDAO {
     id: string,
     slug: string,
     scope: Scope,
-    title: string,
     description: string | null,
-    text: string,
+    content: string,
   ): Promise<void> {
     const contentId = nanoid()
 
@@ -182,7 +176,6 @@ export class PostsDAO {
           SET
             slug = ?,
             scope = ?,
-            title = ?,
             description = ?,
             latest_content_id = ?,
             updated_at = CURRENT_TIMESTAMP
@@ -190,7 +183,7 @@ export class PostsDAO {
             id = ?
         `,
         )
-        .bind(slug, scope, title, description, contentId, id),
+        .bind(slug, scope, description, contentId, id),
       this.#db
         .prepare(
           `
@@ -209,7 +202,7 @@ export class PostsDAO {
           )
         `,
         )
-        .bind(contentId, id, scope, text),
+        .bind(contentId, id, scope, content),
     ])
 
     if (res.some((r) => !r.success)) {

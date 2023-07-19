@@ -5,7 +5,6 @@ CREATE TABLE "posts" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "slug" TEXT NOT NULL UNIQUE,
     "scope" TEXT NOT NULL,
-    "title" TEXT NOT NULL,
     "description" TEXT,
     "latest_content_id" TEXT NOT NULL,
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

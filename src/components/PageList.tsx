@@ -1,4 +1,4 @@
-import { Link } from '@remix-run/react'
+import Link from 'next/link'
 import React from 'react'
 import { Post } from '../models/post'
 
@@ -10,7 +10,7 @@ export const PageList: React.FC<PageListProps> = ({ posts }) => (
   <ul>
     {posts.map((p) => (
       <li key={p.id}>
-        <Link to={`/${p.slug === 'index' ? '' : p.slug}`}>{p.title}</Link>
+        <Link href={`/${p.slug === 'index' ? '' : p.slug}`}>{p.slug}</Link>
         <p>{p.description ?? ''}</p>
       </li>
     ))}
