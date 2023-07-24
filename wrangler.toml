@@ -1,8 +1,8 @@
 name = "scienest"
-compatibility_date = "2023-01-14"
+compatibility_date = "2023-05-18"
 
-[[ d1_databases ]]
+[[d1_databases]]
 binding = "DB"
 database_name = "scienest"
-database_id = "f349fbf4-5838-482c-beec-706115dc80a7"
-preview_database_id = "f349fbf4-5838-482c-beec-706115dc80a7"
+database_id = "5dd17953-e672-4f02-aff5-b390ac3ad233"
+preview_database_id = "DB"

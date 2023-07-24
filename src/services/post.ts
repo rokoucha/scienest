@@ -1,14 +1,14 @@
-import { remark } from 'remark'
-import strip from 'strip-markdown'
-import { Scope } from '../constants'
+import { ComponentData } from '../components/Renderer'
 import { PostsDAO } from '../dao/posts'
+import { parse, tokensToPlain } from '../markdown'
 import { Post } from '../models/post'
+import { Scope } from '../models/scope'
 
 export class PostService {
-  readonly #posts: PostsDAO
+  readonly #postsDao: PostsDAO
 
-  constructor(db: D1Database | undefined, posts?: PostsDAO | undefined) {
-    this.#posts = posts ?? new PostsDAO(db!)
+  constructor(db: D1Database | undefined, postsDao?: PostsDAO | undefined) {
+    this.#postsDao = postsDao ?? new PostsDAO(db!)
   }
 
   #accessableScopes(scope: Scope): Scope[] {
@@ -19,62 +19,49 @@ export class PostService {
       : [Scope.Public]
   }
 
-  async #parseMarkdown(
-    text: string,
-  ): Promise<{ title: string | undefined; description: string | undefined }> {
-    const plain = await remark()
-      .use(strip)
-      .process(text)
-      .then((f) => String(f).split('\n'))
-
-    return { title: plain.at(0), description: plain.at(2) }
-  }
-
   async findOne(id: string): Promise<Post | null> {
-    return this.#posts.findOne(id)
+    return this.#postsDao.findOne(id)
   }
 
   async findBySlug(slug: string): Promise<Post | null> {
-    return this.#posts.findBySlug(slug)
+    return this.#postsDao.findBySlug(slug)
   }
 
   async findMany(scope?: Scope | undefined): Promise<Post[]> {
-    return this.#posts.findMany(this.#accessableScopes(scope ?? Scope.Public))
-  }
-
-  async create(data: Pick<Post, 'slug' | 'scope' | 'text'>): Promise<Post> {
-    const { title, description } = await this.#parseMarkdown(data.text)
-
-    const postId = await this.#posts.create(
-      data.slug,
-      data.scope,
-      title ?? data.slug,
-      description ?? null,
-      data.text,
+    return this.#postsDao.findMany(
+      this.#accessableScopes(scope ?? Scope.Public),
     )
-
-    const post = await this.findOne(postId)
-    if (!post) {
-      throw new Error('Failed to fetch created post')
-    }
-
-    return post
   }
 
-  async update(
-    id: string,
-    data: Pick<Post, 'slug' | 'scope' | 'text'>,
+  async createOrUpdate(
+    id: string | undefined,
+    data: Pick<Post, 'slug' | 'scope' | 'content'>,
   ): Promise<Post> {
-    const { title, description } = await this.#parseMarkdown(data.text)
+    const parsed = parse(data.content)
 
-    await this.#posts.update(
-      id,
-      data.slug,
-      data.scope,
-      title ?? data.slug,
-      description ?? null,
-      data.text,
-    )
+    const title = parsed.title ? tokensToPlain([parsed.title]) : data.slug
+    const description = parsed.description
+      ? tokensToPlain([parsed.description])
+      : ''
+
+    if (id) {
+      await this.#postsDao.update(
+        id,
+        data.slug,
+        data.scope,
+        title,
+        description,
+        data.content,
+      )
+    } else {
+      id = await this.#postsDao.create(
+        data.slug,
+        data.scope,
+        title,
+        description,
+        data.content,
+      )
+    }
 
     const post = await this.findOne(id)
     if (!post) {
@@ -85,6 +72,13 @@ export class PostService {
   }
 
   async delete(id: string): Promise<void> {
-    await this.#posts.delete(id)
+    await this.#postsDao.delete(id)
+  }
+
+  async getComponentData(): Promise<ComponentData> {
+    const posts = await this.findMany()
+    return {
+      posts,
+    }
   }
 }
