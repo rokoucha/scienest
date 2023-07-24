@@ -1,13 +1,14 @@
-import { z } from 'zod'
-import { Scope } from '../constants'
+import { $nullable, $object, $string, Infer } from 'lizod'
+import { ScopeValidator } from './scope'
 
-export const Post = z.object({
-  id: z.string(),
-  slug: z.string(),
-  scope: z.nativeEnum(Scope),
-  description: z.string().nullable(),
-  content: z.string(),
-  created_at: z.coerce.date(),
-  updated_at: z.coerce.date(),
+export const Post = $object({
+  id: $string,
+  slug: $string,
+  scope: ScopeValidator,
+  title: $string,
+  description: $nullable($string),
+  content: $string,
+  created_at: $string,
+  updated_at: $string,
 })
-export type Post = z.infer<typeof Post>
+export type Post = Infer<typeof Post>

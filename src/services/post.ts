@@ -1,6 +1,8 @@
-import { Scope } from '../constants'
+import { ComponentData } from '../components/Renderer'
 import { PostsDAO } from '../dao/posts'
+import { parse, tokensToPlain } from '../markdown'
 import { Post } from '../models/post'
+import { Scope } from '../models/scope'
 
 export class PostService {
   readonly #postsDao: PostsDAO
@@ -17,14 +19,6 @@ export class PostService {
       : [Scope.Public]
   }
 
-  async #parseMarkdown(
-    text: string,
-  ): Promise<{ slug: string; description: string | undefined }> {
-    const plain = text.split('\n')
-
-    return { slug: plain.at(0)!, description: plain.at(2) }
-  }
-
   async findOne(id: string): Promise<Post | null> {
     return this.#postsDao.findOne(id)
   }
@@ -39,37 +33,35 @@ export class PostService {
     )
   }
 
-  async create(data: Pick<Post, 'scope' | 'content'>): Promise<Post> {
-    const { slug, description } = await this.#parseMarkdown(data.content)
-
-    const postId = await this.#postsDao.create(
-      slug,
-      data.scope,
-      description ?? null,
-      data.content,
-    )
-
-    const post = await this.findOne(postId)
-    if (!post) {
-      throw new Error('Failed to fetch created post')
-    }
-
-    return post
-  }
-
-  async update(
-    id: string,
-    data: Pick<Post, 'scope' | 'content'>,
+  async createOrUpdate(
+    id: string | undefined,
+    data: Pick<Post, 'slug' | 'scope' | 'content'>,
   ): Promise<Post> {
-    const { slug, description } = await this.#parseMarkdown(data.content)
+    const parsed = parse(data.content)
 
-    await this.#postsDao.update(
-      id,
-      slug,
-      data.scope,
-      description ?? null,
-      data.content,
-    )
+    const title = parsed.title ? tokensToPlain([parsed.title]) : data.slug
+    const description = parsed.description
+      ? tokensToPlain([parsed.description])
+      : ''
+
+    if (id) {
+      await this.#postsDao.update(
+        id,
+        data.slug,
+        data.scope,
+        title,
+        description,
+        data.content,
+      )
+    } else {
+      id = await this.#postsDao.create(
+        data.slug,
+        data.scope,
+        title,
+        description,
+        data.content,
+      )
+    }
 
     const post = await this.findOne(id)
     if (!post) {
@@ -81,5 +73,12 @@ export class PostService {
 
   async delete(id: string): Promise<void> {
     await this.#postsDao.delete(id)
+  }
+
+  async getComponentData(): Promise<ComponentData> {
+    const posts = await this.findMany()
+    return {
+      posts,
+    }
   }
 }

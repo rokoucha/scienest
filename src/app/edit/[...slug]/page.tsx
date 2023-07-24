@@ -1,40 +1,20 @@
 import React from 'react'
+import { savePost } from '../../../actions/savePost'
 import { postService } from '../../../app'
-import { Scope } from '../../../constants'
+import { Editor } from '../../../components/Editor'
 
 export const runtime = 'edge'
 
-type Props = Readonly<{ params: { slug: [string] } }>
+type Props = Readonly<{ params: { slug: [string] | undefined } }>
 
 const Page: React.FC<Props> = async ({ params }) => {
-  const slug = params.slug[0]
-
-  async function save(data: FormData) {
-    'use server'
-
-    console.log(...data.entries())
+  const slug = params.slug?.at(0)
+  if (!slug) {
+    throw new Error('slug is required')
   }
 
   const post = await postService.findBySlug(slug)
 
-  return (
-    <div>
-      <form action={save}>
-        <div>
-          <select name="scope" defaultValue={post?.scope}>
-            <option value={Scope.Public}>Public</option>
-            <option value={Scope.Protected}>Protected</option>
-            <option value={Scope.Private}>Private</option>
-          </select>
-        </div>
-        <div>
-          <textarea name="content" defaultValue={post?.content} />
-        </div>
-        <div>
-          <button type="submit">Save</button>
-        </div>
-      </form>
-    </div>
-  )
+  return <Editor post={post} handleSubmit={savePost} slug={slug} />
 }
 export default Page

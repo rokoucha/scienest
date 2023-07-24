@@ -4,7 +4,11 @@ import { auth } from './auth'
 
 export const middleware = auth((req: NextAuthRequest): any => {
   if (!req.auth.user)
-    return NextResponse.redirect(new URL('/auth/signin/github', req.url), 302)
+    if (req.method === 'GET') {
+      return NextResponse.redirect(new URL('/auth/signin/github', req.url), 302)
+    } else {
+      return new NextResponse('authencation required', { status: 401 })
+    }
 
   return
 })

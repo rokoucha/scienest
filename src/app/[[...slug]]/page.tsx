@@ -1,28 +1,35 @@
+import { notFound } from 'next/navigation'
 import React from 'react'
-import { auth } from '../../auth'
-import { SignIn } from '../../components/SignIn'
-import { SignOut } from '../../components/SignOut'
+import { postService } from '../../app'
+import { Header } from '../../components/Header'
+import { Renderer } from '../../components/Renderer'
+import { parse } from '../../markdown'
 
 export const runtime = 'edge'
 
-type Props = Readonly<{ params: { slug: [string] } }>
+type Props = Readonly<{ params: { slug: [string] | undefined } }>
 
 const Page: React.FC<Props> = async ({ params }) => {
-  const session = await auth()
+  const slug = params.slug?.at(0)
+
+  const componentData = await postService.getComponentData()
+
+  const post = await postService.findBySlug(slug ?? 'index')
+  if (!post) {
+    notFound()
+  }
+
+  const { title, description, contents } = parse(post.content)
+
+  const content = [description?.raw ?? '', ...contents.map((t) => t.raw)].join(
+    '',
+  )
 
   return (
-    <div>
-      <h1>Hello, Next.js!!!!!!</h1>
-      <p>{params.slug}</p>
-      <div>
-        <pre>{JSON.stringify(session, null, 2)}</pre>
-        {session ? (
-          <SignOut>Sign out</SignOut>
-        ) : (
-          <SignIn>Sign in with GitHub</SignIn>
-        )}
-      </div>
-    </div>
+    <article>
+      <Header slug={slug} title={title} />
+      <Renderer componentData={componentData} content={content} />
+    </article>
   )
 }
 export default Page

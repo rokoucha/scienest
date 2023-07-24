@@ -1,6 +1,6 @@
-import { z } from 'zod'
-import { Scope } from '../constants'
+import { $array, $null, $union } from 'lizod'
 import { Post } from '../models/post'
+import { Scope } from '../models/scope'
 import { nanoid } from '../nanoid'
 
 export class PostsDAO {
@@ -18,6 +18,7 @@ export class PostsDAO {
           posts.id AS id,
           posts.slug AS slug,
           posts.scope AS scope,
+          posts.title AS title,
           posts.description AS description,
           contents.text AS content,
           posts.created_at AS created_at,
@@ -35,7 +36,14 @@ export class PostsDAO {
       )
       .bind(id)
 
-    return z.union([z.null(), Post]).parse(await stmt.first())
+    const ctx = { errors: [] }
+    const res = await stmt.first()
+
+    if (!$union([$null, Post])(res, ctx)) {
+      throw new Error(JSON.stringify(ctx.errors))
+    }
+
+    return res
   }
 
   public async findBySlug(slug: string): Promise<Post | null> {
@@ -46,6 +54,7 @@ export class PostsDAO {
           posts.id AS id,
           posts.slug AS slug,
           posts.scope AS scope,
+          posts.title AS title,
           posts.description AS description,
           contents.text AS content,
           posts.created_at AS created_at,
@@ -63,7 +72,14 @@ export class PostsDAO {
       )
       .bind(slug)
 
-    return z.union([z.null(), Post]).parse(await stmt.first())
+    const ctx = { errors: [] }
+    const res = await stmt.first()
+
+    if (!$union([$null, Post])(res, ctx)) {
+      throw new Error(JSON.stringify(ctx.errors))
+    }
+
+    return res
   }
 
   public async findMany(scopes: Scope[]): Promise<Post[]> {
@@ -74,6 +90,7 @@ export class PostsDAO {
           posts.id AS id,
           posts.slug AS slug,
           posts.scope AS scope,
+          posts.title AS title,
           posts.description AS description,
           contents.text AS content,
           posts.created_at AS created_at,
@@ -93,12 +110,20 @@ export class PostsDAO {
       )
       .bind(...scopes)
 
-    return z.array(Post).parse((await stmt.all()).results)
+    const ctx = { errors: [] }
+    const res = (await stmt.all()).results
+
+    if (!$array(Post)(res, ctx)) {
+      throw new Error(JSON.stringify(ctx.errors))
+    }
+
+    return res
   }
 
   public async create(
     slug: string,
     scope: Scope,
+    title: string,
     description: string | null,
     content: string,
   ): Promise<string> {
@@ -114,6 +139,7 @@ export class PostsDAO {
             id,
             slug,
             scope,
+            title,
             description,
             latest_content_id,
             updated_at
@@ -129,7 +155,7 @@ export class PostsDAO {
           )
         `,
         )
-        .bind(postId, slug, scope, description, contentId),
+        .bind(postId, slug, scope, title, description, contentId),
       this.#db
         .prepare(
           `
@@ -162,6 +188,7 @@ export class PostsDAO {
     id: string,
     slug: string,
     scope: Scope,
+    title: string,
     description: string | null,
     content: string,
   ): Promise<void> {
@@ -176,6 +203,7 @@ export class PostsDAO {
           SET
             slug = ?,
             scope = ?,
+            title = ?,
             description = ?,
             latest_content_id = ?,
             updated_at = CURRENT_TIMESTAMP
@@ -183,7 +211,7 @@ export class PostsDAO {
             id = ?
         `,
         )
-        .bind(slug, scope, description, contentId, id),
+        .bind(slug, scope, title, description, contentId, id),
       this.#db
         .prepare(
           `

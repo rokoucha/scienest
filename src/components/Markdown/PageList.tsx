@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
-import { Post } from '../models/post'
+import { Post } from '../../models/post'
 
 export type PageListProps = Readonly<{
   posts: Post[]

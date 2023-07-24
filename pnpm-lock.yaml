@@ -8,6 +8,9 @@ dependencies:
   '@auth/core':
     specifier: 0.10.0
     version: 0.10.0
+  lizod:
+    specifier: ^0.2.6
+    version: 0.2.6(typescript@5.1.6)
   markdown-to-jsx:
     specifier: ^7.2.1
     version: 7.2.1(react@18.2.0)
@@ -32,9 +35,6 @@ dependencies:
   react-dom:
     specifier: ^18.2.0
     version: 18.2.0(react@18.2.0)
-  zod:
-    specifier: ^3.21.4
-    version: 3.21.4
 
 devDependencies:
   '@cloudflare/next-on-pages':
@@ -6180,6 +6180,14 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
+  /lizod@0.2.6(typescript@5.1.6):
+    resolution: {integrity: sha512-HZKxn0eyMsjEl4hX3A4p9ASWaDECSad/YJUdZja2+sTj2ZY5fXXaW2MTsHghub8JjB5XbyQSnI2YLUIXJloGfA==}
+    peerDependencies:
+      typescript: '>=5'
+    dependencies:
+      typescript: 5.1.6
+    dev: false
+
   /load-json-file@4.0.0:
     resolution: {integrity: sha512-Kx8hMakjX03tiGTLAIdJ+lL0htKnXjEZN6hk/tozf/WOuYGdZBJrZ+rCJRbVCugsjB3jMLn9746NsQIf5VjBMw==}
     engines: {node: '>=4'}
@@ -8875,7 +8883,6 @@ packages:
     resolution: {integrity: sha512-zaWCozRZ6DLEWAWFrVDz1H6FVXzUSfTy5FUMWsQlU8Ym5JP9eO4xkTIROFCQvhQf61z6O/G6ugw3SgAnvvm+HA==}
     engines: {node: '>=14.17'}
     hasBin: true
-    dev: true
 
   /ufo@1.1.2:
     resolution: {integrity: sha512-TrY6DsjTQQgyS3E3dBaOXf0TpPD8u9FVrVYmKVegJuFw51n/YB9XPt+U6ydzFG5ZIN7+DIjPbNmXoBj9esYhgQ==}
