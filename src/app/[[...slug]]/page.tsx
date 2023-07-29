@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import React from 'react'
 import { postService } from '../../app'
-import { Header } from '../../components/Header'
+import { ArticleHeader } from '../../components/ArticleHeader'
 import { Renderer } from '../../components/Renderer'
 import { parse } from '../../markdown'
 
@@ -27,7 +27,7 @@ const Page: React.FC<Props> = async ({ params }) => {
 
   return (
     <article>
-      <Header slug={slug} title={title} />
+      <ArticleHeader slug={slug} title={title} />
       <Renderer componentData={componentData} content={content} />
     </article>
   )

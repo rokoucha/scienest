@@ -1,37 +1,35 @@
-import Markdown from 'markdown-to-jsx'
-import { marked } from 'marked'
 import React from 'react'
-import { Heading } from './Markdown/Heading'
+import { SignIn } from './SignIn'
+import { SignOut } from './SignOut'
 
 export type HeaderProps = Readonly<{
-  slug: string | undefined
-  title: marked.Token | undefined
+  isSignedIn: boolean
 }>
 
-export const Header: React.FC<HeaderProps> = ({ slug, title }) => {
+export const Header: React.FC<HeaderProps> = ({ isSignedIn }) => {
   return (
     <header>
-      {title ? (
-        <Markdown
-          children={title.raw}
-          options={{
-            forceBlock: true,
-            overrides: {
-              h1: {
-                component: ({ children, id }) => (
-                  <Heading id={id} level={1}>
-                    {children}
-                  </Heading>
-                ),
-              },
-            },
-          }}
-        />
-      ) : (
-        <h1>{slug ?? 'index'}</h1>
-      )}
-      <a href={`/edit/${slug ?? 'index'}`}>edit</a>
-      <pre>{`/${slug ?? ''}`}</pre>
+      <nav>
+        <ul>
+          <li>
+            <h1>{process.env.SITE_NAME}</h1>
+          </li>
+          {isSignedIn ? (
+            <>
+              <li>
+                <SignOut>Sign out</SignOut>
+              </li>
+              <li>
+                <a href="/new">New</a>
+              </li>
+            </>
+          ) : (
+            <li>
+              <SignIn>Sign in with GitHub</SignIn>
+            </li>
+          )}
+        </ul>
+      </nav>
     </header>
   )
 }
