@@ -7,6 +7,7 @@
   "dependencies": {
     "@auth/core": "0.10.0",
     "@vanilla-extract/css": "^1.12.0",
+    "clsx": "^2.0.0",
     "lizod": "^0.2.6",
     "markdown-to-jsx": "^7.2.1",
     "marked": "^5.1.2",
