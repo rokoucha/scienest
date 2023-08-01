@@ -1,17 +1,11 @@
 import React from 'react'
 import { CSRF_experimental } from '../auth'
+import { Button } from './Button'
 
-export type SignOutProps = Readonly<
-  React.DetailedHTMLProps<
-    React.ButtonHTMLAttributes<HTMLButtonElement>,
-    HTMLButtonElement
-  >
->
-
-export const SignOut: React.FC<SignOutProps> = (props: any) => {
+export const SignOut: React.FC = () => {
   return (
     <form action="/auth/signout" method="post">
-      <button {...props} />
+      <Button>Sign Out</Button>
       <CSRF_experimental />
     </form>
   )
