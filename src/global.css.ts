@@ -7,6 +7,11 @@ globalStyle('html, body', {
   margin: 0,
 })
 
+globalStyle('a', {
+  color: 'inherit',
+  textDecoration: 'none',
+})
+
 export const maxWidth = createVar()
 
 globalStyle(':root', {

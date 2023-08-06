@@ -16,7 +16,6 @@ export const container = style({
   gridTemplateColumns: 'auto 1fr',
   margin: '0 auto',
   maxWidth,
-  padding: '0 1rem',
   width: '100%',
 })
 
@@ -24,7 +23,6 @@ export const brand = style({})
 
 export const brandLink = style({
   color: 'inherit',
-  textDecoration: 'none',
 })
 
 export const brandName = style({

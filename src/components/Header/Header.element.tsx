@@ -11,17 +11,21 @@ import {
 } from './Header.css'
 
 export type HeaderElementProps = Readonly<{
+  isEditing: boolean
   isSignedIn: boolean
   signIn: React.ReactNode
   signOut: React.ReactNode
   siteName: string
+  slug: string
 }>
 
 export const HeaderElement: React.FC<HeaderElementProps> = ({
+  isEditing,
   isSignedIn,
   signIn,
   signOut,
   siteName,
+  slug,
 }) => {
   return (
     <header className={wrapper}>
@@ -35,9 +39,16 @@ export const HeaderElement: React.FC<HeaderElementProps> = ({
           <ul className={navigation}>
             {isSignedIn ? (
               <>
-                <li>
-                  <ButtonLink href="/new">New</ButtonLink>
-                </li>
+                {!isEditing && (
+                  <>
+                    <li>
+                      <ButtonLink href="/new">New</ButtonLink>
+                    </li>
+                    <li>
+                      <ButtonLink href={`/edit/${slug}`}>📝</ButtonLink>
+                    </li>
+                  </>
+                )}
                 <li>{signOut}</li>
               </>
             ) : (

@@ -17,7 +17,6 @@ export const container = style({
   marginBlock: 0,
   marginInline: 'auto',
   maxWidth,
-  padding: '0 1rem',
   width: '100%',
 })
 

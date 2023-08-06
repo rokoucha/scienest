@@ -1,4 +1,4 @@
-import { ComponentData } from '../components/Renderer'
+import { ComponentData } from '../components/Article'
 import { PostsDAO } from '../dao/posts'
 import { parse, tokensToPlain } from '../markdown'
 import { Post } from '../models/post'

@@ -1,8 +1,6 @@
 import { style } from '@vanilla-extract/css'
 
-export const link = style({
-  textDecoration: 'none',
-})
+export const link = style({})
 
 export const wrapper = style({
   alignItems: 'center',

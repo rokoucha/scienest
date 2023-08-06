@@ -1,35 +1,36 @@
 import { notFound } from 'next/navigation'
 import React from 'react'
 import { postService } from '../../app'
-import { ArticleHeader } from '../../components/ArticleHeader'
-import { Renderer } from '../../components/Renderer'
-import { parse } from '../../markdown'
+import { auth } from '../../auth'
+import { Article } from '../../components/Article'
+import { Footer } from '../../components/Footer'
+import { Header } from '../../components/Header'
+import { Main } from '../../components/Main'
 
 export const runtime = 'edge'
 
 type Props = Readonly<{ params: { slug: [string] | undefined } }>
 
 const Page: React.FC<Props> = async ({ params }) => {
-  const slug = params.slug?.at(0)
+  const session = await auth()
+
+  const slug = params.slug?.at(0) ?? 'index'
 
   const componentData = await postService.getComponentData()
 
-  const post = await postService.findBySlug(slug ?? 'index')
+  const post = await postService.findBySlug(slug)
   if (!post) {
     notFound()
   }
 
-  const { title, description, contents } = parse(post.content)
-
-  const content = [description?.raw ?? '', ...contents.map((t) => t.raw)].join(
-    '',
-  )
-
   return (
-    <article>
-      <ArticleHeader slug={slug} title={title} />
-      <Renderer componentData={componentData} content={content} />
-    </article>
+    <>
+      <Header isEditing={false} isSignedIn={session !== null} slug={slug} />
+      <Main>
+        <Article componentData={componentData} post={post} />
+      </Main>
+      <Footer />
+    </>
   )
 }
 export default Page
