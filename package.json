@@ -48,6 +48,8 @@
     "build:next": "next-on-pages",
     "build": "next build",
     "clean": "rimraf .next .vercel",
+    "deploy:wrangler": "wrangler pages deploy ---project-name scienest ./.vercel/output/static",
+    "deploy": "run-s -s build:next deploy:wrangler",
     "dev:next": "next-on-pages -w",
     "dev:wrangler": "killall workerd || true && NO_D1_WARNING=true NODE_ENV=development wrangler pages dev ./.vercel/output/static --compatibility-date=2023-05-18 --compatibility-flag=nodejs_compat --d1 DB",
     "dev": "run-s -s build:next dev:wrangler",
