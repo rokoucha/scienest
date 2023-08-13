@@ -11,26 +11,22 @@ export class PostService {
     this.#postsDao = postsDao ?? new PostsDAO(db!)
   }
 
-  #accessableScopes(scope: Scope): Scope[] {
-    return scope === Scope.Private
+  #accessableScopes(signedIn: boolean): Scope[] {
+    return signedIn
       ? [Scope.Public, Scope.Protected, Scope.Private]
-      : scope === Scope.Protected
-      ? [Scope.Public, Scope.Protected]
       : [Scope.Public]
   }
 
-  async findOne(id: string): Promise<Post | null> {
-    return this.#postsDao.findOne(id)
+  async findOne(id: string, signedIn = false): Promise<Post | null> {
+    return this.#postsDao.findOne(id, this.#accessableScopes(signedIn))
   }
 
-  async findBySlug(slug: string): Promise<Post | null> {
-    return this.#postsDao.findBySlug(slug)
+  async findBySlug(slug: string, signedIn = false): Promise<Post | null> {
+    return this.#postsDao.findBySlug(slug, this.#accessableScopes(signedIn))
   }
 
-  async findMany(scope?: Scope | undefined): Promise<Post[]> {
-    return this.#postsDao.findMany(
-      this.#accessableScopes(scope ?? Scope.Public),
-    )
+  async findMany(signedIn = false): Promise<Post[]> {
+    return this.#postsDao.findMany(this.#accessableScopes(signedIn))
   }
 
   async createOrUpdate(
@@ -75,8 +71,8 @@ export class PostService {
     await this.#postsDao.delete(id)
   }
 
-  async getComponentData(): Promise<ComponentData> {
-    const posts = await this.findMany()
+  async getComponentData(isSignedIn = false): Promise<ComponentData> {
+    const posts = await this.findMany(isSignedIn)
     return {
       posts,
     }

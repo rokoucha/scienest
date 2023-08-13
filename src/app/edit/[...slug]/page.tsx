@@ -14,16 +14,18 @@ type Props = Readonly<{ params: { slug: [string] | undefined } }>
 const Page: React.FC<Props> = async ({ params }) => {
   const session = await auth()
 
+  const isSignedIn = session !== null
+
   const slug = params.slug?.at(0)
   if (!slug) {
     throw new Error('slug is required')
   }
 
-  const post = await postService.findBySlug(slug)
+  const post = await postService.findBySlug(slug, isSignedIn)
 
   return (
     <>
-      <Header isEditing={true} isSignedIn={session !== null} slug={slug} />
+      <Header isEditing={true} isSignedIn={isSignedIn} slug={slug} />
       <Main>
         <form
           action={async (formData) => {

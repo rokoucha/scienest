@@ -14,18 +14,20 @@ type Props = Readonly<{ params: { slug: [string] | undefined } }>
 const Page: React.FC<Props> = async ({ params }) => {
   const session = await auth()
 
+  const isSignedIn = session !== null
+
   const slug = params.slug?.at(0) ?? 'index'
 
-  const componentData = await postService.getComponentData()
+  const componentData = await postService.getComponentData(isSignedIn)
 
-  const post = await postService.findBySlug(slug)
+  const post = await postService.findBySlug(slug, isSignedIn)
   if (!post) {
     notFound()
   }
 
   return (
     <>
-      <Header isEditing={false} isSignedIn={session !== null} slug={slug} />
+      <Header isEditing={false} isSignedIn={isSignedIn} slug={slug} />
       <Main>
         <Article componentData={componentData} post={post} />
       </Main>

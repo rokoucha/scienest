@@ -10,7 +10,7 @@ export class PostsDAO {
     this.#db = db
   }
 
-  public async findOne(id: string): Promise<Post | null> {
+  public async findOne(id: string, scopes: Scope[]): Promise<Post | null> {
     const stmt = this.#db
       .prepare(
         `
@@ -32,9 +32,12 @@ export class PostsDAO {
           AND posts.latest_content_id = contents.id
         WHERE
           posts.id = ?
+          AND posts.scope IN (
+            ${Array(scopes.length).fill('?').join(', ')}
+          )
         `,
       )
-      .bind(id)
+      .bind(id, ...scopes)
 
     const ctx = { errors: [] }
     const res = await stmt.first()
@@ -46,7 +49,7 @@ export class PostsDAO {
     return res
   }
 
-  public async findBySlug(slug: string): Promise<Post | null> {
+  public async findBySlug(slug: string, scopes: Scope[]): Promise<Post | null> {
     const stmt = this.#db
       .prepare(
         `
@@ -68,6 +71,9 @@ export class PostsDAO {
           AND posts.latest_content_id = contents.id
         WHERE
           posts.slug = ?
+          AND posts.scope IN (
+            ${Array(scopes.length).fill('?').join(', ')}
+          )
         `,
       )
       .bind(slug)
