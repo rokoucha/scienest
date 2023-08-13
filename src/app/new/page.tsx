@@ -9,11 +9,11 @@ import { Main } from '../../components/Main'
 export const runtime = 'edge'
 
 const Page: React.FC = async () => {
-  const session = await auth()
+  const isSignedIn = (await auth()) !== null
 
   return (
     <>
-      <Header isEditing={true} isSignedIn={session !== null} slug="" />
+      <Header isEditing={true} isSignedIn={isSignedIn} slug="" />
       <Main>
         <form
           action={async (formData) => {

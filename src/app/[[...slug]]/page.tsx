@@ -12,9 +12,7 @@ export const runtime = 'edge'
 type Props = Readonly<{ params: { slug: [string] | undefined } }>
 
 const Page: React.FC<Props> = async ({ params }) => {
-  const session = await auth()
-
-  const isSignedIn = session !== null
+  const isSignedIn = (await auth()) !== null
 
   const slug = params.slug?.at(0) ?? 'index'
 
