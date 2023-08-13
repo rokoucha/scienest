@@ -43,7 +43,11 @@ export const ArticleHeader: React.FC<ArticleHeaderProps> = ({
       </div>
       <div className={infoContainer}>
         <p className={dateText}>
-          <time>{createdAt.toLocaleDateString()}</time>
+          <time>
+            {createdAt.getFullYear()}-
+            {String(createdAt.getMonth() + 1).padStart(2, '0')}-
+            {String(createdAt.getDate()).padStart(2, '0')}
+          </time>
         </p>
         <pre className={slugText}>{`/${slug === 'index' ? '' : slug}`}</pre>
       </div>
