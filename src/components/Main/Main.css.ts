@@ -1,5 +1,4 @@
 import { style } from '@vanilla-extract/css'
-import { maxWidth } from '../../global.css'
 
 export const wrapper = style({})
 
@@ -7,6 +6,12 @@ export const container = style({
   boxSizing: 'border-box',
   marginBlock: 0,
   marginInline: 'auto',
-  maxWidth,
+  maxWidth: '1200px',
+  paddingInline: '1rem',
   width: '100%',
+  '@media': {
+    'screen and (min-width: 1200px)': {
+      paddingInline: 0,
+    },
+  },
 })

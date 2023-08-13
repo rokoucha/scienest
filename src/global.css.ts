@@ -1,4 +1,4 @@
-import { createVar, globalStyle, style } from '@vanilla-extract/css'
+import { globalStyle, style } from '@vanilla-extract/css'
 
 export const body = style({})
 
@@ -10,12 +10,4 @@ globalStyle('html, body', {
 globalStyle('a', {
   color: 'inherit',
   textDecoration: 'none',
-})
-
-export const maxWidth = createVar()
-
-globalStyle(':root', {
-  vars: {
-    [maxWidth]: '1200px',
-  },
 })

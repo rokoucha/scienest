@@ -1,5 +1,4 @@
 import { style } from '@vanilla-extract/css'
-import { maxWidth } from '../../global.css'
 
 export const wrapper = style({
   borderBottomColor: 'grey',
@@ -14,9 +13,16 @@ export const container = style({
   columnGap: '1rem',
   display: 'grid',
   gridTemplateColumns: 'auto 1fr',
-  margin: '0 auto',
-  maxWidth,
+  marginBlock: 0,
+  marginInline: 'auto',
+  maxWidth: '1200px',
+  paddingInline: '1rem',
   width: '100%',
+  '@media': {
+    'screen and (min-width: 1200px)': {
+      paddingInline: 0,
+    },
+  },
 })
 
 export const brand = style({})
@@ -38,4 +44,5 @@ export const navigation = style({
   display: 'flex',
   justifySelf: 'end',
   listStyle: 'none',
+  marginBlock: '0.5rem',
 })
