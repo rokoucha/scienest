@@ -6,7 +6,7 @@ export default {
     title: undefined,
   },
   argTypes: {
-    title: { control: false },
+    title: { table: { disable: true } },
   },
   component: ArticleHeader,
 } satisfies Meta<typeof ArticleHeader>

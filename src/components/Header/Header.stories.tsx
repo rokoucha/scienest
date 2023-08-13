@@ -8,8 +8,8 @@ export default {
     signOut: <Button>Sign Out</Button>,
   },
   argTypes: {
-    signIn: { control: false },
-    signOut: { control: false },
+    signIn: { table: { disable: true } },
+    signOut: { table: { disable: true } },
   },
   component: HeaderElement,
   parameters: {

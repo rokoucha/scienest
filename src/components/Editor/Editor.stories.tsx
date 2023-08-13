@@ -1,19 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Article } from './Article'
+import { Editor } from './Editor'
 
 export default {
-  args: {
-    componentData: {
-      posts: [],
-    },
-  },
-  argTypes: {
-    componentData: { table: { disable: true } },
-  },
-  component: Article,
-} satisfies Meta<typeof Article>
+  component: Editor,
+} satisfies Meta<typeof Editor>
 
-export const Primary: StoryObj<typeof Article> = {
+export const Primary: StoryObj<typeof Editor> = {
   args: {
     post: {
       id: 'id',
@@ -25,5 +17,6 @@ export const Primary: StoryObj<typeof Article> = {
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     },
+    slug: 'index',
   },
 }

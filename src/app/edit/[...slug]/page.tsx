@@ -25,7 +25,15 @@ const Page: React.FC<Props> = async ({ params }) => {
     <>
       <Header isEditing={true} isSignedIn={session !== null} slug={slug} />
       <Main>
-        <Editor post={post} handleSubmit={savePost} slug={slug} />
+        <form
+          action={async (formData) => {
+            await savePost(formData)
+
+            window.alert('なんかうまくいかんかった')
+          }}
+        >
+          <Editor post={post} slug={slug} />
+        </form>
       </Main>
       <Footer />
     </>

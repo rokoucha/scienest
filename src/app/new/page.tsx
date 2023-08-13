@@ -15,7 +15,15 @@ const Page: React.FC = async () => {
     <>
       <Header isEditing={true} isSignedIn={session !== null} slug="" />
       <Main>
-        <Editor post={null} handleSubmit={savePost} slug="" />
+        <form
+          action={async (formData) => {
+            await savePost(formData)
+
+            window.alert('なんかうまくいかんかった')
+          }}
+        >
+          <Editor post={null} slug="" />
+        </form>
       </Main>
       <Footer />
     </>

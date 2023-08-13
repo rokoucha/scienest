@@ -6,7 +6,7 @@ export default {
     href: '#',
   },
   argTypes: {
-    href: { control: false },
+    href: { table: { disable: true } },
   },
   component: ButtonLink,
 } satisfies Meta<typeof ButtonLink>

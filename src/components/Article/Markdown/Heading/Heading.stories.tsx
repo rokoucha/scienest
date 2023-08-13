@@ -3,7 +3,7 @@ import { Heading } from './Heading'
 
 export default {
   argTypes: {
-    ref: { control: false },
+    ref: { table: { disable: true } },
   },
   component: Heading,
 } satisfies Meta<typeof Heading>
