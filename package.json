@@ -14,8 +14,8 @@
     "marked": "^7.0.2",
     "nanoid": "^4.0.2",
     "nanoid-dictionary": "^4.3.0",
-    "next": "^13.4.13",
-    "next-auth": "0.0.0-manual.024ba3e6",
+    "next": "13.4.12",
+    "next-auth": "0.0.0-manual.d0952342",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
