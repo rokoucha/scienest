@@ -76,7 +76,7 @@ export class PostsDAO {
           )
         `,
       )
-      .bind(slug)
+      .bind(slug, ...scopes)
 
     const ctx = { errors: [] }
     const res = await stmt.first()

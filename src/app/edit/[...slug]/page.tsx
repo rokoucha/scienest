@@ -1,5 +1,4 @@
 import React from 'react'
-import { savePost } from '../../../actions/savePost'
 import { postService } from '../../../app'
 import { auth } from '../../../auth'
 import { Editor } from '../../../components/Editor'
@@ -25,15 +24,7 @@ const Page: React.FC<Props> = async ({ params }) => {
     <>
       <Header isEditing={true} isSignedIn={isSignedIn} slug={slug} />
       <Main>
-        <form
-          action={async (formData) => {
-            await savePost(formData)
-
-            window.alert('なんかうまくいかんかった')
-          }}
-        >
-          <Editor post={post} slug={slug} />
-        </form>
+        <Editor post={post} slug={slug} />
       </Main>
       <Footer />
     </>

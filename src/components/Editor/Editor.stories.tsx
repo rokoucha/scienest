@@ -1,9 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Editor } from './Editor'
+import { EditorElement } from './Editor.Element'
 
 export default {
-  component: Editor,
-} satisfies Meta<typeof Editor>
+  args: {
+    action: 'https://httpbin.org/post',
+    method: 'POST',
+  },
+  argTypes: {
+    action: { table: { disable: true } },
+    method: { table: { disable: true } },
+  },
+  component: EditorElement,
+} satisfies Meta<typeof EditorElement>
 
 export const Primary: StoryObj<typeof Editor> = {
   args: {

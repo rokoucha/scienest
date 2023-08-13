@@ -6,6 +6,7 @@
   "type": "module",
   "dependencies": {
     "@auth/core": "0.11.1",
+    "@monaco-editor/react": "^4.5.1",
     "@vanilla-extract/css": "^1.12.0",
     "clsx": "^2.0.0",
     "lizod": "^0.2.6",
