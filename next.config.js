@@ -1,8 +1,12 @@
-import createBundleAnalyzer from '@next/bundle-analyzer'
 import { createVanillaExtractPlugin } from '@vanilla-extract/next-plugin'
 
+const createBundleAnalyzer =
+  process.env.ANALYZE === 'true'
+    ? (await import('@next/bundle-analyzer')).default
+    : () => (config) => config
+
 const withBundleAnalyzer = createBundleAnalyzer({
-  enabled: process.env.ANALYZE === 'true',
+  enabled: true,
 })
 const withVanillaExtract = createVanillaExtractPlugin()
 
