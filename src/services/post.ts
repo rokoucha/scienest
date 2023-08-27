@@ -1,8 +1,8 @@
 import { ComponentData } from '../components/Article'
 import { PostsDAO } from '../dao/posts'
-import { parse, tokensToPlain } from '../markdown'
 import { Post } from '../models/post'
 import { Scope } from '../models/scope'
+import { parse, tokensToPlain } from '../parser/markdown'
 
 export class PostService {
   readonly #postsDao: PostsDAO

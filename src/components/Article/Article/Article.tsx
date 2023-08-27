@@ -1,6 +1,6 @@
 import React from 'react'
-import { parse, tokenToRaw, tokensToRaw } from '../../../markdown'
 import { Post } from '../../../models/post'
+import { parse, tokenToRaw, tokensToRaw } from '../../../parser/markdown'
 import { ArticleContent } from '../ArticleContent'
 import { ComponentData } from '../ArticleContent/ArticleContent'
 import { ArticleFooter } from '../ArticleFooter'
