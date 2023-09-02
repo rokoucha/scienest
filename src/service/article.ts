@@ -3,7 +3,7 @@ import { db } from '../db/connection'
 import { ArticleRepository } from '../db/repository/article'
 import { Article } from '../model/article'
 import { Scope } from '../model/scope'
-import { parse, tokensToPlain } from '../parser/markdown'
+import { parse, tokenToPlain } from '../parser/markdown'
 
 export class ArticleService {
   readonly #repository: ArticleRepository
@@ -48,9 +48,9 @@ export class ArticleService {
   ): Promise<Article> {
     const parsed = parse(data.content)
 
-    const title = parsed.title ? tokensToPlain([parsed.title]) : 'undefined'
+    const title = parsed.title ? tokenToPlain(parsed.title) : 'undefined'
     const description = parsed.description
-      ? tokensToPlain([parsed.description])
+      ? tokenToPlain(parsed.description)
       : ''
 
     if (id) {

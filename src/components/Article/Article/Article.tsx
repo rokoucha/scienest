@@ -2,8 +2,8 @@ import React, { useMemo } from 'react'
 import { Article as ArticleModel } from '../../../model/article'
 import {
   parse,
+  tokenToPlain,
   tokenToRaw,
-  tokensToPlain,
   tokensToRaw,
 } from '../../../parser/markdown'
 import { ArticleContent, ComponentData } from '../ArticleContent/ArticleContent'
@@ -19,7 +19,7 @@ export const Article: React.FC<ArticleProps> = ({ article, componentData }) => {
   const parsed = useMemo(() => parse(article.content), [article.content])
 
   const path = useMemo(() => {
-    const t = tokensToPlain([parsed.title])
+    const t = tokenToPlain(parsed.title)
     return `/${t === 'index' ? '' : t}`
   }, [parsed.title])
   const title = useMemo(() => tokenToRaw(parsed.title), [parsed.title])

@@ -32,58 +32,60 @@ export function tokenToRaw(token: Token): string {
 }
 
 export function tokensToRaw(tokens: Token[]): string {
-  return tokens.map((t) => t.raw).join('')
+  return tokens.map((t) => tokenToRaw(t)).join('')
+}
+
+export function tokenToPlain(token: Token): string {
+  // fuck off
+  const t = token as TokenWithoutGeneric
+
+  switch (t.type) {
+    case 'space':
+    case 'hr':
+    case 'def':
+    case 'image':
+    case 'br': {
+      return ''
+    }
+
+    case 'code':
+    case 'html':
+    case 'text':
+    case 'escape':
+    case 'codespan': {
+      return t.text.replaceAll('\n', ' ')
+    }
+
+    case 'heading':
+    case 'blockquote':
+    case 'list_item':
+    case 'paragraph':
+    case 'link':
+    case 'strong':
+    case 'em':
+    case 'del': {
+      return tokensToPlain(t.tokens ?? [])
+    }
+
+    case 'table': {
+      return tokensToPlain([
+        ...t.header.flatMap((t) => t.tokens ?? []),
+        ...t.rows.flatMap((r) => r.flatMap((t) => t.tokens ?? [])),
+      ])
+    }
+
+    case 'list': {
+      return tokensToPlain(t.items.flatMap((i) => i.tokens ?? []))
+    }
+
+    default: {
+      throw new Error(`Unknown token: ${t satisfies never}`)
+    }
+  }
 }
 
 export function tokensToPlain(tokens: Token[]): string {
-  return (tokens as TokenWithoutGeneric[])
-    .map((t) => {
-      switch (t.type) {
-        case 'space':
-        case 'hr':
-        case 'def':
-        case 'image':
-        case 'br': {
-          return undefined
-        }
-
-        case 'code':
-        case 'html':
-        case 'text':
-        case 'escape':
-        case 'codespan': {
-          return t.text.replaceAll('\n', ' ')
-        }
-
-        case 'heading':
-        case 'blockquote':
-        case 'list_item':
-        case 'paragraph':
-        case 'link':
-        case 'strong':
-        case 'em':
-        case 'del': {
-          return tokensToPlain(t.tokens ?? [])
-        }
-
-        case 'table': {
-          return tokensToPlain([
-            ...t.header.flatMap((t) => t.tokens ?? []),
-            ...t.rows.flatMap((r) => r.flatMap((t) => t.tokens ?? [])),
-          ])
-        }
-
-        case 'list': {
-          return tokensToPlain(t.items.flatMap((i) => i.tokens ?? []))
-        }
-
-        default: {
-          throw new Error(`Unknown token: ${t satisfies never}`)
-        }
-      }
-    })
-    .filter((t): t is string => t !== undefined)
-    .join('')
+  return tokens.map((t) => tokenToPlain(t)).join('')
 }
 
 function parseHeadings(tokens: Token[]): Toc {
@@ -92,7 +94,7 @@ function parseHeadings(tokens: Token[]): Toc {
   const headings = tokens
     .filter((t): t is Tokens.Heading => t.type === 'heading')
     .map((t) => {
-      const title = tokensToPlain([t])
+      const title = tokenToPlain(t)
       return {
         id: title.replaceAll(' ', '-').toLowerCase(),
         title,
