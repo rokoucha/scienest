@@ -5,6 +5,8 @@ import { Article } from '../model/article'
 import { Scope } from '../model/scope'
 import { parse, tokenToPlain } from '../parser/markdown'
 
+const reserverdTitles = ['new', 'edit', 'auth']
+
 export class ArticleService {
   readonly #repository: ArticleRepository
 
@@ -52,6 +54,10 @@ export class ArticleService {
     const description = parsed.description
       ? tokenToPlain(parsed.description)
       : ''
+
+    if (reserverdTitles.some((r) => title.startsWith(r))) {
+      throw new Error('Reserved title')
+    }
 
     if (id) {
       await this.#repository.updateOne({
