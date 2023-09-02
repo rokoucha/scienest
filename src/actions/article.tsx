@@ -28,6 +28,8 @@ export async function saveArticle(formData: FormData) {
   )
 
   return redirect(
-    `${process.env.BASE_URL}/${article.title === 'index' ? '' : article.title}`,
+    `${process.env.BASE_URL}/${encodeURIComponent(
+      article.title === 'index' ? '' : article.title,
+    )}`,
   )
 }

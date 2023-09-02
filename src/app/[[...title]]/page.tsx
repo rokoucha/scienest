@@ -15,7 +15,7 @@ type Props = Readonly<{ params: { title: [string] | undefined } }>
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const isSignedIn = await auth().then((s) => s !== null)
 
-  const title = params.title?.at(0) ?? 'index'
+  const title = decodeURIComponent(params.title?.at(0) ?? 'index')
 
   const article = await articleService.findOneByTitle(title, isSignedIn)
 
@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const Page: React.FC<Props> = async ({ params }) => {
   const isSignedIn = (await auth()) !== null
 
-  const title = params.title?.at(0) ?? 'index'
+  const title = decodeURIComponent(params.title?.at(0) ?? 'index')
 
   const componentData = await articleService.getComponentData(isSignedIn)
 
