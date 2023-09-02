@@ -41,7 +41,7 @@ export const EditorElement: React.FC<EditorElementProps> = ({
           <MonacoEditor
             defaultLanguage="markdown"
             defaultValue={article?.content ?? `# ${title}`}
-            height="50vh"
+            height="75vh"
             onChange={(value, _e) => setContent(value ?? '')}
           />
         </div>

@@ -12,11 +12,13 @@ import {
 
 export type ArticleHeaderProps = Readonly<{
   createdAt: Date
+  path: string
   title: string
 }>
 
 export const ArticleHeader: React.FC<ArticleHeaderProps> = ({
   createdAt,
+  path,
   title,
 }) => {
   return (
@@ -45,7 +47,7 @@ export const ArticleHeader: React.FC<ArticleHeaderProps> = ({
             {String(createdAt.getDate()).padStart(2, '0')}
           </time>
         </p>
-        <pre className={pathText}>{`/${title === 'index' ? '' : title}`}</pre>
+        <pre className={pathText}>{path}</pre>
       </div>
       <div>
         <pre>tags: []</pre>

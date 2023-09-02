@@ -20,7 +20,8 @@ export const Primary: StoryObj<typeof Article> = {
       scope: 'Public',
       title: 'index',
       description: 'Description',
-      content: '# This is a title\n\nThis is a description\n\nContent',
+      content:
+        '# This is a title\n\nThis is a **description** line\n\nand Contents!!!',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     },

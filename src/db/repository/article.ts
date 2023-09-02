@@ -123,7 +123,7 @@ export class ArticleRepository {
     const articleId = nanoid()
     const contentId = nanoid()
 
-    const res = await this.#db.insert(articles).values({
+    await this.#db.insert(articles).values({
       id: articleId,
       scope,
       title,

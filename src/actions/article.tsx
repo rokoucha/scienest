@@ -22,7 +22,10 @@ export async function saveArticle(formData: FormData) {
   }
   const { id, ...data } = entries
 
-  const article = await articleService.createOrUpdateOne(id, data)
+  const article = await articleService.createOrUpdateOne(
+    id === '' ? null : id,
+    data,
+  )
 
   return redirect(
     `${process.env.BASE_URL}/${article.title === 'index' ? '' : article.title}`,

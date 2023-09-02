@@ -37,7 +37,7 @@ export class ArticleService {
   }
 
   async createOrUpdateOne(
-    id: string | undefined,
+    id: string | null,
     data: Pick<Article, 'scope' | 'content'>,
   ): Promise<Article> {
     const parsed = parse(data.content)
@@ -64,7 +64,7 @@ export class ArticleService {
       })
     }
 
-    const article = await this.findOneById(id)
+    const article = await this.findOneById(id, true)
 
     if (!article) {
       throw new Error('Article not found')

@@ -42,7 +42,7 @@ export const HeaderElement: React.FC<HeaderElementProps> = ({
                 {!isEditing && (
                   <>
                     <li>
-                      <ButtonLink href="/new">New</ButtonLink>
+                      <ButtonLink href="/edit/new">New</ButtonLink>
                     </li>
                     <li>
                       <ButtonLink href={`/edit/${title}`}>📝</ButtonLink>
