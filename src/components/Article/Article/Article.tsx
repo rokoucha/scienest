@@ -7,7 +7,6 @@ import {
   tokensToRaw,
 } from '../../../parser/markdown'
 import { ArticleContent, ComponentData } from '../ArticleContent/ArticleContent'
-import { ArticleFooter } from '../ArticleFooter'
 import { ArticleHeader } from '../ArticleHeader'
 
 export type ArticleProps = Readonly<{
@@ -38,7 +37,6 @@ export const Article: React.FC<ArticleProps> = ({ article, componentData }) => {
         toc={parsed.toc}
       />
       <ArticleContent componentData={componentData} contents={contents} />
-      <ArticleFooter />
     </div>
   )
 }
