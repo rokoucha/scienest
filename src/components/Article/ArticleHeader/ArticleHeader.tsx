@@ -87,7 +87,7 @@ export const ArticleHeader: React.FC<ArticleHeaderProps> = ({
       <div className={info}>
         <span className={infoLabel}>toc</span>
         <details>
-          <summary>headings</summary>
+          <summary></summary>
           <nav>
             <TableOfContents toc={toc} />
           </nav>
@@ -96,7 +96,7 @@ export const ArticleHeader: React.FC<ArticleHeaderProps> = ({
       <div className={info}>
         <span className={infoLabel}>histories</span>
         <details>
-          <summary>list</summary>
+          <summary></summary>
           <nav>
             <ul className={historiesList}>
               {histories.map(({ id, createdAt }) => (
