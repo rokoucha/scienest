@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 const Page: React.FC<Props> = async ({ params }) => {
-  const isSignedIn = (await auth()) !== null
+  const isSignedIn = await auth().then((s) => s !== null)
 
   const title = decodeURIComponent(params.title?.at(0) ?? 'index')
 
