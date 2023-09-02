@@ -1,3 +1,4 @@
+import { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 import React from 'react'
 import { articleService } from '../../app'
@@ -10,6 +11,18 @@ import { Main } from '../../components/Main'
 export const runtime = 'edge'
 
 type Props = Readonly<{ params: { title: [string] | undefined } }>
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const isSignedIn = await auth().then((s) => s !== null)
+
+  const title = params.title?.at(0) ?? 'index'
+
+  const article = await articleService.findOneByTitle(title, isSignedIn)
+
+  return {
+    title: article?.title,
+  }
+}
 
 const Page: React.FC<Props> = async ({ params }) => {
   const isSignedIn = (await auth()) !== null
