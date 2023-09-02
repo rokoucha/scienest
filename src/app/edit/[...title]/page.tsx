@@ -20,6 +20,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: `Edit ${article?.title}`,
+    robots: {
+      follow: false,
+      index: false,
+    },
   }
 }
 

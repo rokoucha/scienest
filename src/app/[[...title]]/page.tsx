@@ -7,6 +7,7 @@ import { Article } from '../../components/Article'
 import { Footer } from '../../components/Footer'
 import { Header } from '../../components/Header'
 import { Main } from '../../components/Main'
+import { Scope } from '../../model/scope'
 
 export const runtime = 'edge'
 
@@ -21,6 +22,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: article?.title,
+    description: article?.description,
+    robots: {
+      follow: article?.scope === Scope.Public,
+      index: article?.scope === Scope.Public,
+    },
   }
 }
 
