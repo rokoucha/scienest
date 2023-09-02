@@ -4,8 +4,8 @@ CREATE TABLE `articles` (
 	`title` text NOT NULL,
 	`description` text,
 	`latest_content_id` text NOT NULL,
-	`created_at` text DEFAULT CURRENT_TIMESTAMP NOT NULL,
-	`updated_at` text DEFAULT CURRENT_TIMESTAMP NOT NULL
+	`created_at` text NOT NULL,
+	`updated_at` text NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE `contents` (
@@ -13,7 +13,7 @@ CREATE TABLE `contents` (
 	`article_id` text NOT NULL,
 	`scope` text NOT NULL,
 	`text` text NOT NULL,
-	`created_at` text DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	`created_at` text NOT NULL,
 	FOREIGN KEY (`article_id`) REFERENCES `articles`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint

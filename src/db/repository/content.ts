@@ -1,6 +1,6 @@
-import { and, eq, inArray } from 'drizzle-orm'
+import { and, desc, eq, inArray, sql } from 'drizzle-orm'
 import { $array } from 'lizod'
-import { Content } from '../../model/content'
+import { History } from '../../model/content'
 import { Scope } from '../../model/scope'
 import { Database } from '../connection'
 import { contents } from '../schema'
@@ -12,26 +12,25 @@ export class ContentRepository {
     this.#db = db
   }
 
-  async findManyByArticleId(
+  async findManyHistoriesByArticleId(
     articleId: string,
     scopes: Scope[],
-  ): Promise<Content[]> {
+  ): Promise<History[]> {
     const ctx = { errors: [] }
     const res = await this.#db
       .select({
         id: contents.id,
         articleId: contents.articleId,
-        scope: contents.scope,
-        text: contents.text,
         createdAt: contents.createdAt,
       })
       .from(contents)
       .where(
         and(eq(contents.articleId, articleId), inArray(contents.scope, scopes)),
       )
+      .orderBy(desc(sql`datetime(${contents.createdAt})`))
       .all()
 
-    if (!$array(Content)(res, ctx)) {
+    if (!$array(History)(res, ctx)) {
       throw new Error(JSON.stringify(ctx.errors))
     }
 

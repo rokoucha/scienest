@@ -1,4 +1,4 @@
-import { relations, sql } from 'drizzle-orm'
+import { relations } from 'drizzle-orm'
 import { sqliteTable, text } from 'drizzle-orm/sqlite-core'
 
 export const articles = sqliteTable('articles', {
@@ -7,12 +7,8 @@ export const articles = sqliteTable('articles', {
   title: text('title').notNull().unique(),
   description: text('description'),
   latestContentId: text('latest_content_id').notNull(),
-  createdAt: text('created_at')
-    .notNull()
-    .default(sql`CURRENT_TIMESTAMP`),
-  updatedAt: text('updated_at')
-    .notNull()
-    .default(sql`CURRENT_TIMESTAMP`),
+  createdAt: text('created_at').notNull(),
+  updatedAt: text('updated_at').notNull(),
 })
 
 export const articleRelations = relations(articles, ({ one }) => ({
@@ -29,7 +25,5 @@ export const contents = sqliteTable('contents', {
     .references(() => articles.id),
   scope: text('scope').notNull(),
   text: text('text').notNull(),
-  createdAt: text('created_at')
-    .notNull()
-    .default(sql`CURRENT_TIMESTAMP`),
+  createdAt: text('created_at').notNull(),
 })

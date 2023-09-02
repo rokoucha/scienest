@@ -58,7 +58,8 @@ export const tagsText = style({
 export const tocHeadingsList = style({
   counterReset: 'counter',
   listStyleType: 'none',
-  paddingLeft: '1rem',
+  margin: 0,
+  paddingLeft: '0.7rem',
 })
 
 export const tocHeadingsListItem = style({
@@ -66,4 +67,10 @@ export const tocHeadingsListItem = style({
     content: ' counters(counter, ".") ". "',
     counterIncrement: 'counter',
   },
+})
+
+export const historiesList = style({
+  listStylePosition: 'inside',
+  margin: 0,
+  paddingLeft: '0.7rem',
 })

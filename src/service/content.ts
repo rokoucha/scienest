@@ -1,6 +1,6 @@
 import { db } from '../db/connection'
 import { ContentRepository } from '../db/repository/content'
-import { Content } from '../model/content'
+import { History } from '../model/content'
 import { Scope } from '../model/scope'
 
 export class ContentService {
@@ -16,11 +16,11 @@ export class ContentService {
       : [Scope.Public, Scope.Protected]
   }
 
-  async findManyByArticleId(
+  async findManyHistoriesByArticleId(
     articleId: string,
     signedIn = false,
-  ): Promise<Content[]> {
-    return this.#repository.findManyByArticleId(
+  ): Promise<History[]> {
+    return this.#repository.findManyHistoriesByArticleId(
       articleId,
       this.#accessableScopes(signedIn),
     )

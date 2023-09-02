@@ -1,10 +1,12 @@
 import React from 'react'
+import { History } from '../../../model/content'
 import { Scope } from '../../../model/scope'
 import { Toc } from '../../../parser/markdown'
 import { Heading } from '../Markdown/Heading'
 import { MarkdownRenderer } from '../Markdown/MarkdownRenderer'
 import {
   heading,
+  historiesList,
   info,
   infoContainer,
   infoLabel,
@@ -31,6 +33,7 @@ function scopeToEmoji(scope: Scope): string {
 
 export type ArticleHeaderProps = Readonly<{
   createdAt: Date
+  histories: History[]
   path: string
   scope: Scope
   title: string
@@ -39,6 +42,7 @@ export type ArticleHeaderProps = Readonly<{
 
 export const ArticleHeader: React.FC<ArticleHeaderProps> = ({
   createdAt,
+  histories,
   path,
   scope,
   title,
@@ -86,6 +90,21 @@ export const ArticleHeader: React.FC<ArticleHeaderProps> = ({
           <summary>headings</summary>
           <nav>
             <TableOfContents toc={toc} />
+          </nav>
+        </details>
+      </div>
+      <div className={info}>
+        <span className={infoLabel}>histories</span>
+        <details>
+          <summary>list</summary>
+          <nav>
+            <ul className={historiesList}>
+              {histories.map(({ id, createdAt }) => (
+                <li key={id}>
+                  <time>{createdAt}</time>
+                </li>
+              ))}
+            </ul>
           </nav>
         </details>
       </div>

@@ -1,4 +1,4 @@
-import { and, eq, inArray, sql } from 'drizzle-orm'
+import { and, eq, inArray } from 'drizzle-orm'
 import { $array, $undefined, $union } from 'lizod'
 import { Article } from '../../model/article'
 import { Scope } from '../../model/scope'
@@ -129,7 +129,8 @@ export class ArticleRepository {
       title,
       description,
       latestContentId: contentId,
-      updatedAt: sql`CURRENT_TIMESTAMP`,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     })
 
     await this.#db.insert(contents).values({
@@ -137,6 +138,7 @@ export class ArticleRepository {
       articleId,
       scope,
       text,
+      createdAt: new Date().toISOString(),
     })
 
     return articleId
@@ -164,7 +166,7 @@ export class ArticleRepository {
         title,
         description,
         latestContentId: contentId,
-        updatedAt: sql`CURRENT_TIMESTAMP`,
+        updatedAt: new Date().toISOString(),
       })
       .where(eq(articles.id, id))
 
@@ -173,6 +175,7 @@ export class ArticleRepository {
       articleId: id,
       scope,
       text,
+      createdAt: new Date().toISOString(),
     })
 
     return id

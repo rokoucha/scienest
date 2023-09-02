@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 import React from 'react'
-import { articleService } from '../../app'
+import { articleService, contentService } from '../../app'
 import { auth } from '../../auth'
 import { Article } from '../../components/Article'
 import { Footer } from '../../components/Footer'
@@ -35,8 +35,6 @@ const Page: React.FC<Props> = async ({ params }) => {
 
   const title = decodeURIComponent(params.title?.at(0) ?? 'index')
 
-  const componentData = await articleService.getComponentData(isSignedIn)
-
   const article = await articleService.findOneByTitle(title, isSignedIn)
   if (!article) {
     if (title === 'index') {
@@ -46,11 +44,22 @@ const Page: React.FC<Props> = async ({ params }) => {
     notFound()
   }
 
+  const histories = await contentService.findManyHistoriesByArticleId(
+    article.id,
+    isSignedIn,
+  )
+
+  const componentData = await articleService.getComponentData(isSignedIn)
+
   return (
     <>
       <Header isEditing={false} isSignedIn={isSignedIn} title={title} />
       <Main>
-        <Article componentData={componentData} article={article} />
+        <Article
+          article={article}
+          componentData={componentData}
+          histories={histories}
+        />
       </Main>
       <Footer />
     </>
