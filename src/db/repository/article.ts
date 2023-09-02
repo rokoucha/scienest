@@ -123,22 +123,20 @@ export class ArticleRepository {
     const articleId = nanoid()
     const contentId = nanoid()
 
-    await this.#db.transaction(async (tx) => {
-      await tx.insert(articles).values({
-        id: articleId,
-        scope,
-        title,
-        description,
-        latestContentId: contentId,
-        updatedAt: sql`CURRENT_TIMESTAMP`,
-      })
+    const res = await this.#db.insert(articles).values({
+      id: articleId,
+      scope,
+      title,
+      description,
+      latestContentId: contentId,
+      updatedAt: sql`CURRENT_TIMESTAMP`,
+    })
 
-      await tx.insert(contents).values({
-        id: contentId,
-        articleId,
-        scope,
-        text,
-      })
+    await this.#db.insert(contents).values({
+      id: contentId,
+      articleId,
+      scope,
+      text,
     })
 
     return articleId
@@ -159,33 +157,29 @@ export class ArticleRepository {
   }): Promise<string> {
     const contentId = nanoid()
 
-    await this.#db.transaction(async (tx) => {
-      await tx
-        .update(articles)
-        .set({
-          scope,
-          title,
-          description,
-          latestContentId: contentId,
-          updatedAt: sql`CURRENT_TIMESTAMP`,
-        })
-        .where(eq(articles.id, id))
-
-      await tx.insert(contents).values({
-        id: contentId,
-        articleId: id,
+    await this.#db
+      .update(articles)
+      .set({
         scope,
-        text,
+        title,
+        description,
+        latestContentId: contentId,
+        updatedAt: sql`CURRENT_TIMESTAMP`,
       })
+      .where(eq(articles.id, id))
+
+    await this.#db.insert(contents).values({
+      id: contentId,
+      articleId: id,
+      scope,
+      text,
     })
 
     return id
   }
 
   public async deleteOne(id: string): Promise<void> {
-    await this.#db.transaction(async (tx) => {
-      await tx.delete(contents).where(eq(contents.articleId, id))
-      await tx.delete(articles).where(eq(articles.id, id))
-    })
+    await this.#db.delete(contents).where(eq(contents.articleId, id))
+    await this.#db.delete(articles).where(eq(articles.id, id))
   }
 }
