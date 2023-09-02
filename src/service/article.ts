@@ -15,6 +15,12 @@ export class ArticleService {
   #accessableScopes(signedIn: boolean): Scope[] {
     return signedIn
       ? [Scope.Public, Scope.Protected, Scope.Private]
+      : [Scope.Public, Scope.Protected]
+  }
+
+  #listableScopes(signedIn: boolean): Scope[] {
+    return signedIn
+      ? [Scope.Public, Scope.Protected, Scope.Private]
       : [Scope.Public]
   }
 
@@ -33,7 +39,7 @@ export class ArticleService {
   }
 
   async findMany(signedIn = false): Promise<Article[]> {
-    return this.#repository.findMany(this.#accessableScopes(signedIn))
+    return this.#repository.findMany(this.#listableScopes(signedIn))
   }
 
   async createOrUpdateOne(
