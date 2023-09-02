@@ -24,6 +24,9 @@ export type TokenWithoutGeneric = (
   | Tokens.Del
 ) & { loose?: boolean; tokens?: Token[] }
 
+type Heading = { id: string; title: string; children: Heading[] }
+export type Toc = Heading[]
+
 export function tokenToRaw(token: Token): string {
   return token.raw
 }
@@ -83,10 +86,65 @@ export function tokensToPlain(tokens: Token[]): string {
     .join('')
 }
 
+function parseHeadings(tokens: Token[]): Toc {
+  type h = { id: string; title: string; depth: number }
+
+  const headings = tokens
+    .filter((t): t is Tokens.Heading => t.type === 'heading')
+    .map((t) => {
+      const title = tokensToPlain([t])
+      return {
+        id: title.replaceAll(' ', '-').toLowerCase(),
+        title,
+        depth: t.depth - 1,
+      }
+    })
+
+  function depthToTree(headings: h[]): Toc {
+    const toc: Toc = []
+
+    for (let i = 0; i < headings.length; i++) {
+      if (i + 1 < headings.length && headings[i + 1].depth > 1) {
+        const searchNextDepth1 = headings
+          .slice(i + 1)
+          .findIndex((h) => h.depth === 1)
+        const nextReturnIndex =
+          searchNextDepth1 === -1 ? headings.length : searchNextDepth1 + i
+
+        const start = i + 1
+        const end = nextReturnIndex + 1
+
+        toc.push({
+          id: headings[i].id,
+          title: headings[i].title,
+          children: depthToTree(
+            headings
+              .slice(start, end)
+              .map((h) => ({ ...h, depth: h.depth - 1 })),
+          ),
+        })
+        i = nextReturnIndex
+        continue
+      }
+
+      toc.push({
+        id: headings[i].id,
+        title: headings[i].title,
+        children: [],
+      })
+    }
+
+    return toc
+  }
+
+  return depthToTree(headings)
+}
+
 export function parse(src: string): {
-  title: Token
-  description: Token | undefined
   contents: Token[]
+  description: Token | undefined
+  title: Token
+  toc: Toc
 } {
   const lexer = new Lexer()
   const lex = lexer.lex(src)
@@ -97,8 +155,9 @@ export function parse(src: string): {
   }
 
   return {
-    title,
-    description: lex.at(1),
     contents: lex.slice(1),
+    description: lex.at(1),
+    title,
+    toc: parseHeadings(lex.slice(1)),
   }
 }

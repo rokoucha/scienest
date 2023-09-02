@@ -16,27 +16,28 @@ export type ArticleProps = Readonly<{
 }>
 
 export const Article: React.FC<ArticleProps> = ({ article, componentData }) => {
-  const { title, contents } = useMemo(
-    () => parse(article.content),
-    [article.content],
-  )
+  const parsed = useMemo(() => parse(article.content), [article.content])
 
   const path = useMemo(() => {
-    const t = tokensToPlain([title])
+    const t = tokensToPlain([parsed.title])
     return `/${t === 'index' ? '' : t}`
-  }, [title])
-
-  const rawTitle = useMemo(() => tokenToRaw(title), [title])
-  const rawContents = useMemo(() => tokensToRaw(contents), [contents])
+  }, [parsed.title])
+  const title = useMemo(() => tokenToRaw(parsed.title), [parsed.title])
+  const contents = useMemo(
+    () => tokensToRaw(parsed.contents),
+    [parsed.contents],
+  )
 
   return (
     <div>
       <ArticleHeader
         createdAt={new Date(article.createdAt)}
         path={path}
-        title={rawTitle}
+        scope={article.scope}
+        title={title}
+        toc={parsed.toc}
       />
-      <ArticleContent componentData={componentData} contents={rawContents} />
+      <ArticleContent componentData={componentData} contents={contents} />
       <ArticleFooter />
     </div>
   )
