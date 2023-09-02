@@ -16,7 +16,7 @@ export type HeaderElementProps = Readonly<{
   signIn: React.ReactNode
   signOut: React.ReactNode
   siteName: string
-  slug: string
+  title: string
 }>
 
 export const HeaderElement: React.FC<HeaderElementProps> = ({
@@ -25,7 +25,7 @@ export const HeaderElement: React.FC<HeaderElementProps> = ({
   signIn,
   signOut,
   siteName,
-  slug,
+  title,
 }) => {
   return (
     <header className={wrapper}>
@@ -45,7 +45,7 @@ export const HeaderElement: React.FC<HeaderElementProps> = ({
                       <ButtonLink href="/new">New</ButtonLink>
                     </li>
                     <li>
-                      <ButtonLink href={`/edit/${slug}`}>📝</ButtonLink>
+                      <ButtonLink href={`/edit/${title}`}>📝</ButtonLink>
                     </li>
                   </>
                 )}

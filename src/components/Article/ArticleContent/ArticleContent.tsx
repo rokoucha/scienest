@@ -1,9 +1,9 @@
 import React from 'react'
-import { Post } from '../../../models/post'
+import { Article } from '../../../model/article'
 import { MarkdownRenderer } from '../Markdown/MarkdownRenderer'
 import { PageList, PageListProps } from '../Markdown/PageList'
 
-export type ComponentData = { posts: Post[] }
+export type ComponentData = { articles: Article[] }
 
 export type ArticleContentProps = Readonly<{
   componentData: ComponentData
@@ -21,7 +21,7 @@ export const ArticleContent: React.FC<ArticleContentProps> = ({
         PageList: {
           component: PageList,
           props: {
-            posts: componentData.posts,
+            articles: componentData.articles,
           } satisfies PageListProps,
         },
       },

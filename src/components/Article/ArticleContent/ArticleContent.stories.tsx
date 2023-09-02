@@ -4,7 +4,7 @@ import { ArticleContent } from './ArticleContent'
 export default {
   args: {
     componentData: {
-      posts: [],
+      articles: [],
     },
   },
   argTypes: {

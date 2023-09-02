@@ -13,7 +13,7 @@ export const heading = style({
   margin: 0,
 })
 
-export const slugText = style({
+export const pathText = style({
   color: 'grey',
   fontFamily: 'monospace',
   fontSize: '0.8rem',

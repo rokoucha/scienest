@@ -7,13 +7,13 @@ import { HeaderElement } from './Header.element'
 export type HeaderProps = Readonly<{
   isEditing: boolean
   isSignedIn: boolean
-  slug: string
+  title: string
 }>
 
 export const Header: React.FC<HeaderProps> = ({
   isEditing,
   isSignedIn,
-  slug,
+  title,
 }) => {
   return (
     <HeaderElement
@@ -22,7 +22,7 @@ export const Header: React.FC<HeaderProps> = ({
       signIn={<SignIn />}
       signOut={<SignOut />}
       siteName={process.env.SITE_NAME ?? pkg.name}
-      slug={slug}
+      title={title}
     />
   )
 }

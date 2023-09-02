@@ -1,5 +1,17 @@
+import { Metadata } from 'next'
 import React from 'react'
+import pkg from '../../package.json' assert { type: 'json' }
 import { body } from '../global.css'
+
+export const metadata = {
+  title: {
+    absolute: process.env.SITE_NAME,
+    template: `%s - ${process.env.SITE_NAME}'`,
+  },
+  description: process.env.SITE_DESCRIPTION,
+  applicationName: pkg.name,
+  generator: pkg.name,
+} satisfies Metadata
 
 type RootLayoutProps = Readonly<{
   children: React.ReactNode

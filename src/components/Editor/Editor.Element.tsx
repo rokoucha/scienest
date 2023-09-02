@@ -2,36 +2,36 @@
 
 import MonacoEditor from '@monaco-editor/react'
 import React, { useState } from 'react'
-import { Post } from '../../models/post'
-import { Scope } from '../../models/scope'
+import { Article } from '../../model/article'
+import { Scope } from '../../model/scope'
 
 export type EditorElementProps = Readonly<
   {
-    post: Post | null
-    slug: string
+    article: Article | null
+    title: string
   } & Pick<React.ComponentPropsWithoutRef<'form'>, 'action' | 'method'>
 >
 
 export const EditorElement: React.FC<EditorElementProps> = ({
   action,
+  article,
   method,
-  post,
-  slug,
+  title,
 }) => {
-  const [content, setContent] = useState(post?.content ?? '')
+  const [content, setContent] = useState(article?.content ?? '')
 
   return (
     <div>
       <form action={action} method={method}>
-        <input name="id" type="hidden" defaultValue={post?.id} />
+        <input name="id" type="hidden" defaultValue={article?.id} />
         <input name="content" type="hidden" value={content} />
         <div>
-          <label htmlFor="slug">slug</label>
-          <input id="slug" name="slug" defaultValue={slug} />
-        </div>
-        <div>
           <label htmlFor="scope">公開範囲</label>
-          <select id="scope" name="scope" defaultValue={post?.scope}>
+          <select
+            id="scope"
+            name="scope"
+            defaultValue={article?.scope ?? Scope.Private}
+          >
             <option value={Scope.Public}>公開</option>
             <option value={Scope.Protected}>限定公開</option>
             <option value={Scope.Private}>非公開</option>
@@ -40,7 +40,7 @@ export const EditorElement: React.FC<EditorElementProps> = ({
         <div>
           <MonacoEditor
             defaultLanguage="markdown"
-            defaultValue={post?.content}
+            defaultValue={article?.content ?? `# ${title}`}
             height="50vh"
             onChange={(value, _e) => setContent(value ?? '')}
           />

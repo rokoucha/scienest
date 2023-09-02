@@ -1,14 +1,13 @@
 import { $nullable, $object, $string, Infer } from 'lizod'
 import { ScopeValidator } from './scope'
 
-export const Post = $object({
+export const Article = $object({
   id: $string,
-  slug: $string,
   scope: ScopeValidator,
   title: $string,
   description: $nullable($string),
   content: $string,
-  created_at: $string,
-  updated_at: $string,
+  createdAt: $string,
+  updatedAt: $string,
 })
-export type Post = Infer<typeof Post>
+export type Article = Infer<typeof Article>

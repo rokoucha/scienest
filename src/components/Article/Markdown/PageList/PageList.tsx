@@ -1,16 +1,16 @@
 import Link from 'next/link'
 import React from 'react'
-import { Post } from '../../../../models/post'
+import { Article } from '../../../../model/article'
 
 export type PageListProps = Readonly<{
-  posts: Post[]
+  articles: Article[]
 }>
 
-export const PageList: React.FC<PageListProps> = ({ posts }) => (
+export const PageList: React.FC<PageListProps> = ({ articles }) => (
   <ul>
-    {posts.map((p) => (
+    {articles.map((p) => (
       <li key={p.id}>
-        <Link href={`/${p.slug === 'index' ? '' : p.slug}`}>{p.slug}</Link>
+        <Link href={`/${p.title === 'index' ? '' : p.title}`}>{p.title}</Link>
         <p>{p.description ?? ''}</p>
       </li>
     ))}

@@ -24,8 +24,8 @@ export type TokenWithoutGeneric = (
   | Tokens.Del
 ) & { loose?: boolean; tokens?: Token[] }
 
-export function tokenToRaw(token: Token | undefined): string | undefined {
-  return token?.raw
+export function tokenToRaw(token: Token): string {
+  return token.raw
 }
 
 export function tokensToRaw(tokens: Token[]): string {
@@ -84,16 +84,21 @@ export function tokensToPlain(tokens: Token[]): string {
 }
 
 export function parse(src: string): {
-  title: Token | undefined
+  title: Token
   description: Token | undefined
   contents: Token[]
 } {
   const lexer = new Lexer()
   const lex = lexer.lex(src)
 
+  const title = lex.at(0)
+  if (title === undefined) {
+    throw new Error('No title found')
+  }
+
   return {
-    title: lex.at(0),
+    title,
     description: lex.at(1),
-    contents: lex.slice(2),
+    contents: lex.slice(1),
   }
 }

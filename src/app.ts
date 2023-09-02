@@ -1,3 +1,3 @@
-import { PostService } from './services/post'
+import { ArticleService } from './service/article'
 
-export const postService = new PostService(process.env.DB)
+export const articleService = new ArticleService()

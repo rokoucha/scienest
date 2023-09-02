@@ -6,28 +6,24 @@ import {
   heading,
   headingContainer,
   infoContainer,
-  slugText,
+  pathText,
   wrapper,
 } from './ArticleHeader.css'
 
 export type ArticleHeaderProps = Readonly<{
   createdAt: Date
-  description: string | undefined
-  slug: string
-  title: string | undefined
+  title: string
 }>
 
 export const ArticleHeader: React.FC<ArticleHeaderProps> = ({
   createdAt,
-  description,
-  slug,
   title,
 }) => {
   return (
     <header className={wrapper}>
       <div className={headingContainer}>
         <MarkdownRenderer
-          contents={title ?? `# ${slug}`}
+          contents={title}
           options={{
             overrides: {
               h1: {
@@ -49,12 +45,7 @@ export const ArticleHeader: React.FC<ArticleHeaderProps> = ({
             {String(createdAt.getDate()).padStart(2, '0')}
           </time>
         </p>
-        <pre className={slugText}>{`/${slug === 'index' ? '' : slug}`}</pre>
-      </div>
-      <div>
-        {description !== undefined && (
-          <MarkdownRenderer contents={description} />
-        )}
+        <pre className={pathText}>{`/${title === 'index' ? '' : title}`}</pre>
       </div>
       <div>
         <pre>tags: []</pre>

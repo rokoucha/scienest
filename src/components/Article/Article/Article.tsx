@@ -1,5 +1,5 @@
 import React from 'react'
-import { Post } from '../../../models/post'
+import { Article as ArticleModel } from '../../../model/article'
 import { parse, tokenToRaw, tokensToRaw } from '../../../parser/markdown'
 import { ArticleContent } from '../ArticleContent'
 import { ComponentData } from '../ArticleContent/ArticleContent'
@@ -7,19 +7,17 @@ import { ArticleFooter } from '../ArticleFooter'
 import { ArticleHeader } from '../ArticleHeader'
 
 export type ArticleProps = Readonly<{
+  article: ArticleModel
   componentData: ComponentData
-  post: Post
 }>
 
-export const Article: React.FC<ArticleProps> = ({ componentData, post }) => {
-  const { title, description, contents } = parse(post.content)
+export const Article: React.FC<ArticleProps> = ({ article, componentData }) => {
+  const { title, contents } = parse(article.content)
 
   return (
     <div>
       <ArticleHeader
-        createdAt={new Date(post.created_at)}
-        description={tokenToRaw(description)}
-        slug={post.slug}
+        createdAt={new Date(article.createdAt)}
         title={tokenToRaw(title)}
       />
       <ArticleContent

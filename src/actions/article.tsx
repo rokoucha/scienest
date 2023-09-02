@@ -2,10 +2,10 @@
 
 import { $object, $string } from 'lizod'
 import { redirect } from 'next/navigation'
-import { postService } from '../app'
-import { ScopeValidator } from '../models/scope'
+import { articleService } from '../app'
+import { ScopeValidator } from '../model/scope'
 
-export async function savePost(formData: FormData) {
+export async function saveArticle(formData: FormData) {
   const entries = Object.fromEntries(formData.entries())
   const ctx = { errors: [] }
   if (
@@ -14,7 +14,6 @@ export async function savePost(formData: FormData) {
         content: $string,
         id: $string,
         scope: ScopeValidator,
-        slug: $string,
       },
       false,
     )(entries, ctx)
@@ -23,9 +22,9 @@ export async function savePost(formData: FormData) {
   }
   const { id, ...data } = entries
 
-  const post = await postService.createOrUpdate(id, data)
+  const article = await articleService.createOrUpdateOne(id, data)
 
   return redirect(
-    `${process.env.BASE_URL}/${post.slug === 'index' ? '' : post.slug}`,
+    `${process.env.BASE_URL}/${article.title === 'index' ? '' : article.title}`,
   )
 }

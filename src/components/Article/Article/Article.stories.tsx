@@ -4,7 +4,7 @@ import { Article } from './Article'
 export default {
   args: {
     componentData: {
-      posts: [],
+      articles: [],
     },
   },
   argTypes: {
@@ -15,15 +15,14 @@ export default {
 
 export const Primary: StoryObj<typeof Article> = {
   args: {
-    post: {
+    article: {
       id: 'id',
-      slug: 'index',
       scope: 'Public',
-      title: 'Title',
+      title: 'index',
       description: 'Description',
       content: '# This is a title\n\nThis is a description\n\nContent',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     },
   },
 }
