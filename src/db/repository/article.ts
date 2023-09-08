@@ -2,16 +2,23 @@ import { $array } from 'lizod'
 import { Article } from '../../model/article'
 import { Scope } from '../../model/scope'
 import { nanoid } from '../../nanoid'
+import { Database, db } from '../connection'
 import { ArticleDAO } from '../dao/article'
 import { ContentDAO } from '../dao/content'
 
 export class ArticleRepository {
+  #db: Database
   #artcileDAO: ArticleDAO
   #contentDAO: ContentDAO
 
-  constructor(articleDAO?: ArticleDAO, contentDAO?: ContentDAO) {
-    this.#artcileDAO = articleDAO ?? new ArticleDAO()
-    this.#contentDAO = contentDAO ?? new ContentDAO()
+  constructor(
+    database?: Database,
+    articleDAO?: ArticleDAO,
+    contentDAO?: ContentDAO,
+  ) {
+    this.#db = database ?? db
+    this.#artcileDAO = articleDAO ?? new ArticleDAO(this.#db)
+    this.#contentDAO = contentDAO ?? new ContentDAO(this.#db)
   }
 
   public async findOneById({

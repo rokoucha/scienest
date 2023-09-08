@@ -1,40 +1,30 @@
 import { and, desc, eq, inArray, sql } from 'drizzle-orm'
 import { Scope } from '../../model/scope'
-import { db } from '../connection'
+import { Database } from '../connection'
 import { contents } from '../schema'
 
 export class ContentDAO {
-  readonly _findManyHistoriesByArticleId = db
-    .select({
-      id: contents.id,
-      articleId: contents.articleId,
-      scope: contents.scope,
-      createdAt: contents.createdAt,
-    })
-    .from(contents)
-    .where(
-      and(
-        eq(contents.articleId, sql.placeholder('articleId')),
-        inArray(contents.scope, sql.placeholder('scopes')),
-      ),
-    )
-    .orderBy(desc(sql`datetime(${contents.createdAt})`))
-    .prepare()
+  #db: Database
 
-  async findManyHistoriesByArticleId(articleId: string, scopes: Scope[]) {
-    return this._findManyHistoriesByArticleId.all({ articleId, scopes })
+  constructor(db: Database) {
+    this.#db = db
   }
 
-  readonly _insertOne = db
-    .insert(contents)
-    .values({
-      id: sql.placeholder('id'),
-      articleId: sql.placeholder('articleId'),
-      scope: sql.placeholder('scope'),
-      text: sql.placeholder('text'),
-      createdAt: sql.placeholder('createdAt'),
-    })
-    .prepare()
+  async findManyHistoriesByArticleId(articleId: string, scopes: Scope[]) {
+    return this.#db
+      .select({
+        id: contents.id,
+        articleId: contents.articleId,
+        scope: contents.scope,
+        createdAt: contents.createdAt,
+      })
+      .from(contents)
+      .where(
+        and(eq(contents.articleId, articleId), inArray(contents.scope, scopes)),
+      )
+      .orderBy(desc(sql`datetime(${contents.createdAt})`))
+      .all()
+  }
 
   public async insertOne(
     id: string,
@@ -42,21 +32,22 @@ export class ContentDAO {
     scope: Scope,
     text: string,
   ) {
-    return this._insertOne.run({
-      id,
-      articleId,
-      scope,
-      text,
-      createdAt: Date.now().toString(),
-    })
+    return this.#db
+      .insert(contents)
+      .values({
+        id,
+        articleId,
+        scope,
+        text,
+        createdAt: new Date().toISOString(),
+      })
+      .run()
   }
 
-  readonly _deleteManyByArticleId = db
-    .delete(contents)
-    .where(eq(contents.articleId, sql.placeholder('articleId')))
-    .prepare()
-
   public async deleteManyByArticleId(id: string) {
-    return this._deleteManyByArticleId.run({ articleId: id })
+    return this.#db
+      .delete(contents)
+      .where(eq(contents.articleId, sql.placeholder('articleId')))
+      .run({ articleId: id })
   }
 }
