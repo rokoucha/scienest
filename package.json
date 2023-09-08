@@ -2,18 +2,18 @@
   "name": "scienest",
   "description": "Scientia est potentia",
   "version": "0.0.0",
-  "packageManager": "pnpm@8.7.1",
+  "packageManager": "pnpm@8.7.4",
   "private": true,
   "type": "module",
   "dependencies": {
-    "@auth/core": "0.13.0",
+    "@auth/core": "0.14.0",
     "@monaco-editor/react": "^4.5.2",
     "@vanilla-extract/css": "^1.13.0",
     "clsx": "^2.0.0",
-    "drizzle-orm": "^0.28.5",
+    "drizzle-orm": "^0.28.6",
     "lizod": "^0.2.7",
     "markdown-to-jsx": "^7.3.2",
-    "marked": "^7.0.5",
+    "marked": "^8.0.1",
     "nanoid": "^4.0.2",
     "nanoid-dictionary": "^4.3.0",
     "next": "^13.4.19",
@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@cloudflare/next-on-pages": "^1.6.0",
-    "@cloudflare/workers-types": "^4.20230821.0",
+    "@cloudflare/workers-types": "^4.20230904.0",
     "@next/bundle-analyzer": "^13.4.19",
     "@storybook/addon-essentials": "^7.4.0",
     "@storybook/addon-interactions": "^7.4.0",
@@ -33,12 +33,12 @@
     "@storybook/react": "^7.4.0",
     "@storybook/testing-library": "^0.2.0",
     "@types/nanoid-dictionary": "^4.2.0",
-    "@types/node": "^20.5.8",
+    "@types/node": "^20.5.9",
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
     "@vanilla-extract/next-plugin": "^2.3.0",
     "@vanilla-extract/webpack-plugin": "^2.3.0",
-    "better-sqlite3": "^8.5.2",
+    "better-sqlite3": "^8.6.0",
     "drizzle-kit": "^0.19.13",
     "eslint-config-next": "^13.4.19",
     "mini-css-extract-plugin": "^2.7.6",
@@ -47,11 +47,11 @@
     "storybook": "^7.4.0",
     "typescript": "^5.2.2",
     "vercel": "^32.1.0",
-    "wrangler": "^3.6.0"
+    "wrangler": "^3.7.0"
   },
   "pnpm": {
     "overrides": {
-      "@auth/core": "0.13.0"
+      "@auth/core": "0.14.0"
     }
   },
   "scripts": {
