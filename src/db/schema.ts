@@ -1,4 +1,3 @@
-import { relations } from 'drizzle-orm'
 import { sqliteTable, text } from 'drizzle-orm/sqlite-core'
 
 export const articles = sqliteTable('articles', {
@@ -11,13 +10,6 @@ export const articles = sqliteTable('articles', {
   updatedAt: text('updated_at').notNull(),
 })
 
-export const articleRelations = relations(articles, ({ one }) => ({
-  contents: one(contents, {
-    fields: [articles.id],
-    references: [contents.articleId],
-  }),
-}))
-
 export const contents = sqliteTable('contents', {
   id: text('id').primaryKey(),
   articleId: text('article_id')
@@ -25,5 +17,22 @@ export const contents = sqliteTable('contents', {
     .references(() => articles.id),
   scope: text('scope').notNull(),
   text: text('text').notNull(),
+  createdAt: text('created_at').notNull(),
+})
+
+export const links = sqliteTable('links', {
+  id: text('id').primaryKey(),
+  text: text('text').notNull().unique(),
+  createdAt: text('created_at').notNull(),
+})
+
+export const articleLinks = sqliteTable('article_links', {
+  id: text('id').primaryKey(),
+  articleId: text('article_id')
+    .notNull()
+    .references(() => articles.id),
+  linkId: text('link_id')
+    .notNull()
+    .references(() => links.id),
   createdAt: text('created_at').notNull(),
 })

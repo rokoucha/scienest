@@ -8,6 +8,13 @@
       "when": 1693691229823,
       "tag": "0000_dusty_starjammers",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1694180093988,
+      "tag": "0001_fine_joystick",
+      "breakpoints": true
     }
   ]
 }
