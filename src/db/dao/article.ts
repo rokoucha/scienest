@@ -9,7 +9,7 @@ export class ArticleDAO {
     this.#db = db
   }
 
-  public async findOneById(id: string, scopes: string[]) {
+  findOneById(id: string, scopes: string[]) {
     return this.#db
       .select({
         id: articles.id,
@@ -32,7 +32,7 @@ export class ArticleDAO {
       .get()
   }
 
-  public async findOneByTitle(title: string, scopes: string[]) {
+  findOneByTitle(title: string, scopes: string[]) {
     return this.#db
       .select({
         id: articles.id,
@@ -55,7 +55,7 @@ export class ArticleDAO {
       .get()
   }
 
-  public async findMany(scopes: string[]) {
+  findMany(scopes: string[]) {
     return this.#db
       .select({
         id: articles.id,
@@ -78,7 +78,7 @@ export class ArticleDAO {
       .all()
   }
 
-  public async insertOne(
+  insertOne(
     id: string,
     scope: string,
     title: string,
@@ -99,7 +99,7 @@ export class ArticleDAO {
       .run()
   }
 
-  public async updateOne(
+  updateOne(
     id: string,
     scope: string,
     title: string,
@@ -119,7 +119,7 @@ export class ArticleDAO {
       .run()
   }
 
-  public async deleteOne(id: string) {
+  deleteOne(id: string) {
     return this.#db.delete(contents).where(eq(contents.articleId, id)).run()
   }
 }

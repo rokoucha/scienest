@@ -10,7 +10,7 @@ export class ContentDAO {
     this.#db = db
   }
 
-  async findManyHistoriesByArticleId(articleId: string, scopes: Scope[]) {
+  findManyHistoriesByArticleId(articleId: string, scopes: Scope[]) {
     return this.#db
       .select({
         id: contents.id,
@@ -26,12 +26,7 @@ export class ContentDAO {
       .all()
   }
 
-  public async insertOne(
-    id: string,
-    articleId: string,
-    scope: Scope,
-    text: string,
-  ) {
+  insertOne(id: string, articleId: string, scope: Scope, text: string) {
     return this.#db
       .insert(contents)
       .values({
@@ -44,7 +39,7 @@ export class ContentDAO {
       .run()
   }
 
-  public async deleteManyByArticleId(id: string) {
+  deleteManyByArticleId(id: string) {
     return this.#db
       .delete(contents)
       .where(eq(contents.articleId, sql.placeholder('articleId')))
