@@ -1,5 +1,4 @@
 import { ComponentData } from '../components/Article'
-import { db } from '../db/connection'
 import { ArticleRepository } from '../db/repository/article'
 import { Article } from '../model/article'
 import { Scope } from '../model/scope'
@@ -11,7 +10,7 @@ export class ArticleService {
   readonly #repository: ArticleRepository
 
   constructor(repository?: ArticleRepository) {
-    this.#repository = repository ?? new ArticleRepository(db)
+    this.#repository = repository ?? new ArticleRepository()
   }
 
   #accessableScopes(signedIn: boolean): Scope[] {
@@ -27,21 +26,24 @@ export class ArticleService {
   }
 
   async findOneById(id: string, signedIn = false): Promise<Article | null> {
-    return this.#repository.findOneById(id, this.#accessableScopes(signedIn))
+    return this.#repository.findOneById({
+      id,
+      scopes: this.#accessableScopes(signedIn),
+    })
   }
 
   async findOneByTitle(
     title: string,
     isSignedIn = false,
   ): Promise<Article | null> {
-    return this.#repository.findOneByTitle(
+    return this.#repository.findOneByTitle({
+      scopes: this.#accessableScopes(isSignedIn),
       title,
-      this.#accessableScopes(isSignedIn),
-    )
+    })
   }
 
   async findMany(signedIn = false): Promise<Article[]> {
-    return this.#repository.findMany(this.#listableScopes(signedIn))
+    return this.#repository.findMany({ scopes: this.#listableScopes(signedIn) })
   }
 
   async createOrUpdateOne(
@@ -86,7 +88,7 @@ export class ArticleService {
   }
 
   async deleteOne(id: string): Promise<void> {
-    await this.#repository.deleteOne(id)
+    await this.#repository.deleteOne({ id })
   }
 
   async getComponentData(isSignedIn = false): Promise<ComponentData> {

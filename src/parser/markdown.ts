@@ -142,9 +142,28 @@ function parseHeadings(tokens: Token[]): Toc {
   return depthToTree(headings)
 }
 
+function pageLinksFromTokens(tokens: Token[]): string[] {
+  return [
+    ...new Set(
+      tokens
+        .filter((t): t is Tokens.Link => t.type === 'link')
+        .map((t) => t.href)
+        .filter((href) => {
+          try {
+            new URL(href)
+            return false
+          } catch {
+            return true
+          }
+        }),
+    ).values(),
+  ]
+}
+
 export function parse(src: string): {
   contents: Token[]
   description: Token | undefined
+  links: string[]
   title: Token
   toc: Toc
 } {
@@ -159,6 +178,7 @@ export function parse(src: string): {
   return {
     contents: lex.slice(1),
     description: lex.at(1),
+    links: pageLinksFromTokens(lex),
     title,
     toc: parseHeadings(lex.slice(1)),
   }

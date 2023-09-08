@@ -6,4 +6,4 @@ export const Scope = {
   Public: 'Public',
 } as const
 export type Scope = (typeof Scope)[keyof typeof Scope]
-export const ScopeValidator = $enum(Object.values(Scope))
+export const $Scope = $enum(Object.values(Scope))

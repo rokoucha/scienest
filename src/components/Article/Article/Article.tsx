@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react'
 import { Article as ArticleModel } from '../../../model/article'
-import { History } from '../../../model/content'
 import {
   parse,
   tokenToPlain,
@@ -13,14 +12,9 @@ import { ArticleHeader } from '../ArticleHeader'
 export type ArticleProps = Readonly<{
   article: ArticleModel
   componentData: ComponentData
-  histories: History[]
 }>
 
-export const Article: React.FC<ArticleProps> = ({
-  article,
-  componentData,
-  histories,
-}) => {
+export const Article: React.FC<ArticleProps> = ({ article, componentData }) => {
   const parsed = useMemo(() => parse(article.content), [article.content])
 
   const path = useMemo(() => {
@@ -37,7 +31,7 @@ export const Article: React.FC<ArticleProps> = ({
     <div>
       <ArticleHeader
         createdAt={new Date(article.createdAt)}
-        histories={histories}
+        histories={article.histories ?? []}
         path={path}
         scope={article.scope}
         title={title}

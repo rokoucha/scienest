@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 import React from 'react'
-import { articleService, contentService } from '../../app'
+import { articleService } from '../../app'
 import { auth } from '../../auth'
 import { Article } from '../../components/Article'
 import { Footer } from '../../components/Footer'
@@ -44,22 +44,13 @@ const Page: React.FC<Props> = async ({ params }) => {
     notFound()
   }
 
-  const histories = await contentService.findManyHistoriesByArticleId(
-    article.id,
-    isSignedIn,
-  )
-
   const componentData = await articleService.getComponentData(isSignedIn)
 
   return (
     <>
       <Header isEditing={false} isSignedIn={isSignedIn} title={title} />
       <Main>
-        <Article
-          article={article}
-          componentData={componentData}
-          histories={histories}
-        />
+        <Article article={article} componentData={componentData} />
       </Main>
       <Footer />
     </>

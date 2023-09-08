@@ -1,107 +1,81 @@
-import { and, eq, inArray } from 'drizzle-orm'
-import { $array, $undefined, $union } from 'lizod'
+import { $array } from 'lizod'
 import { Article } from '../../model/article'
 import { Scope } from '../../model/scope'
 import { nanoid } from '../../nanoid'
-import { Database } from '../connection'
-import { articles, contents } from '../schema'
+import { ArticleDAO } from '../dao/article'
+import { ContentDAO } from '../dao/content'
 
 export class ArticleRepository {
-  #db: Database
+  #artcileDAO: ArticleDAO
+  #contentDAO: ContentDAO
 
-  constructor(db: Database) {
-    this.#db = db
+  constructor(articleDAO?: ArticleDAO, contentDAO?: ContentDAO) {
+    this.#artcileDAO = articleDAO ?? new ArticleDAO()
+    this.#contentDAO = contentDAO ?? new ContentDAO()
   }
 
-  public async findOneById(
-    id: string,
-    scopes: string[],
-  ): Promise<Article | null> {
-    const ctx = { errors: [] }
-    const res = await this.#db
-      .select({
-        id: articles.id,
-        scope: articles.scope,
-        title: articles.title,
-        description: articles.description,
-        content: contents.text,
-        createdAt: articles.createdAt,
-        updatedAt: articles.updatedAt,
-      })
-      .from(articles)
-      .innerJoin(
-        contents,
-        and(
-          eq(articles.id, contents.articleId),
-          eq(articles.latestContentId, contents.id),
-        ),
-      )
-      .where(and(eq(articles.id, id), inArray(articles.scope, scopes)))
-      .get()
+  public async findOneById({
+    id,
+    scopes,
+  }: {
+    id: string
+    scopes: Scope[]
+  }): Promise<Article | null> {
+    const a = await this.#artcileDAO.findOneById(id, scopes)
+    if (a === undefined) {
+      return null
+    }
+    const histories = await this.#contentDAO.findManyHistoriesByArticleId(
+      a.id,
+      scopes,
+    )
 
-    if (!$union([$undefined, Article])(res, ctx)) {
+    const article = {
+      ...a,
+      histories,
+    }
+
+    const ctx = { errors: [] }
+    if (!Article(article, ctx)) {
       throw new Error(JSON.stringify(ctx.errors))
     }
 
-    return res ?? null
+    return article
   }
 
-  public async findOneByTitle(
-    title: string,
-    scopes: string[],
-  ): Promise<Article | null> {
-    const ctx = { errors: [] }
-    const res = await this.#db
-      .select({
-        id: articles.id,
-        scope: articles.scope,
-        title: articles.title,
-        description: articles.description,
-        content: contents.text,
-        createdAt: articles.createdAt,
-        updatedAt: articles.updatedAt,
-      })
-      .from(articles)
-      .innerJoin(
-        contents,
-        and(
-          eq(articles.id, contents.articleId),
-          eq(articles.latestContentId, contents.id),
-        ),
-      )
-      .where(and(eq(articles.title, title), inArray(articles.scope, scopes)))
-      .get()
+  public async findOneByTitle({
+    title,
+    scopes,
+  }: {
+    title: string
+    scopes: Scope[]
+  }): Promise<Article | null> {
+    const a = await this.#artcileDAO.findOneByTitle(title, scopes)
+    if (a === undefined) {
+      return null
+    }
+    const histories = await this.#contentDAO.findManyHistoriesByArticleId(
+      a.id,
+      scopes,
+    )
 
-    if (!$union([$undefined, Article])(res, ctx)) {
+    const article = {
+      ...a,
+      histories,
+    }
+
+    const ctx = { errors: [] }
+    if (!Article(article, ctx)) {
       throw new Error(JSON.stringify(ctx.errors))
     }
 
-    return res ?? null
+    return article
   }
 
-  public async findMany(scopes: string[]): Promise<Article[]> {
-    const ctx = { errors: [] }
-    const res = await this.#db
-      .select({
-        id: articles.id,
-        scope: articles.scope,
-        title: articles.title,
-        description: articles.description,
-        content: contents.text,
-        createdAt: articles.createdAt,
-        updatedAt: articles.updatedAt,
-      })
-      .from(articles)
-      .innerJoin(
-        contents,
-        and(
-          eq(articles.id, contents.articleId),
-          eq(articles.latestContentId, contents.id),
-        ),
-      )
-      .where(inArray(articles.scope, scopes))
-      .all()
+  public async findMany({ scopes }: { scopes: Scope[] }): Promise<Article[]> {
+    const res = await this.#artcileDAO.findMany(scopes)
 
+    const ctx = { errors: [] }
     if (!$array(Article)(res, ctx)) {
       throw new Error(JSON.stringify(ctx.errors))
     }
@@ -110,36 +84,27 @@ export class ArticleRepository {
   }
 
   public async insertOne({
-    scope,
-    title,
     description,
+    scope,
     text,
+    title,
   }: {
-    scope: Scope
-    title: string
     description: string | null
+    scope: Scope
     text: string
+    title: string
   }): Promise<string> {
     const articleId = nanoid()
     const contentId = nanoid()
 
-    await this.#db.insert(articles).values({
-      id: articleId,
+    await this.#artcileDAO.insertOne(
+      articleId,
       scope,
       title,
       description,
-      latestContentId: contentId,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    })
-
-    await this.#db.insert(contents).values({
-      id: contentId,
-      articleId,
-      scope,
-      text,
-      createdAt: new Date().toISOString(),
-    })
+      contentId,
+    )
+    await this.#contentDAO.insertOne(contentId, articleId, scope, text)
 
     return articleId
   }
@@ -159,30 +124,14 @@ export class ArticleRepository {
   }): Promise<string> {
     const contentId = nanoid()
 
-    await this.#db
-      .update(articles)
-      .set({
-        scope,
-        title,
-        description,
-        latestContentId: contentId,
-        updatedAt: new Date().toISOString(),
-      })
-      .where(eq(articles.id, id))
-
-    await this.#db.insert(contents).values({
-      id: contentId,
-      articleId: id,
-      scope,
-      text,
-      createdAt: new Date().toISOString(),
-    })
+    await this.#artcileDAO.updateOne(id, scope, title, description, contentId)
+    await this.#contentDAO.insertOne(contentId, id, scope, text)
 
     return id
   }
 
-  public async deleteOne(id: string): Promise<void> {
-    await this.#db.delete(contents).where(eq(contents.articleId, id))
-    await this.#db.delete(articles).where(eq(articles.id, id))
+  public async deleteOne({ id }: { id: string }): Promise<void> {
+    await this.#artcileDAO.deleteOne(id)
+    await this.#contentDAO.deleteManyByArticleId(id)
   }
 }

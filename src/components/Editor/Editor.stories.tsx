@@ -22,6 +22,7 @@ export const Primary: StoryObj<typeof Editor> = {
       title: 'index',
       description: 'Description',
       content: '# This is a title\n\nThis is a description\n\nContent',
+      histories: [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     },

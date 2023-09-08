@@ -3,7 +3,7 @@
 import { $object, $string } from 'lizod'
 import { redirect } from 'next/navigation'
 import { articleService } from '../app'
-import { ScopeValidator } from '../model/scope'
+import { $Scope } from '../model/scope'
 
 export async function saveArticle(formData: FormData) {
   const entries = Object.fromEntries(formData.entries())
@@ -13,7 +13,7 @@ export async function saveArticle(formData: FormData) {
       {
         content: $string,
         id: $string,
-        scope: ScopeValidator,
+        scope: $Scope,
       },
       false,
     )(entries, ctx)

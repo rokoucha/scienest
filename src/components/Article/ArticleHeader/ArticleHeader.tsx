@@ -1,5 +1,5 @@
 import React from 'react'
-import { History } from '../../../model/content'
+import { History } from '../../../model/history'
 import { Scope } from '../../../model/scope'
 import { Toc } from '../../../parser/markdown'
 import { Heading } from '../Markdown/Heading'
