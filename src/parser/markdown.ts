@@ -204,31 +204,37 @@ function pageLinksFromTokens(tokens: Token[]): string[] {
             return true
           }
         })
-        .map((l) => (l.startsWith('/') ? l.slice(1) : l)),
+        .map((l) => (l.startsWith('/') ? l.slice(1) : l))
+        .map((l) => (l === '' ? 'index' : l)),
     ).values(),
   ]
 }
 
 export function parse(src: string): {
-  contents: Token[]
-  description: Token | undefined
-  links: string[]
-  title: Token
+  title: string
+  description: string | null
   toc: Toc
+  heading: string
+  content: string
+  links: string[]
 } {
   const lexer = new Lexer()
   const lex = lexer.lex(src)
 
-  const title = lex.at(0)
-  if (title === undefined) {
+  const titleToken = lex.at(0)
+  const descriptionToken = lex.at(1)
+  const contentTokens = lex.slice(1)
+
+  if (titleToken === undefined) {
     throw new Error('No title found')
   }
 
   return {
-    contents: lex.slice(1),
-    description: lex.at(1),
-    links: pageLinksFromTokens(lex),
-    title,
-    toc: parseHeadings(lex.slice(1)),
+    title: tokenToPlain(titleToken),
+    description: descriptionToken ? tokenToPlain(descriptionToken) : null,
+    toc: parseHeadings(contentTokens),
+    heading: tokenToRaw(titleToken),
+    content: tokensToRaw(contentTokens),
+    links: pageLinksFromTokens(contentTokens),
   }
 }

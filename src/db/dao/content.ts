@@ -26,15 +26,25 @@ export class ContentDAO {
       .all()
   }
 
-  insertOne(id: string, articleId: string, scope: Scope, text: string) {
+  insertOne(
+    id: string,
+    articleId: string,
+    scope: Scope,
+    toc: unknown,
+    heading: string,
+    content: string,
+    raw: string,
+  ) {
     return this.#db
       .insert(contents)
       .values({
         id,
         articleId,
         scope,
-        text,
-        createdAt: new Date().toISOString(),
+        toc,
+        heading,
+        content,
+        raw,
       })
       .run()
   }

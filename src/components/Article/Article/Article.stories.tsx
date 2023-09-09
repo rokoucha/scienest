@@ -20,9 +20,38 @@ export const Primary: StoryObj<typeof Article> = {
       id: 'id',
       scope: 'Public',
       title: 'index',
-      description: 'Description',
-      content:
-        '# This is a title\n\nThis is a **description** line\n\nand Contents!!!',
+      description: 'description',
+      toc: [
+        {
+          id: 'first',
+          title: 'First',
+          children: [],
+        },
+        {
+          id: 'second',
+          title: 'Second',
+          children: [
+            {
+              id: 'second-first',
+              title: 'Second > First',
+              children: [],
+            },
+            {
+              id: 'second-second',
+              title: 'Second > Second',
+              children: [],
+            },
+          ],
+        },
+        {
+          id: 'third',
+          title: 'Third',
+          children: [],
+        },
+      ],
+      heading: '# index',
+      content: 'description\n\ncontent',
+      raw: '# index\n\ndescription\n\ncontent',
       histories: [
         {
           articleId: '1',
@@ -47,12 +76,12 @@ export const Primary: StoryObj<typeof Article> = {
         {
           id: '1',
           title: 'linked',
-          count: 2,
+          linked: true,
         },
         {
           id: '2',
           title: 'unlinked',
-          count: 1,
+          linked: false,
         },
       ],
       createdAt: new Date().toISOString(),

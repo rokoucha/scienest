@@ -6,7 +6,6 @@ import { Toc } from '../../../parser/markdown'
 import { Heading } from '../Markdown/Heading'
 import { MarkdownRenderer } from '../Markdown/MarkdownRenderer'
 import {
-  heading,
   historiesList,
   info,
   infoContainer,
@@ -36,26 +35,26 @@ function scopeToEmoji(scope: Scope): string {
 
 export type ArticleHeaderProps = Readonly<{
   createdAt: Date
+  heading: string
   histories: History[]
   links: Link[]
   path: string
   scope: Scope
-  title: string
   toc: Toc
 }>
 
 export const ArticleHeader: React.FC<ArticleHeaderProps> = ({
   createdAt,
+  heading,
   histories,
   links,
   path,
   scope,
-  title,
   toc,
 }) => (
   <header className={wrapper}>
     <MarkdownRenderer
-      contents={title}
+      contents={heading}
       options={{
         overrides: {
           h1: {
@@ -91,11 +90,11 @@ export const ArticleHeader: React.FC<ArticleHeaderProps> = ({
           <summary>[]</summary>
           <nav>
             <ul className={linksList}>
-              {links.map(({ id, title, count }) => (
+              {links.map(({ id, title, linked }) => (
                 <li key={id}>
                   <a
                     href={`/${title}`}
-                    className={count > 1 ? linkedLink : unlinkedLink}
+                    className={linked ? linkedLink : unlinkedLink}
                   >
                     {title}
                   </a>

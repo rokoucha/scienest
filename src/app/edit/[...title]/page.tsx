@@ -40,7 +40,12 @@ const Page: React.FC<Props> = async ({ params }) => {
     <>
       <Header isEditing={true} isSignedIn={isSignedIn} title={title} />
       <Main>
-        <Editor article={article} title={title} />
+        <Editor
+          id={article?.id}
+          raw={article?.raw}
+          scope={article?.scope}
+          title={title}
+        />
       </Main>
       <Footer />
     </>

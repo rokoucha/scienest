@@ -11,14 +11,14 @@ export async function saveArticle(formData: FormData) {
   if (
     !$object(
       {
-        content: $string,
         id: $string,
+        raw: $string,
         scope: $Scope,
       },
       false,
     )(entries, ctx)
   ) {
-    throw new Error(JSON.stringify(ctx.errors))
+    throw new Error(`Invalid form data: ${JSON.stringify(ctx.errors, null, 2)}`)
   }
   const { id, ...data } = entries
 

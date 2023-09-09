@@ -1,6 +1,6 @@
 import { eq, inArray, sql } from 'drizzle-orm'
 import { Database } from '../connection'
-import { articleLinks, links } from '../schema'
+import { articleLinks, articles, links } from '../schema'
 
 export class LinkDAO {
   #db: Database
@@ -9,30 +9,70 @@ export class LinkDAO {
     this.#db = db
   }
 
+  #linkedLinks() {
+    return this.#db
+      .select({
+        id: links.id,
+        linking: sql<boolean>`count(${articleLinks.articleId}) > 1`.as(
+          'linking',
+        ),
+      })
+      .from(links)
+      .innerJoin(articleLinks, eq(links.id, articleLinks.linkId))
+      .groupBy(links.id)
+      .as('linked_links')
+  }
+
+  #existLinks() {
+    return this.#db
+      .select({
+        id: links.id,
+        exist: sql<boolean>`${articles.id} is not null`.as('exist'),
+      })
+      .from(links)
+      .leftJoin(articles, eq(links.title, articles.title))
+      .groupBy(links.id)
+      .as('exist_links')
+  }
+
   findManyByArticleId(articleId: string) {
+    const linkedLinks = this.#linkedLinks()
+    const existLinks = this.#existLinks()
+
     return this.#db
       .select({
         id: links.id,
         title: links.title,
-        count: sql<number>`count(${articleLinks.id})`,
+        linked: sql`(${linkedLinks.linking} or ${existLinks.exist})`.mapWith(
+          Boolean,
+        ),
       })
       .from(links)
       .innerJoin(articleLinks, eq(links.id, articleLinks.linkId))
+      .innerJoin(linkedLinks, eq(links.id, linkedLinks.id))
+      .innerJoin(existLinks, eq(links.id, existLinks.id))
       .where(eq(articleLinks.articleId, articleId))
-      .groupBy(links.id, articleLinks.articleId)
+      .groupBy(links.id)
       .all()
   }
 
   findManyByArticleIds(articleIds: string[]) {
+    const linkedLinks = this.#linkedLinks()
+    const existLinks = this.#existLinks()
+
     return this.#db
       .select({
         id: links.id,
         articleId: articleLinks.articleId,
         title: links.title,
-        count: sql<number>`count(${articleLinks.id})`,
+        linked: sql`(${linkedLinks.linking} or ${existLinks.exist})`.mapWith(
+          Boolean,
+        ),
       })
       .from(links)
       .innerJoin(articleLinks, eq(links.id, articleLinks.linkId))
+      .innerJoin(linkedLinks, eq(links.id, linkedLinks.id))
+      .innerJoin(existLinks, eq(links.id, existLinks.id))
       .where(inArray(articleLinks.articleId, articleIds))
       .groupBy(links.id, articleLinks.articleId)
       .all()
@@ -50,11 +90,9 @@ export class LinkDAO {
   }
 
   insertMany(articleLinks: { id: string; title: string }[]) {
-    const now = new Date().toISOString()
-
     return this.#db
       .insert(links)
-      .values(articleLinks.map((l) => ({ ...l, createdAt: now })))
+      .values(articleLinks)
       .onConflictDoNothing()
       .run()
   }

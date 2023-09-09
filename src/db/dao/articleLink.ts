@@ -9,12 +9,10 @@ export class ArticleLinkDAO {
     this.#db = db
   }
 
-  insertMany(links: { id: string; articleId: string; linkId: string }[]) {
-    const now = new Date().toISOString()
-
+  insertMany(links: { articleId: string; linkId: string }[]) {
     return this.#db
       .insert(articleLinks)
-      .values(links.map((l) => ({ ...l, createdAt: now })))
+      .values(links)
       .onConflictDoNothing()
       .run()
   }

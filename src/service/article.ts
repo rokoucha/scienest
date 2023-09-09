@@ -1,8 +1,8 @@
 import { ComponentData } from '../components/Article'
 import { ArticleRepository } from '../db/repository/article'
-import { Article } from '../model/article'
+import { Article, ArticleList } from '../model/article'
 import { Scope } from '../model/scope'
-import { parse, tokenToPlain } from '../parser/markdown'
+import { parse } from '../parser/markdown'
 
 const reserverdTitles = ['new', 'edit', 'auth']
 
@@ -35,45 +35,38 @@ export class ArticleService {
     })
   }
 
-  async findMany(signedIn = false): Promise<Article[]> {
+  async findMany(signedIn = false): Promise<ArticleList> {
     return this.#repository.findMany({ scopes: this.#listableScopes(signedIn) })
   }
 
   async createOrUpdateOne(
     id: string | null,
-    data: Pick<Article, 'scope' | 'content'>,
+    { scope, raw }: Pick<Article, 'scope' | 'raw'>,
   ): Promise<Article> {
-    const parsed = parse(data.content)
+    const parsed = parse(raw)
 
-    const title = parsed.title ? tokenToPlain(parsed.title) : 'undefined'
-    const description = parsed.description
-      ? tokenToPlain(parsed.description)
-      : ''
-
-    if (reserverdTitles.some((r) => title.startsWith(r))) {
-      throw new Error('Reserved title')
+    if (
+      parsed.title === '' ||
+      reserverdTitles.some((r) => parsed.title.startsWith(r))
+    ) {
+      throw new Error(`Reserved title: ${parsed.title}`)
     }
 
     if (id) {
-      await this.#repository.updateOne({
-        description,
-        id,
-        links: parsed.links,
-        scope: data.scope,
-        text: data.content,
-        title,
+      await this.#repository.updateOne(id, {
+        ...parsed,
+        raw,
+        scope,
       })
     } else {
       id = await this.#repository.insertOne({
-        description,
-        links: parsed.links,
-        scope: data.scope,
-        text: data.content,
-        title,
+        ...parsed,
+        raw,
+        scope,
       })
     }
 
-    const article = await this.findOneByTitle(title, true)
+    const article = await this.findOneByTitle(parsed.title, true)
 
     if (!article) {
       throw new Error('Article not found')
@@ -83,13 +76,12 @@ export class ArticleService {
   }
 
   async deleteOne(id: string): Promise<void> {
-    await this.#repository.deleteOne({ id })
+    await this.#repository.deleteOne(id)
   }
 
   async getComponentData(isSignedIn = false): Promise<ComponentData> {
-    const articles = await this.findMany(isSignedIn)
     return {
-      articles,
+      articles: await this.findMany(isSignedIn),
     }
   }
 }

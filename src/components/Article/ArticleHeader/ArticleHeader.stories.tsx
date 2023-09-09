@@ -3,12 +3,6 @@ import { Scope } from '../../../model/scope'
 import { ArticleHeader } from './ArticleHeader'
 
 export default {
-  args: {
-    title: undefined,
-  },
-  argTypes: {
-    title: { table: { disable: true } },
-  },
   component: ArticleHeader,
 } satisfies Meta<typeof ArticleHeader>
 
@@ -39,17 +33,17 @@ export const Primary: StoryObj<typeof ArticleHeader> = {
       {
         id: '1',
         title: 'linked',
-        count: 2,
+        linked: true,
       },
       {
         id: '2',
         title: 'unlinked',
-        count: 1,
+        linked: false,
       },
     ],
     path: '/index',
     scope: Scope.Public,
-    title: '# index',
+    heading: '# index',
     toc: [
       {
         id: 'first',
@@ -71,6 +65,11 @@ export const Primary: StoryObj<typeof ArticleHeader> = {
             children: [],
           },
         ],
+      },
+      {
+        id: 'third',
+        title: 'Third',
+        children: [],
       },
     ],
   },

@@ -1,21 +1,21 @@
 import React from 'react'
-import { Article } from '../../../model/article'
+import { ArticleList } from '../../../model/article'
 import { MarkdownRenderer } from '../Markdown/MarkdownRenderer'
 import { PageList, PageListProps } from '../Markdown/PageList'
 
-export type ComponentData = { articles: Article[] }
+export type ComponentData = { articles: ArticleList }
 
 export type ArticleContentProps = Readonly<{
   componentData: ComponentData
-  contents: string
+  content: string
 }>
 
 export const ArticleContent: React.FC<ArticleContentProps> = ({
   componentData,
-  contents,
+  content,
 }) => (
   <MarkdownRenderer
-    contents={contents}
+    contents={content}
     options={{
       overrides: {
         PageList: {

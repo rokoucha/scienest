@@ -1,4 +1,5 @@
 import { and, eq, inArray } from 'drizzle-orm'
+import { Scope } from '../../model/scope'
 import { Database } from '../connection'
 import { articleLinks, articles, contents, links } from '../schema'
 
@@ -9,37 +10,17 @@ export class ArticleDAO {
     this.#db = db
   }
 
-  findOneById(id: string, scopes: string[]) {
+  findOneByTitle(title: string, scopes: Scope[]) {
     return this.#db
       .select({
         id: articles.id,
         scope: articles.scope,
         title: articles.title,
         description: articles.description,
-        content: contents.text,
-        createdAt: articles.createdAt,
-        updatedAt: articles.updatedAt,
-      })
-      .from(articles)
-      .innerJoin(
-        contents,
-        and(
-          eq(articles.id, contents.articleId),
-          eq(articles.latestContentId, contents.id),
-        ),
-      )
-      .where(and(eq(articles.id, id), inArray(articles.scope, scopes)))
-      .get()
-  }
-
-  findOneByTitle(title: string, scopes: string[]) {
-    return this.#db
-      .select({
-        id: articles.id,
-        scope: articles.scope,
-        title: articles.title,
-        description: articles.description,
-        content: contents.text,
+        toc: contents.toc,
+        heading: contents.heading,
+        content: contents.content,
+        raw: contents.raw,
         createdAt: articles.createdAt,
         updatedAt: articles.updatedAt,
       })
@@ -55,57 +36,42 @@ export class ArticleDAO {
       .get()
   }
 
-  findMany(scopes: string[]) {
+  findMany(scopes: Scope[]) {
     return this.#db
       .select({
         id: articles.id,
         scope: articles.scope,
         title: articles.title,
         description: articles.description,
-        content: contents.text,
         createdAt: articles.createdAt,
         updatedAt: articles.updatedAt,
       })
       .from(articles)
-      .innerJoin(
-        contents,
-        and(
-          eq(articles.id, contents.articleId),
-          eq(articles.latestContentId, contents.id),
-        ),
-      )
       .where(inArray(articles.scope, scopes))
       .all()
   }
 
-  findManyByLinkTitle(linkTitle: string, scopes: string[]) {
+  findManyByLink(linkTitle: string, scopes: Scope[]) {
     return this.#db
       .select({
         id: articles.id,
         scope: articles.scope,
         title: articles.title,
         description: articles.description,
-        content: contents.text,
         createdAt: articles.createdAt,
         updatedAt: articles.updatedAt,
       })
       .from(articles)
-      .innerJoin(
-        contents,
-        and(
-          eq(articles.id, contents.articleId),
-          eq(articles.latestContentId, contents.id),
-        ),
-      )
-      .innerJoin(articleLinks, and(eq(articles.id, articleLinks.articleId)))
+      .leftJoin(articleLinks, and(eq(articles.id, articleLinks.articleId)))
       .innerJoin(links, eq(articleLinks.linkId, links.id))
       .where(and(eq(links.title, linkTitle), inArray(articles.scope, scopes)))
+      .groupBy(articles.id)
       .all()
   }
 
   insertOne(
     id: string,
-    scope: string,
+    scope: Scope,
     title: string,
     description: string | null,
     latestContentId: string,
@@ -118,15 +84,13 @@ export class ArticleDAO {
         title,
         description,
         latestContentId,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
       })
       .run()
   }
 
   updateOne(
     id: string,
-    scope: string,
+    scope: Scope,
     title: string,
     description: string | null,
     latestContentId: string,

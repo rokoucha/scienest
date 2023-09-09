@@ -15,6 +15,6 @@ export default {
 
 export const Primary: StoryObj<typeof ArticleContent> = {
   args: {
-    contents: '# Hello world!\n\nThis is a test article.',
+    content: '# Hello world!\n\nThis is a test article.',
   },
 }

@@ -1,9 +1,9 @@
 import Link from 'next/link'
 import React from 'react'
-import { Article } from '../../../../model/article'
+import { ArticleList } from '../../../../model/article'
 
 export type PageListProps = Readonly<{
-  articles: Article[]
+  articles: ArticleList
 }>
 
 export const PageList: React.FC<PageListProps> = ({ articles }) => (

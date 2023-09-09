@@ -1,7 +1,7 @@
 import { $array } from 'lizod'
-import { Article } from '../../model/article'
-import { Link } from '../../model/link'
+import { Article, ArticleList, ArticleListItem } from '../../model/article'
 import { Scope } from '../../model/scope'
+import { Toc } from '../../model/toc'
 import { nanoid } from '../../nanoid'
 import { Database, db } from '../connection'
 import { ArticleDAO } from '../dao/article'
@@ -48,17 +48,26 @@ export class ArticleRepository {
     )
     const links = await this.#linkDAO.findManyByArticleId(a.id)
 
-    console.log(JSON.stringify({ links }, null, 2))
+    console.log(JSON.stringify(links, null, 2))
 
     const article = {
-      ...a,
+      id: a.id,
+      scope: a.scope,
+      title: a.title,
+      description: a.description,
+      toc: a.toc,
+      heading: a.heading,
+      content: a.content,
+      raw: a.raw,
       histories,
-      links: links.filter((l) => l.id !== null),
+      links,
+      createdAt: a.createdAt,
+      updatedAt: a.updatedAt,
     }
 
     const ctx = { errors: [] }
     if (!Article(article, ctx)) {
-      throw new Error(JSON.stringify(ctx.errors))
+      throw new Error(`Invalid article: ${JSON.stringify(ctx.errors, null, 2)}`)
     }
 
     return article
@@ -70,60 +79,58 @@ export class ArticleRepository {
   }: {
     link?: string | undefined
     scopes: Scope[]
-  }): Promise<Article[]> {
+  }): Promise<ArticleList> {
     const a = link
-      ? await this.#artcileDAO.findManyByLinkTitle(link, scopes)
+      ? await this.#artcileDAO.findManyByLink(link, scopes)
       : await this.#artcileDAO.findMany(scopes)
     if (a.length === 0) {
       return []
     }
     const links = await this.#linkDAO.findManyByArticleIds(a.map((x) => x.id))
 
-    const linksMap = new Map<string, Link>(
-      links.map(({ articleId, ...l }) => [articleId, l]),
-    )
-
     const articles = a.map((a) => ({
-      ...a,
-      links: linksMap.get(a.id) ? [linksMap.get(a.id)!] : [],
+      id: a.id,
+      scope: a.scope,
+      title: a.title,
+      description: a.description,
+      links: links
+        .filter((l) => l.articleId === a.id)
+        .map(({ articleId, ...l }) => l),
+      createdAt: a.createdAt,
+      updatedAt: a.updatedAt,
     }))
 
     const ctx = { errors: [] }
-    if (!$array(Article)(articles, ctx)) {
-      throw new Error(JSON.stringify(ctx.errors))
+    if (!$array(ArticleListItem)(articles, ctx)) {
+      throw new Error(
+        `Invalid article list: ${JSON.stringify(ctx.errors, null, 2)}`,
+      )
     }
 
     return articles
   }
 
   public async insertOne({
+    content,
     description,
+    heading,
     links,
+    raw,
     scope,
-    text,
     title,
+    toc,
   }: {
+    content: string
     description: string | null
+    heading: string
     links: string[]
+    raw: string
     scope: Scope
-    text: string
     title: string
+    toc: Toc
   }): Promise<string> {
     const articleId = nanoid()
     const contentId = nanoid()
-
-    const existLinks =
-      links.length > 0 ? await this.#linkDAO.findManyByTitles(links) : []
-    const existLinksMap = new Map<string, string>(
-      existLinks.map(({ id, title }) => [title, id]),
-    )
-
-    const linkIds = links.map((title) => ({
-      id: existLinksMap.get(title) ?? nanoid(),
-      title,
-    }))
-
-    console.log(JSON.stringify({ title, links, linkIds }, null, 2))
 
     await this.#artcileDAO.insertOne(
       articleId,
@@ -132,65 +139,95 @@ export class ArticleRepository {
       description,
       contentId,
     )
-    await this.#contentDAO.insertOne(contentId, articleId, scope, text)
-    if (linkIds.length > 0) {
+    await this.#contentDAO.insertOne(
+      contentId,
+      articleId,
+      scope,
+      toc,
+      heading,
+      content,
+      raw,
+    )
+
+    if (links.length > 0) {
+      const existLinks =
+        links.length > 0 ? await this.#linkDAO.findManyByTitles(links) : []
+      const existLinksMap = new Map<string, string>(
+        existLinks.map(({ id, title }) => [title, id]),
+      )
+
+      const linkIds = links.map((title) => ({
+        id: existLinksMap.get(title) ?? nanoid(),
+        title,
+      }))
+
       await this.#linkDAO.insertMany(linkIds)
       await this.#articleLinkDAO.insertMany(
-        linkIds.map(({ id: linkId }) => ({ id: nanoid(), articleId, linkId })),
+        linkIds.map(({ id: linkId }) => ({ articleId, linkId })),
       )
     }
 
     return articleId
   }
 
-  public async updateOne({
-    description,
-    id,
-    links,
-    scope,
-    text,
-    title,
-  }: {
-    description: string | null
-    id: string
-    links: string[]
-    scope: Scope
-    text: string
-    title: string
-  }): Promise<string> {
+  public async updateOne(
+    id: string,
+    {
+      content,
+      description,
+      heading,
+      links,
+      raw,
+      scope,
+      title,
+      toc,
+    }: {
+      content: string
+      description: string | null
+      heading: string
+      links: string[]
+      raw: string
+      scope: Scope
+      title: string
+      toc: Toc
+    },
+  ): Promise<string> {
     const contentId = nanoid()
 
-    const existLinks =
-      links.length > 0 ? await this.#linkDAO.findManyByTitles(links) : []
-    const existLinksMap = new Map<string, string>(
-      existLinks.map(({ id, title }) => [title, id]),
-    )
-
-    const linkIds = links.map((title) => ({
-      id: existLinksMap.get(title) ?? nanoid(),
-      title,
-    }))
-
-    console.log(JSON.stringify({ title, links, linkIds }, null, 2))
-
     await this.#artcileDAO.updateOne(id, scope, title, description, contentId)
-    await this.#contentDAO.insertOne(contentId, id, scope, text)
+    await this.#contentDAO.insertOne(
+      contentId,
+      id,
+      scope,
+      toc,
+      heading,
+      content,
+      raw,
+    )
     await this.#articleLinkDAO.deleteManyByArticleId(id)
-    if (linkIds.length > 0) {
+
+    if (links.length > 0) {
+      const existLinks =
+        links.length > 0 ? await this.#linkDAO.findManyByTitles(links) : []
+      const existLinksMap = new Map<string, string>(
+        existLinks.map(({ id, title }) => [title, id]),
+      )
+
+      const linkIds = links.map((title) => ({
+        id: existLinksMap.get(title) ?? nanoid(),
+        title,
+      }))
+
       await this.#linkDAO.insertMany(linkIds)
       await this.#articleLinkDAO.insertMany(
-        linkIds.map(({ id: linkId }) => ({
-          articleId: id,
-          id: nanoid(),
-          linkId,
-        })),
+        linkIds.map(({ id: linkId }) => ({ articleId: id, linkId })),
       )
     }
 
     return id
   }
 
-  public async deleteOne({ id }: { id: string }): Promise<void> {
+  public async deleteOne(id: string): Promise<void> {
     await this.#contentDAO.deleteManyByArticleId(id)
     await this.#articleLinkDAO.deleteManyByArticleId(id)
     await this.#artcileDAO.deleteOne(id)
