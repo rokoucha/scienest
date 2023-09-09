@@ -6,6 +6,7 @@ import { Toc } from '../../../parser/markdown'
 import { Heading } from '../Markdown/Heading'
 import { MarkdownRenderer } from '../Markdown/MarkdownRenderer'
 import {
+  headingTitle,
   historiesList,
   info,
   infoContainer,
@@ -60,7 +61,7 @@ export const ArticleHeader: React.FC<ArticleHeaderProps> = ({
           h1: {
             component: Heading,
             props: {
-              className: heading,
+              className: headingTitle,
               level: 1,
             },
           },

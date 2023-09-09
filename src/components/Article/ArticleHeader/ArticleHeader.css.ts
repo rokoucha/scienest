@@ -6,7 +6,7 @@ export const wrapper = style({
   gap: '0.5rem',
 })
 
-export const heading = style({
+export const headingTitle = style({
   margin: 0,
 })
 
