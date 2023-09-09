@@ -37,8 +37,12 @@ const Page: React.FC<Props> = async ({ params }) => {
 
   const article = await articleService.findOneByTitle(title, isSignedIn)
   if (!article) {
+    if (isSignedIn) {
+      redirect(`/edit/${title}`)
+    }
+
     if (title === 'index') {
-      redirect(isSignedIn ? '/edit/index' : '/auth/signin')
+      redirect('/auth/signin')
     }
 
     notFound()

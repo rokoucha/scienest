@@ -1,6 +1,6 @@
 import { and, eq, inArray } from 'drizzle-orm'
 import { Database } from '../connection'
-import { articles, contents } from '../schema'
+import { articleLinks, articles, contents, links } from '../schema'
 
 export class ArticleDAO {
   #db: Database
@@ -75,6 +75,31 @@ export class ArticleDAO {
         ),
       )
       .where(inArray(articles.scope, scopes))
+      .all()
+  }
+
+  findManyByLinkTitle(linkTitle: string, scopes: string[]) {
+    return this.#db
+      .select({
+        id: articles.id,
+        scope: articles.scope,
+        title: articles.title,
+        description: articles.description,
+        content: contents.text,
+        createdAt: articles.createdAt,
+        updatedAt: articles.updatedAt,
+      })
+      .from(articles)
+      .innerJoin(
+        contents,
+        and(
+          eq(articles.id, contents.articleId),
+          eq(articles.latestContentId, contents.id),
+        ),
+      )
+      .innerJoin(articleLinks, and(eq(articles.id, articleLinks.articleId)))
+      .innerJoin(links, eq(articleLinks.linkId, links.id))
+      .where(and(eq(links.title, linkTitle), inArray(articles.scope, scopes)))
       .all()
   }
 

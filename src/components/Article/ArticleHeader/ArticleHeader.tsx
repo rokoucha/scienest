@@ -1,5 +1,6 @@
 import React from 'react'
 import { History } from '../../../model/history'
+import { Link } from '../../../model/link'
 import { Scope } from '../../../model/scope'
 import { Toc } from '../../../parser/markdown'
 import { Heading } from '../Markdown/Heading'
@@ -10,11 +11,13 @@ import {
   info,
   infoContainer,
   infoLabel,
+  linkedLink,
+  linksList,
   pathText,
   scopeText,
-  tagsText,
   tocHeadingsList,
   tocHeadingsListItem,
+  unlinkedLink,
   wrapper,
 } from './ArticleHeader.css'
 
@@ -34,6 +37,7 @@ function scopeToEmoji(scope: Scope): string {
 export type ArticleHeaderProps = Readonly<{
   createdAt: Date
   histories: History[]
+  links: Link[]
   path: string
   scope: Scope
   title: string
@@ -43,6 +47,7 @@ export type ArticleHeaderProps = Readonly<{
 export const ArticleHeader: React.FC<ArticleHeaderProps> = ({
   createdAt,
   histories,
+  links,
   path,
   scope,
   title,
@@ -81,8 +86,24 @@ export const ArticleHeader: React.FC<ArticleHeaderProps> = ({
         <pre className={pathText}>{path}</pre>
       </div>
       <div className={info}>
-        <span className={infoLabel}>tags</span>
-        <pre className={tagsText}>[]</pre>
+        <span className={infoLabel}>links</span>
+        <details>
+          <summary>[]</summary>
+          <nav>
+            <ul className={linksList}>
+              {links.map(({ id, title, count }) => (
+                <li key={id}>
+                  <a
+                    href={`/${title}`}
+                    className={count > 1 ? linkedLink : unlinkedLink}
+                  >
+                    {title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </details>
       </div>
       <div className={info}>
         <span className={infoLabel}>toc</span>

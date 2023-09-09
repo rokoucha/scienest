@@ -1,5 +1,6 @@
 import { $array, $nullable, $object, $opt, $string, Infer } from 'lizod'
 import { History } from './history'
+import { Link } from './link'
 import { $Scope } from './scope'
 
 export const Article = $object({
@@ -9,6 +10,7 @@ export const Article = $object({
   description: $nullable($string),
   content: $string,
   histories: $opt($array(History)),
+  links: $opt($array(Link)),
   createdAt: $string,
   updatedAt: $string,
 })

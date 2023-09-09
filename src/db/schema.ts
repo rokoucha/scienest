@@ -22,7 +22,7 @@ export const contents = sqliteTable('contents', {
 
 export const links = sqliteTable('links', {
   id: text('id').primaryKey(),
-  text: text('text').notNull().unique(),
+  title: text('text').notNull().unique(),
   createdAt: text('created_at').notNull(),
 })
 

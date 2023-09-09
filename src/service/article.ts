@@ -25,13 +25,6 @@ export class ArticleService {
       : [Scope.Public]
   }
 
-  async findOneById(id: string, signedIn = false): Promise<Article | null> {
-    return this.#repository.findOneById({
-      id,
-      scopes: this.#accessableScopes(signedIn),
-    })
-  }
-
   async findOneByTitle(
     title: string,
     isSignedIn = false,
@@ -63,22 +56,24 @@ export class ArticleService {
 
     if (id) {
       await this.#repository.updateOne({
-        id,
-        scope: data.scope,
-        title,
         description,
+        id,
+        links: parsed.links,
+        scope: data.scope,
         text: data.content,
+        title,
       })
     } else {
       id = await this.#repository.insertOne({
-        scope: data.scope,
-        title,
         description,
+        links: parsed.links,
+        scope: data.scope,
         text: data.content,
+        title,
       })
     }
 
-    const article = await this.findOneById(id, true)
+    const article = await this.findOneByTitle(title, true)
 
     if (!article) {
       throw new Error('Article not found')

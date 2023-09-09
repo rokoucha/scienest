@@ -32,6 +32,7 @@ export const Article: React.FC<ArticleProps> = ({ article, componentData }) => {
       <ArticleHeader
         createdAt={new Date(article.createdAt)}
         histories={article.histories ?? []}
+        links={article.links ?? []}
         path={path}
         scope={article.scope}
         title={title}

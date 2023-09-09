@@ -23,6 +23,7 @@ export const Primary: StoryObj<typeof Editor> = {
       description: 'Description',
       content: '# This is a title\n\nThis is a description\n\nContent',
       histories: [],
+      links: [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     },

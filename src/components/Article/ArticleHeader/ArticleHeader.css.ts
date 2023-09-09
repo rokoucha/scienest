@@ -74,3 +74,17 @@ export const historiesList = style({
   margin: 0,
   paddingLeft: '0.7rem',
 })
+
+export const linksList = style({
+  listStylePosition: 'inside',
+  margin: 0,
+  paddingLeft: '0.7rem',
+})
+
+export const linkedLink = style({
+  color: 'dodgerblue',
+})
+
+export const unlinkedLink = style({
+  color: 'lightslategrey',
+})

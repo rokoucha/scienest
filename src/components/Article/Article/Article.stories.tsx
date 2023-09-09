@@ -43,6 +43,18 @@ export const Primary: StoryObj<typeof Article> = {
           scope: Scope.Private,
         },
       ],
+      links: [
+        {
+          id: '1',
+          title: 'linked',
+          count: 2,
+        },
+        {
+          id: '2',
+          title: 'unlinked',
+          count: 1,
+        },
+      ],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     },

@@ -142,20 +142,69 @@ function parseHeadings(tokens: Token[]): Toc {
   return depthToTree(headings)
 }
 
+function collectLinks(tokens: Token[]): string[] {
+  return (tokens as TokenWithoutGeneric[])
+    .flatMap((t) => {
+      switch (t.type) {
+        case 'space':
+        case 'code':
+        case 'hr':
+        case 'html':
+        case 'def':
+        case 'escape':
+        case 'image':
+        case 'codespan':
+        case 'br': {
+          return null
+        }
+
+        case 'heading':
+        case 'blockquote':
+        case 'list_item':
+        case 'paragraph':
+        case 'text':
+        case 'strong':
+        case 'em':
+        case 'del': {
+          return collectLinks(t.tokens ?? [])
+        }
+
+        case 'link': {
+          return [t.href, ...collectLinks(t.tokens ?? [])]
+        }
+
+        case 'table': {
+          return collectLinks([
+            ...t.header.flatMap((t) => t.tokens),
+            ...t.rows.flatMap((r) => r.flatMap((t) => t.tokens)),
+          ])
+        }
+
+        case 'list': {
+          return collectLinks(t.items.flatMap((i) => i.tokens))
+        }
+
+        default: {
+          throw new Error(`Unknown token: ${t satisfies never}`)
+        }
+      }
+    })
+    .filter((l): l is string => l !== null)
+}
+
 function pageLinksFromTokens(tokens: Token[]): string[] {
   return [
     ...new Set(
-      tokens
-        .filter((t): t is Tokens.Link => t.type === 'link')
-        .map((t) => t.href)
-        .filter((href) => {
+      collectLinks(tokens)
+        .filter((l) => {
           try {
-            new URL(href)
+            new URL(l)
             return false
           } catch {
             return true
           }
-        }),
+        })
+        .map((l) => (l.startsWith('/') ? l.slice(1) : l)),
     ).values(),
   ]
 }

@@ -35,6 +35,18 @@ export const Primary: StoryObj<typeof ArticleHeader> = {
         scope: Scope.Private,
       },
     ],
+    links: [
+      {
+        id: '1',
+        title: 'linked',
+        count: 2,
+      },
+      {
+        id: '2',
+        title: 'unlinked',
+        count: 1,
+      },
+    ],
     path: '/index',
     scope: Scope.Public,
     title: '# index',
