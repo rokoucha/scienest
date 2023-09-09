@@ -48,8 +48,6 @@ export class ArticleRepository {
     )
     const links = await this.#linkDAO.findManyByArticleId(a.id)
 
-    console.log(JSON.stringify(links, null, 2))
-
     const article = {
       id: a.id,
       scope: a.scope,
