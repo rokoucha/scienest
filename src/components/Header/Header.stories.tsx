@@ -19,7 +19,8 @@ export default {
 
 export const Primary: StoryObj<typeof HeaderElement> = {
   args: {
-    isSignedIn: false,
+    editing: false,
+    signedIn: false,
     siteName: 'Scienest',
   },
 }

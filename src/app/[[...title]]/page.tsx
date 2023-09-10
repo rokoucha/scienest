@@ -14,11 +14,11 @@ export const runtime = 'edge'
 type Props = Readonly<{ params: { title: [string] | undefined } }>
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const isSignedIn = await auth().then((s) => s !== null)
+  const signedIn = await auth().then((s) => s !== null)
 
   const title = decodeURIComponent(params.title?.at(0) ?? 'index')
 
-  const article = await articleService.findOneByTitle(title, isSignedIn)
+  const article = await articleService.findOneByTitle({ title, signedIn })
 
   return {
     title: article?.title,
@@ -31,13 +31,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 const Page: React.FC<Props> = async ({ params }) => {
-  const isSignedIn = await auth().then((s) => s !== null)
+  const signedIn = await auth().then((s) => s !== null)
 
   const title = decodeURIComponent(params.title?.at(0) ?? 'index')
 
-  const article = await articleService.findOneByTitle(title, isSignedIn)
+  const article = await articleService.findOneByTitle({ title, signedIn })
   if (!article) {
-    if (isSignedIn) {
+    if (signedIn) {
       redirect(`/edit/${title}`)
     }
 
@@ -48,11 +48,11 @@ const Page: React.FC<Props> = async ({ params }) => {
     notFound()
   }
 
-  const componentData = await articleService.getComponentData(isSignedIn)
+  const componentData = await articleService.getComponentData(signedIn)
 
   return (
     <>
-      <Header isEditing={false} isSignedIn={isSignedIn} title={title} />
+      <Header editing={false} signedIn={signedIn} title={title} />
       <Main>
         <Article article={article} componentData={componentData} />
       </Main>

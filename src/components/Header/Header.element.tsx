@@ -11,8 +11,8 @@ import {
 } from './Header.css'
 
 export type HeaderElementProps = Readonly<{
-  isEditing: boolean
-  isSignedIn: boolean
+  editing: boolean
+  signedIn: boolean
   signIn: React.ReactNode
   signOut: React.ReactNode
   siteName: string
@@ -20,8 +20,8 @@ export type HeaderElementProps = Readonly<{
 }>
 
 export const HeaderElement: React.FC<HeaderElementProps> = ({
-  isEditing,
-  isSignedIn,
+  editing,
+  signedIn,
   signIn,
   signOut,
   siteName,
@@ -37,9 +37,9 @@ export const HeaderElement: React.FC<HeaderElementProps> = ({
         </div>
         <nav className={navigationWrapper}>
           <ul className={navigation}>
-            {isSignedIn ? (
+            {signedIn ? (
               <>
-                {!isEditing && (
+                {!editing && (
                   <>
                     <li>
                       <ButtonLink href="/edit/new">New</ButtonLink>

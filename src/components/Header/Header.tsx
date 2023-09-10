@@ -5,20 +5,16 @@ import { SignOut } from '../SignOut'
 import { HeaderElement } from './Header.element'
 
 export type HeaderProps = Readonly<{
-  isEditing: boolean
-  isSignedIn: boolean
+  editing: boolean
+  signedIn: boolean
   title: string
 }>
 
-export const Header: React.FC<HeaderProps> = ({
-  isEditing,
-  isSignedIn,
-  title,
-}) => {
+export const Header: React.FC<HeaderProps> = ({ editing, signedIn, title }) => {
   return (
     <HeaderElement
-      isEditing={isEditing}
-      isSignedIn={isSignedIn}
+      editing={editing}
+      signedIn={signedIn}
       signIn={<SignIn />}
       signOut={<SignOut />}
       siteName={process.env.SITE_NAME ?? pkg.name}

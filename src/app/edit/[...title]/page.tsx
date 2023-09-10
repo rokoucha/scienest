@@ -12,11 +12,11 @@ export const runtime = 'edge'
 type Props = Readonly<{ params: { title: [string] } }>
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const isSignedIn = await auth().then((s) => s !== null)
+  const signedIn = await auth().then((s) => s !== null)
 
   const title = decodeURIComponent(params.title.at(0)!)
 
-  const article = await articleService.findOneByTitle(title, isSignedIn)
+  const article = await articleService.findOneByTitle({ title, signedIn })
 
   return {
     title: `Edit ${article?.title}`,
@@ -28,17 +28,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 const Page: React.FC<Props> = async ({ params }) => {
-  const isSignedIn = await auth().then((s) => s !== null)
+  const signedIn = await auth().then((s) => s !== null)
 
   const title = decodeURIComponent(params.title.at(0)!)
 
-  const article = await articleService
-    .findOneByTitle(title, isSignedIn)
-    .catch(() => null)
+  const article = await articleService.findOneByTitle({ title, signedIn })
 
   return (
     <>
-      <Header isEditing={true} isSignedIn={isSignedIn} title={title} />
+      <Header editing={true} signedIn={signedIn} title={title} />
       <Main>
         <Editor
           id={article?.id}

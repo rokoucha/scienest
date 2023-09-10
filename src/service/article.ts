@@ -25,18 +25,30 @@ export class ArticleService {
       : [Scope.Public]
   }
 
-  async findOneByTitle(
-    title: string,
-    isSignedIn = false,
-  ): Promise<Article | null> {
+  async findOneByTitle({
+    signedIn = false,
+    title,
+  }: {
+    signedIn?: boolean | undefined
+    title: string
+  }): Promise<Article | null> {
     return this.#repository.findOneByTitle({
-      scopes: this.#accessableScopes(isSignedIn),
+      scopes: this.#accessableScopes(signedIn),
       title,
     })
   }
 
-  async findMany(signedIn = false): Promise<ArticleList> {
-    return this.#repository.findMany({ scopes: this.#listableScopes(signedIn) })
+  async findMany({
+    link,
+    signedIn = false,
+  }: {
+    link?: string | undefined
+    signedIn?: boolean | undefined
+  } = {}): Promise<ArticleList> {
+    return this.#repository.findMany({
+      link,
+      scopes: this.#listableScopes(signedIn),
+    })
   }
 
   async createOrUpdateOne(
@@ -66,7 +78,10 @@ export class ArticleService {
       })
     }
 
-    const article = await this.findOneByTitle(parsed.title, true)
+    const article = await this.findOneByTitle({
+      signedIn: true,
+      title: parsed.title,
+    })
 
     if (!article) {
       throw new Error('Article not found')
@@ -79,9 +94,9 @@ export class ArticleService {
     await this.#repository.deleteOne(id)
   }
 
-  async getComponentData(isSignedIn = false): Promise<ComponentData> {
+  async getComponentData(signedIn = false): Promise<ComponentData> {
     return {
-      articles: await this.findMany(isSignedIn),
+      articles: await this.findMany({ signedIn }),
     }
   }
 }
