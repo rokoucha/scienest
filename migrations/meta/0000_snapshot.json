@@ -1,24 +1,31 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "d90ad93c-10c6-48cd-96a1-0dab577fea18",
+  "id": "461495da-f630-4711-90ee-c2d108f1afe2",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "article_links": {
       "name": "article_links",
       "columns": {
-        "article_id": {
-          "name": "article_id",
+        "title": {
+          "name": "title",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "link_id": {
-          "name": "link_id",
+        "from": {
+          "name": "from",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": false
+        },
+        "to": {
+          "name": "to",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         },
         "created_at": {
@@ -31,38 +38,38 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "article_links_article_id_articles_id_fk": {
-          "name": "article_links_article_id_articles_id_fk",
+        "article_links_from_articles_id_fk": {
+          "name": "article_links_from_articles_id_fk",
           "tableFrom": "article_links",
           "tableTo": "articles",
           "columnsFrom": [
-            "article_id"
+            "from"
           ],
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "article_links_link_id_links_id_fk": {
-          "name": "article_links_link_id_links_id_fk",
+        "article_links_to_articles_id_fk": {
+          "name": "article_links_to_articles_id_fk",
           "tableFrom": "article_links",
-          "tableTo": "links",
+          "tableTo": "articles",
           "columnsFrom": [
-            "link_id"
+            "to"
           ],
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "set null",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
-        "article_links_article_id_link_id_pk": {
+        "article_links_from_to_pk": {
           "columns": [
-            "article_id",
-            "link_id"
+            "from",
+            "to"
           ]
         }
       },
@@ -103,7 +110,7 @@
           "name": "latest_content_id",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "created_at": {
@@ -206,48 +213,10 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "links": {
-      "name": "links",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "text": {
-          "name": "text",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {
-        "links_text_unique": {
-          "name": "links_text_unique",
-          "columns": [
-            "text"
-          ],
-          "isUnique": true
-        }
-      },
-      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     }

@@ -48,11 +48,4 @@ export class ContentDAO {
       })
       .run()
   }
-
-  deleteManyByArticleId(id: string) {
-    return this.#db
-      .delete(contents)
-      .where(eq(contents.articleId, sql.placeholder('articleId')))
-      .run({ articleId: id })
-  }
 }

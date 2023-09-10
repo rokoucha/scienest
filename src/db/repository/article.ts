@@ -7,7 +7,6 @@ import { Database, db } from '../connection'
 import { ArticleDAO } from '../dao/article'
 import { ArticleLinkDAO } from '../dao/articleLink'
 import { ContentDAO } from '../dao/content'
-import { LinkDAO } from '../dao/link'
 
 export class ArticleRepository {
   #db: Database
@@ -15,20 +14,17 @@ export class ArticleRepository {
   #artcileDAO: ArticleDAO
   #articleLinkDAO: ArticleLinkDAO
   #contentDAO: ContentDAO
-  #linkDAO: LinkDAO
 
   constructor(
     database?: Database,
     articleDAO?: ArticleDAO,
     articleLinkDAO?: ArticleLinkDAO,
     contentDAO?: ContentDAO,
-    linkDAO?: LinkDAO,
   ) {
     this.#db = database ?? db
     this.#artcileDAO = articleDAO ?? new ArticleDAO(this.#db)
     this.#articleLinkDAO = articleLinkDAO ?? new ArticleLinkDAO(this.#db)
     this.#contentDAO = contentDAO ?? new ContentDAO(this.#db)
-    this.#linkDAO = linkDAO ?? new LinkDAO(this.#db)
   }
 
   public async findOneByTitle({
@@ -46,7 +42,7 @@ export class ArticleRepository {
       a.id,
       scopes,
     )
-    const links = await this.#linkDAO.findManyByArticleId(a.id)
+    const links = await this.#articleLinkDAO.findManyByArticleId(a.id)
 
     const article = {
       id: a.id,
@@ -84,7 +80,9 @@ export class ArticleRepository {
     if (a.length === 0) {
       return []
     }
-    const links = await this.#linkDAO.findManyByArticleIds(a.map((x) => x.id))
+    const links = await this.#articleLinkDAO.findManyByArticleIds(
+      a.map((x) => x.id),
+    )
 
     const articles = a.map((a) => ({
       id: a.id,
@@ -108,68 +106,8 @@ export class ArticleRepository {
     return articles
   }
 
-  public async insertOne({
-    content,
-    description,
-    heading,
-    links,
-    raw,
-    scope,
-    title,
-    toc,
-  }: {
-    content: string
-    description: string | null
-    heading: string
-    links: string[]
-    raw: string
-    scope: Scope
-    title: string
-    toc: Toc
-  }): Promise<string> {
-    const articleId = nanoid()
-    const contentId = nanoid()
-
-    await this.#artcileDAO.insertOne(
-      articleId,
-      scope,
-      title,
-      description,
-      contentId,
-    )
-    await this.#contentDAO.insertOne(
-      contentId,
-      articleId,
-      scope,
-      toc,
-      heading,
-      content,
-      raw,
-    )
-
-    if (links.length > 0) {
-      const existLinks =
-        links.length > 0 ? await this.#linkDAO.findManyByTitles(links) : []
-      const existLinksMap = new Map<string, string>(
-        existLinks.map(({ id, title }) => [title, id]),
-      )
-
-      const linkIds = links.map((title) => ({
-        id: existLinksMap.get(title) ?? nanoid(),
-        title,
-      }))
-
-      await this.#linkDAO.insertMany(linkIds)
-      await this.#articleLinkDAO.insertMany(
-        linkIds.map(({ id: linkId }) => ({ articleId, linkId })),
-      )
-    }
-
-    return articleId
-  }
-
-  public async updateOne(
-    id: string,
+  public async upsertOne(
+    id: string | null,
     {
       content,
       description,
@@ -189,45 +127,68 @@ export class ArticleRepository {
       title: string
       toc: Toc
     },
-  ): Promise<string> {
+  ): Promise<Article> {
+    const articleId = id ?? nanoid()
     const contentId = nanoid()
 
-    await this.#artcileDAO.updateOne(id, scope, title, description, contentId)
+    await this.#artcileDAO.upsertOne(
+      articleId,
+      scope,
+      title,
+      description,
+      contentId,
+    )
     await this.#contentDAO.insertOne(
       contentId,
-      id,
+      articleId,
       scope,
       toc,
       heading,
       content,
       raw,
     )
-    await this.#articleLinkDAO.deleteManyByArticleId(id)
+
+    await this.#articleLinkDAO.deleteManyByArticleId(articleId)
 
     if (links.length > 0) {
       const existLinks =
-        links.length > 0 ? await this.#linkDAO.findManyByTitles(links) : []
+        links.length > 0
+          ? await this.#artcileDAO.findManyIdsByTitles(links)
+          : []
       const existLinksMap = new Map<string, string>(
         existLinks.map(({ id, title }) => [title, id]),
       )
 
-      const linkIds = links.map((title) => ({
-        id: existLinksMap.get(title) ?? nanoid(),
-        title,
-      }))
-
-      await this.#linkDAO.insertMany(linkIds)
       await this.#articleLinkDAO.insertMany(
-        linkIds.map(({ id: linkId }) => ({ articleId: id, linkId })),
+        links.map((title) => ({
+          title,
+          from: articleId,
+          to: existLinksMap.get(title) ?? null,
+        })),
       )
     }
 
-    return id
+    const pseudoArticleTitles = await this.#articleLinkDAO.findManyPseudoLinks()
+    if (pseudoArticleTitles.length > 0) {
+      const pseudoArticleIds = await this.#artcileDAO.insertManyPseudo(
+        pseudoArticleTitles.map(({ title }) => title),
+      )
+      await Promise.all(
+        pseudoArticleIds.map(({ id: to, title }) =>
+          this.#articleLinkDAO.linkMany(title, to),
+        ),
+      )
+    }
+
+    const article = await this.findOneByTitle({ title, scopes: [scope] })
+    if (article === null) {
+      throw new Error(`Article not found: ${title}`)
+    }
+
+    return article
   }
 
   public async deleteOne(id: string): Promise<void> {
-    await this.#contentDAO.deleteManyByArticleId(id)
-    await this.#articleLinkDAO.deleteManyByArticleId(id)
     await this.#artcileDAO.deleteOne(id)
   }
 }

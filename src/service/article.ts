@@ -64,28 +64,11 @@ export class ArticleService {
       throw new Error(`Reserved title: ${parsed.title}`)
     }
 
-    if (id) {
-      await this.#repository.updateOne(id, {
-        ...parsed,
-        raw,
-        scope,
-      })
-    } else {
-      id = await this.#repository.insertOne({
-        ...parsed,
-        raw,
-        scope,
-      })
-    }
-
-    const article = await this.findOneByTitle({
-      signedIn: true,
-      title: parsed.title,
+    const article = await this.#repository.upsertOne(id, {
+      ...parsed,
+      raw,
+      scope,
     })
-
-    if (!article) {
-      throw new Error('Article not found')
-    }
 
     return article
   }

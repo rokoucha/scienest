@@ -1,6 +1,6 @@
-import { eq } from 'drizzle-orm'
+import { eq, inArray, isNull, sql } from 'drizzle-orm'
 import { Database } from '../connection'
-import { articleLinks } from '../schema'
+import { articleLinks, articles } from '../schema'
 
 export class ArticleLinkDAO {
   #db: Database
@@ -9,7 +9,55 @@ export class ArticleLinkDAO {
     this.#db = db
   }
 
-  insertMany(links: { articleId: string; linkId: string }[]) {
+  findManyByArticleId(articleId: string) {
+    return this.#db
+      .select({
+        title: sql<string>`coalesce(${articles.title}, ${articleLinks.title})`,
+        linked: sql`${articleLinks.to} is not null`.mapWith(Boolean),
+      })
+      .from(articleLinks)
+      .leftJoin(articles, eq(articleLinks.to, articles.id))
+      .where(eq(articleLinks.from, articleId))
+      .all()
+  }
+
+  findManyByArticleIds(articleIds: string[]) {
+    return this.#db
+      .select({
+        title: sql<string>`coalesce(${articles.title}, ${articleLinks.title})`,
+        linked: sql`${articleLinks.to} is not null`.mapWith(Boolean),
+        articleId: articleLinks.from,
+      })
+      .from(articleLinks)
+      .leftJoin(articles, eq(articleLinks.to, articles.id))
+      .where(inArray(articleLinks.from, articleIds))
+      .all()
+  }
+
+  findManyPseudoLinks() {
+    return this.#db
+      .select({
+        title: articleLinks.title,
+      })
+      .from(articleLinks)
+      .where(isNull(articleLinks.to))
+      .groupBy(articleLinks.title)
+      .having(sql<number>`count(${articleLinks.from}) > 1`)
+      .all()
+  }
+
+  linkMany(title: string, to: string) {
+    return this.#db
+      .update(articleLinks)
+      .set({
+        createdAt: new Date().toISOString(),
+        to,
+      })
+      .where(eq(articleLinks.title, title))
+      .run()
+  }
+
+  insertMany(links: { from: string; to: string | null; title: string }[]) {
     return this.#db
       .insert(articleLinks)
       .values(links)
@@ -20,7 +68,7 @@ export class ArticleLinkDAO {
   deleteManyByArticleId(articleId: string) {
     return this.#db
       .delete(articleLinks)
-      .where(eq(articleLinks.articleId, articleId))
+      .where(eq(articleLinks.from, articleId))
       .run()
   }
 }

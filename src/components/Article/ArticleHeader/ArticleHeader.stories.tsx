@@ -31,12 +31,10 @@ export const Primary: StoryObj<typeof ArticleHeader> = {
     ],
     links: [
       {
-        id: '1',
         title: 'linked',
         linked: true,
       },
       {
-        id: '2',
         title: 'unlinked',
         linked: false,
       },

@@ -91,8 +91,8 @@ export const ArticleHeader: React.FC<ArticleHeaderProps> = ({
           <summary>[]</summary>
           <nav>
             <ul className={linksList}>
-              {links.map(({ id, title, linked }) => (
-                <li key={id}>
+              {links.map(({ title, linked }) => (
+                <li key={title}>
                   <a
                     href={`/${title}`}
                     className={linked ? linkedLink : unlinkedLink}
