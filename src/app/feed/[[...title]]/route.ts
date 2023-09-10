@@ -12,7 +12,6 @@ export async function GET(
   const articles = await articleService.findMany({ link: title })
 
   return NextResponse.json({
-    $schema: 'https://json.schemastore.org/feed.json',
     version: 'https://jsonfeed.org/version/1.1',
     title: process.env.SITE_NAME,
     home_page_url: process.env.BASE_URL,
