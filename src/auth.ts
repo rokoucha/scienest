@@ -15,7 +15,7 @@ declare module 'next-auth' {
   }
 }
 
-export const { auth, handlers, CSRF_experimental } = NextAuth({
+export const { auth, handlers, signIn, signOut } = NextAuth({
   callbacks: {
     async signIn({ account }) {
       return (
@@ -25,4 +25,5 @@ export const { auth, handlers, CSRF_experimental } = NextAuth({
     },
   },
   providers: [GitHub],
+  useSecureCookies: process.env.APP_ENV === 'production',
 })
