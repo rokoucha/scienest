@@ -9,9 +9,9 @@ export async function GET(
   req: NextRequest,
   { params }: { params: { title?: string[] | undefined } },
 ): Promise<Response> {
-  const title = params.title?.join('/')
+  const link = params.title?.join('/')
 
-  const articles = await articleService.findMany({ link: title })
+  const articles = await articleService.findMany({ link })
 
   return NextResponse.json({
     version: 'https://jsonfeed.org/version/1.1',

@@ -32,7 +32,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         'application/feed+json': [
           {
             title: process.env.SITE_NAME,
-            url: `/api/feed/${encodeURIComponent(title)}`,
+            url: `/api/feed/${encodeURIComponent(
+              title === 'index' ? '' : title,
+            )}`,
           },
         ],
       },
