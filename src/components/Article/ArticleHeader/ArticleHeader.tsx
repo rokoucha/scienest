@@ -88,7 +88,7 @@ export const ArticleHeader: React.FC<ArticleHeaderProps> = ({
       <div className={info}>
         <span className={infoLabel}>links</span>
         <details>
-          <summary>[]</summary>
+          <summary>{links.length > 0 ? '[...]' : '[]'}</summary>
           <nav>
             <ul className={linksList}>
               {links.map(({ title, linked }) => (
@@ -108,7 +108,7 @@ export const ArticleHeader: React.FC<ArticleHeaderProps> = ({
       <div className={info}>
         <span className={infoLabel}>toc</span>
         <details>
-          <summary>headings</summary>
+          <summary>{toc.length > 0 ? '[...]' : '[]'}</summary>
           <nav>
             <TableOfContents toc={toc} />
           </nav>
@@ -117,7 +117,7 @@ export const ArticleHeader: React.FC<ArticleHeaderProps> = ({
       <div className={info}>
         <span className={infoLabel}>histories</span>
         <details>
-          <summary>commits</summary>
+          <summary>{histories.length > 0 ? '[...]' : '[]'}</summary>
           <nav>
             <ul className={historiesList}>
               {histories.map(({ id, createdAt }) => (
