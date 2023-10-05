@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { articleService } from '../../../app'
+import { articleService } from '../../../../app'
 
 export const runtime = 'edge'
 
