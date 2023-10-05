@@ -18,6 +18,7 @@ export class ArticleLinkDAO {
       .from(articleLinks)
       .leftJoin(articles, eq(articleLinks.to, articles.id))
       .where(eq(articleLinks.from, articleId))
+      .orderBy(articles.title)
       .all()
   }
 
@@ -31,6 +32,7 @@ export class ArticleLinkDAO {
       .from(articleLinks)
       .leftJoin(articles, eq(articleLinks.to, articles.id))
       .where(inArray(articleLinks.from, articleIds))
+      .orderBy(articles.title)
       .all()
   }
 
@@ -43,6 +45,7 @@ export class ArticleLinkDAO {
       .where(isNull(articleLinks.to))
       .groupBy(articleLinks.title)
       .having(sql<number>`count(${articleLinks.from}) > 1`)
+      .orderBy(articleLinks.title)
       .all()
   }
 
