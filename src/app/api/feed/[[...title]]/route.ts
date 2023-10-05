@@ -3,15 +3,15 @@ import { articleService } from '../../../../app'
 
 export const runtime = 'edge'
 
-const baseUrl = new URL(process.env.BASE_URL)
-
 export async function GET(
   req: NextRequest,
   { params }: { params: { title?: string[] | undefined } },
 ): Promise<Response> {
+  const baseUrl = new URL(process.env.BASE_URL)
+
   const link = params.title?.join('/')
 
-  const articles = await articleService.findMany({ link })
+  const articles = await articleService.findMany({ containsRoot: true, link })
 
   return NextResponse.json({
     version: 'https://jsonfeed.org/version/1.1',

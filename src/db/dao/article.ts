@@ -1,4 +1,4 @@
-import { and, eq, inArray } from 'drizzle-orm'
+import { and, eq, inArray, isNotNull, or } from 'drizzle-orm'
 import { Scope } from '../../model/scope'
 import { Database } from '../connection'
 import { articleLinks, articles, contents } from '../schema'
@@ -48,10 +48,11 @@ export class ArticleDAO {
       })
       .from(articles)
       .where(inArray(articles.scope, scopes))
+      .orderBy(articles.updatedAt)
       .all()
   }
 
-  findManyByLink(linkTitle: string, scopes: Scope[]) {
+  findManyByLink(linkTitle: string, scopes: Scope[], containsRoot: boolean) {
     const linkToId = this.#db
       .select({ linkId: articles.id })
       .from(articles)
@@ -69,9 +70,18 @@ export class ArticleDAO {
       })
       .from(articles)
       .leftJoin(articleLinks, and(eq(articles.id, articleLinks.from)))
-      .innerJoin(linkToId, eq(articleLinks.to, linkToId.linkId))
-      .where(inArray(articles.scope, scopes))
+      .leftJoin(linkToId, eq(articleLinks.to, linkToId.linkId))
+      .where(
+        and(
+          inArray(articles.scope, scopes),
+          or(
+            isNotNull(linkToId.linkId),
+            containsRoot ? eq(articles.title, linkTitle) : undefined,
+          ),
+        ),
+      )
       .groupBy(articles.id)
+      .orderBy(articles.updatedAt)
       .all()
   }
 

@@ -39,13 +39,16 @@ export class ArticleService {
   }
 
   async findMany({
+    containsRoot,
     link,
     signedIn = false,
   }: {
+    containsRoot?: boolean | undefined
     link?: string | undefined
     signedIn?: boolean | undefined
   } = {}): Promise<ArticleList> {
     return this.#repository.findMany({
+      containsRoot,
       link,
       scopes: this.#listableScopes(signedIn),
     })

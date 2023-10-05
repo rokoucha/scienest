@@ -68,14 +68,20 @@ export class ArticleRepository {
   }
 
   public async findMany({
+    containsRoot,
     link,
     scopes,
   }: {
+    containsRoot?: boolean | undefined
     link?: string | undefined
     scopes: Scope[]
   }): Promise<ArticleList> {
     const a = link
-      ? await this.#artcileDAO.findManyByLink(link, scopes)
+      ? await this.#artcileDAO.findManyByLink(
+          link,
+          scopes,
+          containsRoot ?? false,
+        )
       : await this.#artcileDAO.findMany(scopes)
     if (a.length === 0) {
       return []
