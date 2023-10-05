@@ -156,6 +156,8 @@ export class ArticleRepository {
 
     await this.#articleLinkDAO.deleteManyByArticleId(articleId)
 
+    await this.#articleLinkDAO.linkMany(title, articleId)
+
     if (links.length > 0) {
       const existLinks =
         links.length > 0
