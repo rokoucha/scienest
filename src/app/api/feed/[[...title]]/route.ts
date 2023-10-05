@@ -3,6 +3,8 @@ import { articleService } from '../../../../app'
 
 export const runtime = 'edge'
 
+const baseUrl = new URL(process.env.BASE_URL)
+
 export async function GET(
   req: NextRequest,
   { params }: { params: { title?: string[] | undefined } },
@@ -18,7 +20,7 @@ export async function GET(
     feed_url: req.url,
     language: process.env.SITE_LANG,
     items: articles.map((article) => ({
-      id: article.id,
+      id: `tag:${baseUrl.hostname},2023-10-05:${article.id}`,
       url: `${process.env.BASE_URL}/${encodeURIComponent(article.title)}`,
       title: article.title,
       content_text: article.description,
