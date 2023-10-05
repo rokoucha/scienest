@@ -27,6 +27,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       follow: article?.scope === Scope.Public,
       index: article?.scope === Scope.Public,
     },
+    alternates: {
+      types: {
+        'application/feed+json': [
+          {
+            title: process.env.SITE_NAME,
+            url: `/api/feed/${encodeURIComponent(title)}`,
+          },
+        ],
+      },
+    },
   }
 }
 
