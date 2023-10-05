@@ -1,8 +1,8 @@
 import { ComponentData } from '../components/Article'
-import { ArticleRepository } from '../db/repository/article'
 import { Article, ArticleList } from '../model/article'
 import { Scope } from '../model/scope'
 import { parse } from '../parser/markdown'
+import { ArticleRepository } from '../repository/article'
 
 const reserverdTitles = ['new', 'edit', 'auth']
 

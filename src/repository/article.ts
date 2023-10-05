@@ -1,12 +1,12 @@
 import { $array } from 'lizod'
-import { Article, ArticleList, ArticleListItem } from '../../model/article'
-import { Scope } from '../../model/scope'
-import { Toc } from '../../model/toc'
-import { nanoid } from '../../nanoid'
-import { Database, db } from '../connection'
-import { ArticleDAO } from '../dao/article'
-import { ArticleLinkDAO } from '../dao/articleLink'
-import { ContentDAO } from '../dao/content'
+import { Database, db } from '../db/connection'
+import { ArticleDAO } from '../db/dao/article'
+import { ArticleLinkDAO } from '../db/dao/articleLink'
+import { ContentDAO } from '../db/dao/content'
+import { Article, ArticleList, ArticleListItem } from '../model/article'
+import { Scope } from '../model/scope'
+import { Toc } from '../model/toc'
+import { nanoid } from '../nanoid'
 
 export class ArticleRepository {
   #db: Database
