@@ -5,6 +5,8 @@ declare module 'process' {
     namespace NodeJS {
       interface ProcessEnv {
         DB: D1Database
+
+        APP_ENV: string
         AUTH_GITHUB_ID: string
         AUTH_GITHUB_SECRET: string
         AUTH_SECRET: string
@@ -14,6 +16,7 @@ declare module 'process' {
         SITE_DESCRIPTION: string
         SITE_LANG: string
         SITE_NAME: string
+        SITE_TWITTER_CARD_SITE: string
       }
     }
   }

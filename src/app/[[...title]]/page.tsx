@@ -39,6 +39,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         ],
       },
     },
+    openGraph: {
+      title: article?.title,
+      description: article?.description ?? undefined,
+      type: 'article',
+      url: `${process.env.SITE_URL}/${encodeURIComponent(
+        title === 'index' ? '' : title,
+      )}`,
+      publishedTime: article?.createdAt,
+      modifiedTime: article?.updatedAt,
+      tags: article?.links?.map((l) => l.title),
+    },
+    twitter: {
+      title: article?.title,
+      description: article?.description ?? undefined,
+    },
   }
 }
 

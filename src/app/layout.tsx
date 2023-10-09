@@ -13,8 +13,30 @@ export const metadata = {
     template: `%s - ${process.env.SITE_NAME}`,
   },
   description: process.env.SITE_DESCRIPTION,
+  robots: {
+    follow: false,
+    index: false,
+  },
   applicationName: pkg.name,
   generator: pkg.name,
+  openGraph: {
+    title: {
+      absolute: process.env.SITE_NAME,
+      template: `%s - ${process.env.SITE_NAME}`,
+    },
+    siteName: process.env.SITE_NAME,
+    locale: process.env.SITE_LANG,
+  },
+  icons: undefined,
+  twitter: {
+    card: 'summary',
+    site: process.env.SITE_TWITTER_CARD_SITE,
+    title: {
+      absolute: process.env.SITE_NAME,
+      template: `%s - ${process.env.SITE_NAME}`,
+    },
+    images: undefined,
+  },
 } satisfies Metadata
 
 const RootLayout: React.FC<RootLayoutProps> = async ({ children }) => {
