@@ -40,6 +40,10 @@ export function tokenToPlain(token: Token): string {
   const t = token as TokenWithoutGeneric
 
   switch (t.type) {
+    case 'text': {
+      return t.tokens ? tokensToPlain(t.tokens) : t.text.replaceAll('\n', ' ')
+    }
+
     case 'space':
     case 'hr':
     case 'def':
@@ -50,7 +54,6 @@ export function tokenToPlain(token: Token): string {
 
     case 'code':
     case 'html':
-    case 'text':
     case 'escape':
     case 'codespan': {
       return t.text.replaceAll('\n', ' ')
@@ -85,7 +88,7 @@ export function tokenToPlain(token: Token): string {
 }
 
 export function tokensToPlain(tokens: Token[]): string {
-  return tokens.map((t) => tokenToPlain(t)).join('')
+  return tokens.map((t) => tokenToPlain(t)).join(' ')
 }
 
 function parseHeadings(tokens: Token[]): Toc {
