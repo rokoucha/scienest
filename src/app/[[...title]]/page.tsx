@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const article = await articleService.findOneByTitle({ title, signedIn })
 
   return {
-    title: article?.title,
+    title: article?.title === 'index' ? undefined : article?.title,
     description: article?.description,
     robots: {
       follow: article?.scope === Scope.Public,
