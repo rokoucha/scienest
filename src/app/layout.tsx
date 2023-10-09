@@ -30,7 +30,6 @@ export const metadata = {
   icons: undefined,
   twitter: {
     card: 'summary',
-    site: process.env.SITE_TWITTER_CARD_SITE,
     title: {
       absolute: process.env.SITE_NAME,
       template: `%s - ${process.env.SITE_NAME}`,

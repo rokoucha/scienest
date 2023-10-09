@@ -16,7 +16,6 @@ declare module 'process' {
         SITE_DESCRIPTION: string
         SITE_LANG: string
         SITE_NAME: string
-        SITE_TWITTER_CARD_SITE: string
       }
     }
   }
