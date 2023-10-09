@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: article?.title,
       description: article?.description ?? undefined,
       type: 'article',
-      url: `${process.env.SITE_URL}/${encodeURIComponent(
+      url: `${process.env.BASE_URL}/${encodeURIComponent(
         title === 'index' ? '' : title,
       )}`,
       publishedTime: article?.createdAt,
