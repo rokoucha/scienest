@@ -9,7 +9,7 @@ type RootLayoutProps = Readonly<{
 
 export const metadata = {
   title: {
-    absolute: process.env.SITE_NAME,
+    default: process.env.SITE_NAME,
     template: `%s - ${process.env.SITE_NAME}`,
   },
   description: process.env.SITE_DESCRIPTION,
@@ -21,7 +21,7 @@ export const metadata = {
   generator: pkg.name,
   openGraph: {
     title: {
-      absolute: process.env.SITE_NAME,
+      default: process.env.SITE_NAME,
       template: `%s - ${process.env.SITE_NAME}`,
     },
     siteName: process.env.SITE_NAME,
@@ -31,7 +31,7 @@ export const metadata = {
   twitter: {
     card: 'summary',
     title: {
-      absolute: process.env.SITE_NAME,
+      default: process.env.SITE_NAME,
       template: `%s - ${process.env.SITE_NAME}`,
     },
     images: undefined,
