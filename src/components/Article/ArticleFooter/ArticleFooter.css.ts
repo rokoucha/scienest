@@ -1,13 +1,12 @@
 import { style } from '@vanilla-extract/css'
 
 export const wrapper = style({
+  borderTopColor: 'grey',
+  borderTopStyle: 'solid',
+  borderTopWidth: '1px',
   display: 'flex',
   flexDirection: 'column',
   gap: '0.5rem',
-  marginBottom: '1rem',
-  borderTopStyle: 'solid',
-  borderTopWidth: '1px',
-  borderTopColor: 'grey',
 })
 
 export const titleText = style({

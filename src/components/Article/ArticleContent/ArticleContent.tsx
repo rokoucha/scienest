@@ -9,5 +9,7 @@ export type ArticleContentProps = Readonly<{
 }>
 
 export const ArticleContent: React.FC<ArticleContentProps> = ({ content }) => (
-  <MarkdownRenderer contents={content} />
+  <section>
+    <MarkdownRenderer contents={content} />
+  </section>
 )

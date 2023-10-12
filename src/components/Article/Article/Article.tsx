@@ -3,6 +3,7 @@ import { ArticleList, Article as ArticleModel } from '../../../model/article'
 import { ArticleContent, ComponentData } from '../ArticleContent/ArticleContent'
 import { ArticleFooter } from '../ArticleFooter'
 import { ArticleHeader } from '../ArticleHeader'
+import { container } from './Article.css'
 
 export type ArticleProps = Readonly<{
   article: ArticleModel
@@ -18,7 +19,7 @@ export const Article: React.FC<ArticleProps> = ({
   const path = `/${article.title === 'index' ? '' : article.title}`
 
   return (
-    <div>
+    <div className={container}>
       <ArticleHeader
         createdAt={new Date(article.createdAt)}
         heading={article.heading}
