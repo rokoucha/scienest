@@ -76,6 +76,7 @@ const Page: React.FC<Props> = async ({ params }) => {
   }
 
   const links = await articleService.findMany({
+    containsRoot: false,
     link: title === 'index' ? undefined : title,
   })
 
