@@ -12,7 +12,7 @@ export const ArticleFooter: React.FC<ArticleFooterProps> = ({ articles }) => {
     <footer className={wrapper}>
       <section>
         <header>
-          <h1>Related</h1>
+          <h1>Related article</h1>
         </header>
         <section className={articleList}>
           {articles.map((article) => (
