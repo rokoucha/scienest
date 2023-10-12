@@ -23,3 +23,9 @@ export const Primary: StoryObj<typeof ArticleFooter> = {
     })),
   },
 }
+
+export const NoRelatedArticle: StoryObj<typeof ArticleFooter> = {
+  args: {
+    articles: [],
+  },
+}

@@ -19,15 +19,19 @@ export const ArticleFooter: React.FC<ArticleFooterProps> = ({ articles }) => {
         <header>
           <h1 className={titleText}>Related article</h1>
         </header>
-        <section className={articleList}>
-          {articles.map((article) => (
-            <ArticleCard
-              key={article.id}
-              className={articleItem}
-              article={article}
-            />
-          ))}
-        </section>
+        {articles.length > 0 ? (
+          <section className={articleList}>
+            {articles.map((article) => (
+              <ArticleCard
+                key={article.id}
+                className={articleItem}
+                article={article}
+              />
+            ))}
+          </section>
+        ) : (
+          <p>No related article.</p>
+        )}
       </section>
     </footer>
   )
