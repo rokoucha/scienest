@@ -12,7 +12,6 @@ export const metadata = {
     default: process.env.SITE_NAME,
     template: `%s - ${process.env.SITE_NAME}`,
   },
-  description: process.env.SITE_DESCRIPTION,
   robots: {
     follow: false,
     index: false,

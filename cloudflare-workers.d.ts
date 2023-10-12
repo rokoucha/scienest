@@ -13,7 +13,6 @@ declare module 'process' {
         AUTH_TRUST_HOST: string
         BASE_URL: string
         GITHUB_USER_ID: string
-        SITE_DESCRIPTION: string
         SITE_LANG: string
         SITE_NAME: string
       }

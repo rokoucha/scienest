@@ -19,13 +19,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = decodeURIComponent(params.title?.at(0) ?? 'index')
 
   const article = await articleService.findOneByTitle({ title, signedIn })
+  if (!article) {
+    throw new Error('Article not found')
+  }
 
   return {
-    title: article?.title === 'index' ? undefined : article?.title,
-    description: article?.description,
+    ...(article.title !== 'index' && { title: article.title }),
+    description: article.description,
     robots: {
-      follow: article?.scope === Scope.Public,
-      index: article?.scope === Scope.Public,
+      follow: article.scope === Scope.Public,
+      index: article.scope === Scope.Public,
     },
     alternates: {
       types: {
@@ -33,26 +36,32 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           {
             title: process.env.SITE_NAME,
             url: `/api/feed/${encodeURIComponent(
-              title === 'index' ? '' : title,
+              article.title === 'index' ? '' : title,
             )}`,
           },
         ],
       },
     },
     openGraph: {
-      title: article?.title,
-      description: article?.description ?? undefined,
+      title:
+        article.title !== 'index'
+          ? article.title
+          : { absolute: process.env.SITE_NAME },
+      description: article.description ?? undefined,
       type: 'article',
       url: `${process.env.BASE_URL}/${encodeURIComponent(
-        title === 'index' ? '' : title,
+        article.title === 'index' ? '' : title,
       )}`,
-      publishedTime: article?.createdAt,
-      modifiedTime: article?.updatedAt,
-      tags: article?.links?.map((l) => l.title),
+      publishedTime: article.createdAt,
+      modifiedTime: article.updatedAt,
+      tags: article.links?.map((l) => l.title),
     },
     twitter: {
-      title: article?.title,
-      description: article?.description ?? undefined,
+      title:
+        article.title !== 'index'
+          ? article.title
+          : { absolute: process.env.SITE_NAME },
+      description: article.description ?? undefined,
     },
   }
 }
