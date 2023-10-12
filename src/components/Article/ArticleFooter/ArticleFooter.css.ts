@@ -10,6 +10,10 @@ export const wrapper = style({
   borderTopColor: 'grey',
 })
 
+export const titleText = style({
+  marginBlock: '1rem',
+})
+
 export const articleList = style({
   alignContent: 'flex-start',
   display: 'flex',

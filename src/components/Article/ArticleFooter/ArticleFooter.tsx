@@ -1,7 +1,12 @@
 import React from 'react'
 import { ArticleList } from '../../../model/article'
 import { ArticleCard } from '../ArticleCard'
-import { articleItem, articleList, wrapper } from './ArticleFooter.css'
+import {
+  articleItem,
+  articleList,
+  titleText,
+  wrapper,
+} from './ArticleFooter.css'
 
 export type ArticleFooterProps = Readonly<{
   articles: ArticleList
@@ -12,7 +17,7 @@ export const ArticleFooter: React.FC<ArticleFooterProps> = ({ articles }) => {
     <footer className={wrapper}>
       <section>
         <header>
-          <h1>Related article</h1>
+          <h1 className={titleText}>Related article</h1>
         </header>
         <section className={articleList}>
           {articles.map((article) => (
