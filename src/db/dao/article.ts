@@ -1,4 +1,4 @@
-import { and, eq, inArray, isNotNull, or } from 'drizzle-orm'
+import { and, eq, inArray, isNotNull, ne, or } from 'drizzle-orm'
 import { Scope } from '../../model/scope'
 import { Database } from '../connection'
 import { articleLinks, articles, contents } from '../schema'
@@ -36,7 +36,7 @@ export class ArticleDAO {
       .get()
   }
 
-  findMany(scopes: Scope[]) {
+  findMany(scopes: Scope[], containsIndex: boolean) {
     return this.#db
       .select({
         id: articles.id,
@@ -47,7 +47,12 @@ export class ArticleDAO {
         updatedAt: articles.updatedAt,
       })
       .from(articles)
-      .where(inArray(articles.scope, scopes))
+      .where(
+        and(
+          inArray(articles.scope, scopes),
+          containsIndex ? undefined : ne(articles.title, 'index'),
+        ),
+      )
       .orderBy(articles.updatedAt)
       .all()
   }

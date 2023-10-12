@@ -3,11 +3,6 @@ import { Scope } from '../../../model/scope'
 import { Article } from './Article'
 
 export default {
-  args: {
-    componentData: {
-      articles: [],
-    },
-  },
   argTypes: {
     componentData: { table: { disable: true } },
   },
@@ -85,5 +80,18 @@ export const Primary: StoryObj<typeof Article> = {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     },
+    links: [...Array(10)].map((_, i) => ({
+      id: `${i}`,
+      scope: Scope.Public,
+      title: `Article ${i}`,
+      description: 'Article Description',
+      links: [
+        { title: 'Link1', linked: true },
+        { title: 'Link2', linked: true },
+        { title: 'Link3', linked: false },
+      ],
+      createdAt: '2021-01-01T00:00:00.000Z',
+      updatedAt: '2021-01-01T00:00:00.000Z',
+    })),
   },
 }

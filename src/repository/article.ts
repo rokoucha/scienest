@@ -82,7 +82,7 @@ export class ArticleRepository {
           scopes,
           containsRoot ?? false,
         )
-      : await this.#artcileDAO.findMany(scopes)
+      : await this.#artcileDAO.findMany(scopes, containsRoot ?? true)
     if (a.length === 0) {
       return []
     }

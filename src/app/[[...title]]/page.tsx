@@ -75,13 +75,15 @@ const Page: React.FC<Props> = async ({ params }) => {
     notFound()
   }
 
-  const componentData = await articleService.getComponentData(signedIn)
+  const links = await articleService.findMany({
+    link: title === 'index' ? undefined : title,
+  })
 
   return (
     <>
       <Header editing={false} signedIn={signedIn} title={title} />
       <Main>
-        <Article article={article} componentData={componentData} />
+        <Article article={article} componentData={{}} links={links} />
       </Main>
       <Footer />
     </>

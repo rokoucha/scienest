@@ -9,9 +9,12 @@ export async function GET(
 ): Promise<Response> {
   const baseUrl = new URL(process.env.BASE_URL)
 
-  const link = params.title?.join('/')
+  const title = params.title?.join('/')
 
-  const articles = await articleService.findMany({ containsRoot: true, link })
+  const articles = await articleService.findMany({
+    containsRoot: true,
+    link: title === 'index' ? undefined : title,
+  })
 
   return NextResponse.json({
     version: 'https://jsonfeed.org/version/1.1',
