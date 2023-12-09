@@ -2,7 +2,7 @@
   "name": "scienest",
   "description": "Scientia est potentia",
   "version": "0.0.0",
-  "packageManager": "pnpm@8.10.5+sha1.4370a069f21873a0ad83c785b8048ed8caf6e6e9",
+  "packageManager": "pnpm@8.12.0+sha256.553e4eb0e2a2c9abcb419b3262bdc7aee8ae3c42e2301a1807d44575786160c9",
   "private": true,
   "type": "module",
   "dependencies": {
