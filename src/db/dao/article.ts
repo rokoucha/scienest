@@ -1,4 +1,4 @@
-import { and, eq, inArray, isNotNull, ne, or } from 'drizzle-orm'
+import { and, desc, eq, inArray, isNotNull, ne, or } from 'drizzle-orm'
 import { Scope } from '../../model/scope'
 import { Database } from '../connection'
 import { articleLinks, articles, contents } from '../schema'
@@ -53,7 +53,7 @@ export class ArticleDAO {
           containsIndex ? undefined : ne(articles.title, 'index'),
         ),
       )
-      .orderBy(articles.updatedAt)
+      .orderBy(desc(articles.updatedAt))
       .all()
   }
 
@@ -86,7 +86,7 @@ export class ArticleDAO {
         ),
       )
       .groupBy(articles.id)
-      .orderBy(articles.updatedAt)
+      .orderBy(desc(articles.updatedAt))
       .all()
   }
 
@@ -98,6 +98,7 @@ export class ArticleDAO {
       })
       .from(articles)
       .where(inArray(articles.title, titles))
+      .orderBy(desc(articles.updatedAt))
       .all()
   }
 
