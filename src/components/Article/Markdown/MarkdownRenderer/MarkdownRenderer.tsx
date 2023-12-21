@@ -1,7 +1,7 @@
 import Markdown, { MarkdownToJSX } from 'markdown-to-jsx'
-import Link from 'next/link'
 import React from 'react'
 import { Heading, HeadingProps } from '../Heading'
+import { Link } from '../Link'
 
 export type MarkdownRendererProps = Readonly<{
   contents: string
