@@ -22,7 +22,11 @@ export function Link<RouteType>({
   }, [props.href])
 
   return (
-    <NextLink className={clsx(className, wrapper)} {...props}>
+    <NextLink
+      className={clsx(className, wrapper)}
+      {...(isExternal && { target: '_blank', rel: 'noopener noreferrer' })}
+      {...props}
+    >
       <span className={linkText}>{children}</span>
       {isExternal && (
         <FontAwesomeIcon icon={faUpRightFromSquare} className={linkIcon} />
