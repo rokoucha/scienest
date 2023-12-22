@@ -14,6 +14,7 @@ export const blockquote = style({
   borderRadius: '0.25rem',
   borderStyle: 'solid',
   borderWidth: '1px',
+  display: 'block',
   margin: 0,
   padding: '1rem',
 })
