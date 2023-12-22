@@ -2,6 +2,7 @@ import Markdown, { MarkdownToJSX } from 'markdown-to-jsx'
 import React from 'react'
 import { Heading, HeadingProps } from '../Heading'
 import { Link } from '../Link'
+import { ul } from './Markdown.css'
 
 export type MarkdownRendererProps = Readonly<{
   contents: string
@@ -58,6 +59,12 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
           props: {
             level: 6,
           } satisfies HeadingProps,
+        },
+        ul: {
+          component: 'ul',
+          props: {
+            className: ul,
+          },
         },
         ...options?.overrides,
       },
