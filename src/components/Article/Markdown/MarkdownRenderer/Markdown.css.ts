@@ -1,5 +1,10 @@
-import { style } from '@vanilla-extract/css'
+import { globalStyle, style } from '@vanilla-extract/css'
 
 export const ul = style({
-  paddingLeft: '1rem',
+  listStyle: 'none',
+  paddingLeft: 0,
+})
+
+globalStyle(`${ul} > li::before`, {
+  content: '- ',
 })
