@@ -25,3 +25,15 @@ globalStyle(`${blockquote} > p`, {
 globalStyle(`${blockquote} > p::before`, {
   content: '> ',
 })
+
+export const code = style({
+  backgroundColor: 'whitesmoke',
+  '::before': {
+    content: '`',
+  },
+  '::after': {
+    content: '`',
+  },
+  paddingInline: '0.25rem',
+  borderRadius: '0.25rem',
+})
