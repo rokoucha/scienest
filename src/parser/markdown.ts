@@ -225,7 +225,7 @@ export function parse(src: string): {
   const lex = lexer.lex(src)
 
   const titleToken = lex.at(0)
-  const descriptionToken = lex.at(1)
+  const descriptionTokens = lex.slice(1, 3)
   const contentTokens = lex.slice(1)
 
   if (titleToken === undefined) {
@@ -234,7 +234,8 @@ export function parse(src: string): {
 
   return {
     title: tokenToPlain(titleToken),
-    description: descriptionToken ? tokenToPlain(descriptionToken) : null,
+    description:
+      descriptionTokens.length > 0 ? tokensToPlain(descriptionTokens) : null,
     toc: parseHeadings(contentTokens),
     heading: tokenToRaw(titleToken),
     content: tokensToRaw(contentTokens),
