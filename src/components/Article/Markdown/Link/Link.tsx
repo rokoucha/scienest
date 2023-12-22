@@ -6,6 +6,7 @@ import { useMemo } from 'react'
 import { linkIcon, linkText, wrapper } from './Link.css'
 
 export function Link<RouteType>({
+  children,
   className,
   ...props
 }: LinkProps<RouteType>): JSX.Element {
@@ -21,11 +22,11 @@ export function Link<RouteType>({
   }, [props.href])
 
   return (
-    <span className={wrapper}>
-      <NextLink className={clsx(className, linkText)} {...props} />
+    <NextLink className={clsx(className, wrapper)} {...props}>
+      <span className={linkText}>{children}</span>
       {isExternal && (
         <FontAwesomeIcon icon={faUpRightFromSquare} className={linkIcon} />
       )}
-    </span>
+    </NextLink>
   )
 }

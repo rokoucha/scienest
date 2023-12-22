@@ -9,6 +9,6 @@ export const linkText = style({
 })
 
 export const linkIcon = style({
-  fontSize: '0.75rem',
+  height: '0.75rem',
   marginLeft: '0.25rem',
 })
