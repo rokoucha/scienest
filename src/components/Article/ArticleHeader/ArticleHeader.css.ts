@@ -17,6 +17,7 @@ export const headingTitle = style({
 export const infoContainer = style({
   color: 'grey',
   display: 'flex',
+  flexWrap: 'wrap',
   fontSize: '0.8rem',
   gap: '0.8rem',
 })
