@@ -64,3 +64,14 @@ globalStyle(`${pre} > code::before`, {
 globalStyle(`${pre} > code::after`, {
   content: '',
 })
+
+export const ol = style({
+  counterReset: 'list',
+  listStyle: 'none',
+  paddingLeft: '0.25rem',
+})
+
+globalStyle(`${ol} > li::before`, {
+  content: 'counter(list) ". "',
+  counterIncrement: 'list',
+})
