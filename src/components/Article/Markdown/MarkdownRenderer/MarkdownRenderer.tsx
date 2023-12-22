@@ -2,7 +2,7 @@ import Markdown, { MarkdownToJSX } from 'markdown-to-jsx'
 import React from 'react'
 import { Heading, HeadingProps } from '../Heading'
 import { Link } from '../Link'
-import { blockquote, code, ul } from './Markdown.css'
+import { blockquote, code, pre, ul } from './Markdown.css'
 
 export type MarkdownRendererProps = Readonly<{
   contents: string
@@ -76,6 +76,12 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
           component: 'code',
           props: {
             className: code,
+          },
+        },
+        pre: {
+          component: 'pre',
+          props: {
+            className: pre,
           },
         },
         ...options?.overrides,
