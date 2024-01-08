@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const article = await articleService.findOneByTitle({ title, signedIn })
   if (!article) {
-    throw new Error('Article not found')
+    return {}
   }
 
   return {

@@ -25,7 +25,7 @@ export class ArticleDAO {
         updatedAt: articles.updatedAt,
       })
       .from(articles)
-      .innerJoin(
+      .leftJoin(
         contents,
         and(
           eq(articles.id, contents.articleId),
