@@ -1,9 +1,12 @@
 import { style } from '@vanilla-extract/css'
 
-export const wrapper = style({
+export const hr = style({
   borderTopColor: 'grey',
   borderTopStyle: 'solid',
   borderTopWidth: '1px',
+})
+
+export const wrapper = style({
   display: 'flex',
   flexDirection: 'column',
   gap: '0.5rem',
