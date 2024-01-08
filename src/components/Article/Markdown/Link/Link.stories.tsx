@@ -11,3 +11,10 @@ export const Primary: StoryObj<typeof Link> = {
     href: 'https://example.com',
   },
 }
+
+export const ButtonLike: StoryObj<typeof Link> = {
+  args: {
+    children: '#Link',
+    href: '/link' as any,
+  },
+}
