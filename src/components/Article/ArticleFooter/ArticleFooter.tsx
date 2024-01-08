@@ -23,7 +23,7 @@ export const ArticleFooter: React.FC<ArticleFooterProps> = ({
     <footer className={clsx({ [wrapper]: true, [hr]: existContent ?? true })}>
       {existContent && (
         <header>
-          <h1 className={titleText}>Related article</h1>
+          <h2 className={titleText}>Related article</h2>
         </header>
       )}
       <section>

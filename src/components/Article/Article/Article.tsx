@@ -35,7 +35,10 @@ export const Article: React.FC<ArticleProps> = ({
           content={article.content}
         />
       )}
-      <ArticleFooter articles={links} existContent={article.content !== null} />
+      <ArticleFooter
+        articles={links}
+        existContent={article.content !== null && links.length > 0}
+      />
     </div>
   )
 }
