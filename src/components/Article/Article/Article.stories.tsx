@@ -80,7 +80,7 @@ export const Primary: StoryObj<typeof Article> = {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     },
-    links: [...Array(10)].map((_, i) => ({
+    links: [...Array(13)].map((_, i) => ({
       id: `${i}`,
       scope: Scope.Public,
       title: `Article ${i}`,
@@ -112,7 +112,7 @@ export const WithoutContent: StoryObj<typeof Article> = {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     },
-    links: [...Array(10)].map((_, i) => ({
+    links: [...Array(13)].map((_, i) => ({
       id: `${i}`,
       scope: Scope.Public,
       title: `Article ${i}`,

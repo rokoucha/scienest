@@ -8,7 +8,7 @@ export default {
 
 export const Primary: StoryObj<typeof ArticleFooter> = {
   args: {
-    articles: [...Array(10)].map((_, i) => ({
+    articles: [...Array(13)].map((_, i) => ({
       id: `${i}`,
       scope: Scope.Public,
       title: `Article ${i}`,

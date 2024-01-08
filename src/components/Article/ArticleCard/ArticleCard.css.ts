@@ -5,7 +5,6 @@ export const wrapper = style({
   borderRadius: '0.5rem',
   borderStyle: 'solid',
   borderWidth: '1px',
-  maxWidth: '50%',
 })
 
 export const thumbnailAlt = style({

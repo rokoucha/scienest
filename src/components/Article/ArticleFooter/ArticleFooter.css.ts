@@ -21,9 +21,20 @@ export const articleList = style({
   display: 'flex',
   flexDirection: 'row',
   flexWrap: 'wrap',
-  gap: '2rem',
+  gap: '1.5rem',
+  '@media': {
+    'screen and (max-width: 768px)': {
+      flexDirection: 'column',
+    },
+  },
 })
 
 export const articleItem = style({
-  width: '20rem',
+  maxWidth: 'calc((768px - 1.5rem * 2) / 2)',
+  width: '100%',
+  '@media': {
+    'screen and (max-width: 768px)': {
+      maxWidth: '100%',
+    },
+  },
 })
