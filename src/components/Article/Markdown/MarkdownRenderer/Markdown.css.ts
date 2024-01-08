@@ -75,3 +75,8 @@ globalStyle(`${ol} > li::before`, {
   content: 'counter(list) ". "',
   counterIncrement: 'list',
 })
+
+export const img = style({
+  height: 'auto',
+  maxWidth: '100%',
+})
