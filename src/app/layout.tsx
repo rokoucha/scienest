@@ -35,6 +35,7 @@ export const metadata = {
     },
     images: undefined,
   },
+  metadataBase: new URL(process.env.BASE_URL),
 } satisfies Metadata
 
 const RootLayout: React.FC<RootLayoutProps> = async ({ children }) => {
