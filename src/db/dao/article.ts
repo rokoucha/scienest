@@ -53,7 +53,7 @@ export class ArticleDAO {
           containsIndex ? undefined : ne(articles.title, 'index'),
         ),
       )
-      .orderBy(desc(articles.updatedAt))
+      .orderBy(desc(articles.createdAt))
       .all()
   }
 
@@ -86,7 +86,7 @@ export class ArticleDAO {
         ),
       )
       .groupBy(articles.id)
-      .orderBy(desc(articles.updatedAt))
+      .orderBy(desc(articles.createdAt))
       .all()
   }
 
@@ -98,7 +98,7 @@ export class ArticleDAO {
       })
       .from(articles)
       .where(inArray(articles.title, titles))
-      .orderBy(desc(articles.updatedAt))
+      .orderBy(desc(articles.createdAt))
       .all()
   }
 
