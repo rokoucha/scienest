@@ -7,7 +7,7 @@ import { Scope } from '../../model/scope'
 
 export type EditorProps = Readonly<{
   id?: string | undefined
-  raw?: string | undefined
+  raw?: string | undefined | null
   scope?: Scope | undefined
   title: string
 }>

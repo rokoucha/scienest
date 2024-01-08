@@ -58,7 +58,7 @@ export class ArticleService {
     id: string | null,
     { scope, raw }: Pick<Article, 'scope' | 'raw'>,
   ): Promise<Article> {
-    const parsed = parse(raw)
+    const parsed = parse(raw ?? '')
 
     if (
       parsed.title === '' ||
@@ -69,7 +69,7 @@ export class ArticleService {
 
     const article = await this.#repository.upsertOne(id, {
       ...parsed,
-      raw,
+      raw: raw ?? '',
       scope,
     })
 

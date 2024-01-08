@@ -22,14 +22,17 @@ export const Article: React.FC<ArticleProps> = ({
     <div className={container}>
       <ArticleHeader
         createdAt={new Date(article.createdAt)}
-        heading={article.heading}
+        heading={article.heading ?? article.title}
         histories={article.histories ?? []}
         links={article.links ?? []}
         path={path}
         scope={article.scope}
-        toc={article.toc}
+        toc={article.toc ?? []}
       />
-      <ArticleContent componentData={componentData} content={article.content} />
+      <ArticleContent
+        componentData={componentData}
+        content={article.content ?? ''}
+      />
       <ArticleFooter articles={links} />
     </div>
   )
