@@ -16,15 +16,16 @@ export const headingTitle = style({
 
 export const infoContainer = style({
   color: 'grey',
+  columnGap: '0.8rem',
   display: 'flex',
   flexWrap: 'wrap',
   fontSize: '0.8rem',
-  gap: '0.8rem',
 })
 
 export const info = style({
   display: 'flex',
   flexDirection: 'row',
+  lineHeight: '1rem',
   selectors: {
     '&:not(:last-child)::after': {
       content: ',',
