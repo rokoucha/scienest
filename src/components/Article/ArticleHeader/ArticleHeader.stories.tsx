@@ -39,7 +39,6 @@ export const Primary: StoryObj<typeof ArticleHeader> = {
         linked: false,
       },
     ],
-    path: '/index',
     scope: Scope.Public,
     heading: '# index',
     toc: [
