@@ -20,7 +20,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const article = await articleService.findOneByTitle({ title, signedIn })
   if (!article) {
-    return {}
+    return {
+      title: title,
+      openGraph: {
+        title: title !== 'index' ? title : { absolute: process.env.SITE_NAME },
+        type: 'article',
+        url: `${process.env.BASE_URL}/${encodeURIComponent(
+          title === 'index' ? '' : title,
+        )}`,
+      },
+      twitter: {
+        title: title !== 'index' ? title : { absolute: process.env.SITE_NAME },
+      },
+    }
   }
 
   return {

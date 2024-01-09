@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const article = await articleService.findOneByTitle({ title, signedIn })
 
   return {
-    title: `Edit ${article?.title}`,
+    title: `Edit ${article?.title ?? title}`,
     robots: {
       follow: false,
       index: false,
