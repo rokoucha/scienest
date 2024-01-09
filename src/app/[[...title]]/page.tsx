@@ -16,7 +16,10 @@ type Props = Readonly<{ params: { title: [string] | undefined } }>
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const signedIn = await auth().then((s) => s !== null)
 
-  const title = decodeURIComponent(params.title?.at(0) ?? 'index')
+  const title = decodeURIComponent(params.title?.at(0) ?? 'index').replaceAll(
+    '_',
+    ' ',
+  )
 
   const article = await articleService.findOneByTitle({ title, signedIn })
   if (!article) {
@@ -81,7 +84,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const Page: React.FC<Props> = async ({ params }) => {
   const signedIn = await auth().then((s) => s !== null)
 
-  const title = decodeURIComponent(params.title?.at(0) ?? 'index')
+  const title = decodeURIComponent(params.title?.at(0) ?? 'index').replaceAll(
+    '_',
+    ' ',
+  )
 
   const article = await articleService.findOneByTitle({ title, signedIn })
   if (!article) {

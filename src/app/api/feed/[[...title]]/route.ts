@@ -9,7 +9,7 @@ export async function GET(
 ): Promise<Response> {
   const baseUrl = new URL(process.env.BASE_URL)
 
-  const title = params.title?.join('/')
+  const title = params.title?.join('/').replaceAll('_', ' ')
 
   const articles = await articleService.findMany({
     containsRoot: true,
