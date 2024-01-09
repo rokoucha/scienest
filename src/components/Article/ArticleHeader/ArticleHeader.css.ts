@@ -45,21 +45,6 @@ export const scopeText = style({
   top: '-0.1rem',
 })
 
-export const dateText = style({
-  fontFamily: 'monospace',
-})
-
-export const pathText = style({
-  fontFamily: 'monospace',
-  margin: 0,
-  paddingTop: '0.1rem',
-})
-
-export const tagsText = style({
-  margin: 0,
-  paddingTop: '0.1rem',
-})
-
 export const tocHeadingsList = style({
   counterReset: 'counter',
   listStyleType: 'none',

@@ -13,7 +13,6 @@ import {
   infoLabel,
   linkedLink,
   linksList,
-  pathText,
   scopeText,
   tocHeadingsList,
   tocHeadingsListItem,
@@ -39,7 +38,6 @@ export type ArticleHeaderProps = Readonly<{
   heading: string
   histories: History[]
   links: Link[]
-  path: string
   scope: Scope
   toc: Toc
 }>
@@ -49,7 +47,6 @@ export const ArticleHeader: React.FC<ArticleHeaderProps> = ({
   heading,
   histories,
   links,
-  path,
   scope,
   toc,
 }) => (
@@ -80,10 +77,6 @@ export const ArticleHeader: React.FC<ArticleHeaderProps> = ({
           {String(createdAt.getMonth() + 1).padStart(2, '0')}-
           {String(createdAt.getDate()).padStart(2, '0')}
         </time>
-      </div>
-      <div className={info}>
-        <span className={infoLabel}>path</span>
-        <pre className={pathText}>{path}</pre>
       </div>
       <div className={info}>
         <span className={infoLabel}>links</span>

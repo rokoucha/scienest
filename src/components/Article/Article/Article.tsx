@@ -16,8 +16,6 @@ export const Article: React.FC<ArticleProps> = ({
   componentData,
   links,
 }) => {
-  const path = `/${article.title === 'index' ? '' : article.title}`
-
   return (
     <div className={container}>
       <ArticleHeader
@@ -25,7 +23,6 @@ export const Article: React.FC<ArticleProps> = ({
         heading={article.heading ?? `# ${article.title}`}
         histories={article.histories ?? []}
         links={article.links ?? []}
-        path={path}
         scope={article.scope}
         toc={article.toc ?? []}
       />
