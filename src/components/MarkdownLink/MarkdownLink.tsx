@@ -1,39 +1,81 @@
 import { faUpRightFromSquare } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { clsx } from 'clsx'
-import NextLink, { LinkProps } from 'next/link'
+import Link, { LinkProps } from 'next/link'
 import React, { useMemo } from 'react'
-import { buttonLikeLink, linkIcon, linkText, wrapper } from './MarkdownLink.css'
+import { TwitterCard } from '../TwitterCard'
+import { ButtonLikeLink } from './ButtonLikeLink'
+import { linkIcon, linkText, wrapper } from './MarkdownLink.css'
 
 export function MarkdownLink<RouteType>({
   children,
   className,
   ...props
 }: LinkProps<RouteType>): React.ReactNode {
-  const isExternal = useMemo<boolean>(() => {
-    if (props.href === undefined) return false
+  const inline = useMemo<boolean>(() => {
+    return !Boolean(Array.isArray(children) ? children.at(0) : children)
+  }, [children])
+
+  const card = useMemo<boolean>(() => {
+    return (Array.isArray(children) ? children.at(0) : children) === props.href
+  }, [children, props.href])
+
+  const url = useMemo<URL | string>(() => {
+    if (props.href === undefined) return ''
 
     try {
-      new URL(String(props.href))
-      return true
+      return new URL(props.href.toString())
     } catch {
-      return false
+      return props.href.toString()
     }
   }, [props.href])
 
-  const isButtonLike =
-    !isExternal && children && String(children).startsWith('#')
+  const external = typeof url !== 'string'
+
+  // Old
+  if (
+    !external &&
+    ((Array.isArray(children) && children.at(0)?.startsWith('#')) ||
+      (typeof children === 'string' && children.startsWith('#')))
+  ) {
+    return (
+      <ButtonLikeLink className={className} children={children} {...props} />
+    )
+  }
+
+  // hash
+  if (inline && !external) {
+    return (
+      <ButtonLikeLink
+        {...props}
+        className={className}
+        children={`#${url}`}
+        href={`/${url}`}
+      />
+    )
+  }
+
+  // twitter
+  if (
+    card &&
+    external &&
+    url.hostname === 'twitter.com' &&
+    url.pathname.split('/').at(2) === 'status' &&
+    url.pathname.split('/').at(3) !== undefined
+  ) {
+    return <TwitterCard tweetId={url.pathname.split('/').at(3)!} />
+  }
 
   return (
-    <NextLink
-      className={clsx(className, wrapper, isButtonLike && buttonLikeLink)}
-      {...(isExternal && { target: '_blank', rel: 'noopener noreferrer' })}
+    <Link
+      className={clsx(className, wrapper)}
+      {...(external && { target: '_blank', rel: 'noopener noreferrer' })}
       {...props}
     >
-      <span className={clsx(!isButtonLike && linkText)}>{children}</span>
-      {isExternal && (
+      <span className={clsx(linkText)}>{children}</span>
+      {external && (
         <FontAwesomeIcon icon={faUpRightFromSquare} className={linkIcon} />
       )}
-    </NextLink>
+    </Link>
   )
 }

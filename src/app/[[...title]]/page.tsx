@@ -7,6 +7,7 @@ import { Article } from '../../components/Article'
 import { Footer } from '../../components/Footer'
 import { Header } from '../../components/Header'
 import { Main } from '../../components/Main'
+import { TwitterCardLoader } from '../../components/TwitterCard'
 import { Scope } from '../../model/scope'
 
 export const runtime = 'edge'
@@ -114,6 +115,7 @@ const Page: React.FC<Props> = async ({ params }) => {
         <Article article={article} links={links} />
       </Main>
       <Footer />
+      <TwitterCardLoader />
     </>
   )
 }
