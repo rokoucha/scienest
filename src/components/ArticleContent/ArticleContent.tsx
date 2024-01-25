@@ -1,10 +1,7 @@
 import React from 'react'
-import { MarkdownRenderer } from '../Markdown/MarkdownRenderer'
-
-export type ComponentData = {}
+import { MarkdownRenderer } from '../MarkdownRenderer'
 
 export type ArticleContentProps = Readonly<{
-  componentData: ComponentData
   content: string
 }>
 

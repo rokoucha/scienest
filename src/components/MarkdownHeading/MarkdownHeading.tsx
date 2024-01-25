@@ -1,14 +1,14 @@
 import clsx from 'clsx'
 import React from 'react'
-import { hash, inner } from './Heading.css'
+import { hash, inner } from './MarkdownHeading.css'
 
-export type HeadingProps = Readonly<
+export type MarkdownHeadingProps = Readonly<
   React.ComponentPropsWithRef<'h1'> & {
     level: 1 | 2 | 3 | 4 | 5 | 6
   }
 >
 
-export const Heading: React.FC<HeadingProps> = React.forwardRef(
+export const MarkdownHeading: React.FC<MarkdownHeadingProps> = React.forwardRef(
   ({ children, level, ...props }, ref) =>
     React.createElement(
       `h${level}`,

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Scope } from '../../../model/scope'
+import { Scope } from '../../model/scope'
 import { ArticleCard } from './ArticleCard'
 
 export default {

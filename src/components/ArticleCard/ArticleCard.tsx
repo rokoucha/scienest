@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import Link from 'next/link'
 import React from 'react'
-import { ArticleListItem } from '../../../model/article'
+import { ArticleListItem } from '../../model/article'
 import {
   container,
   dateText,

@@ -1,7 +1,7 @@
 import Markdown, { MarkdownToJSX } from 'markdown-to-jsx'
 import React from 'react'
-import { Heading, HeadingProps } from '../Heading'
-import { Link } from '../Link'
+import { MarkdownHeading, MarkdownHeadingProps } from '../MarkdownHeading'
+import { MarkdownLink } from '../MarkdownLink'
 import { blockquote, code, img, ol, pre, ul } from './Markdown.css'
 
 export type MarkdownRendererProps = Readonly<{
@@ -22,43 +22,43 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       ...options,
       overrides: {
         a: {
-          component: Link,
+          component: MarkdownLink,
         },
         h1: {
-          component: Heading,
+          component: MarkdownHeading,
           props: {
             level: 1,
-          } satisfies HeadingProps,
+          } satisfies MarkdownHeadingProps,
         },
         h2: {
-          component: Heading,
+          component: MarkdownHeading,
           props: {
             level: 2,
-          } satisfies HeadingProps,
+          } satisfies MarkdownHeadingProps,
         },
         h3: {
-          component: Heading,
+          component: MarkdownHeading,
           props: {
             level: 3,
-          } satisfies HeadingProps,
+          } satisfies MarkdownHeadingProps,
         },
         h4: {
-          component: Heading,
+          component: MarkdownHeading,
           props: {
             level: 4,
-          } satisfies HeadingProps,
+          } satisfies MarkdownHeadingProps,
         },
         h5: {
-          component: Heading,
+          component: MarkdownHeading,
           props: {
             level: 5,
-          } satisfies HeadingProps,
+          } satisfies MarkdownHeadingProps,
         },
         h6: {
-          component: Heading,
+          component: MarkdownHeading,
           props: {
             level: 6,
-          } satisfies HeadingProps,
+          } satisfies MarkdownHeadingProps,
         },
         ul: {
           component: 'ul',

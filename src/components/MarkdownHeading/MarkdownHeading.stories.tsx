@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Heading } from './Heading'
+import { MarkdownHeading } from './MarkdownHeading'
 
 export default {
   argTypes: {
     ref: { table: { disable: true } },
   },
-  component: Heading,
-} satisfies Meta<typeof Heading>
+  component: MarkdownHeading,
+} satisfies Meta<typeof MarkdownHeading>
 
-export const Primary: StoryObj<typeof Heading> = {
+export const Primary: StoryObj<typeof MarkdownHeading> = {
   args: {
     children: 'Heading',
     level: 1,

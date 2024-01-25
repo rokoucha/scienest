@@ -1,21 +1,16 @@
 import React from 'react'
-import { ArticleList, Article as ArticleModel } from '../../../model/article'
-import { ArticleContent, ComponentData } from '../ArticleContent/ArticleContent'
+import { ArticleList, Article as ArticleModel } from '../../model/article'
+import { ArticleContent } from '../ArticleContent/ArticleContent'
 import { ArticleFooter } from '../ArticleFooter'
 import { ArticleHeader } from '../ArticleHeader'
 import { container } from './Article.css'
 
 export type ArticleProps = Readonly<{
   article: ArticleModel
-  componentData: ComponentData
   links: ArticleList
 }>
 
-export const Article: React.FC<ArticleProps> = ({
-  article,
-  componentData,
-  links,
-}) => {
+export const Article: React.FC<ArticleProps> = ({ article, links }) => {
   return (
     <div className={container}>
       <ArticleHeader
@@ -26,12 +21,7 @@ export const Article: React.FC<ArticleProps> = ({
         scope={article.scope}
         toc={article.toc ?? []}
       />
-      {article.content && (
-        <ArticleContent
-          componentData={componentData}
-          content={article.content}
-        />
-      )}
+      {article.content && <ArticleContent content={article.content} />}
       <ArticleFooter articles={links} existContent={article.content !== null} />
     </div>
   )

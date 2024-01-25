@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import React from 'react'
-import { ArticleList } from '../../../model/article'
+import { ArticleList } from '../../model/article'
 import { ArticleCard } from '../ArticleCard'
 import {
   articleItem,

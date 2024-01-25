@@ -1,11 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Scope } from '../../../model/scope'
+import { Scope } from '../../model/scope'
 import { Article } from './Article'
 
 export default {
-  argTypes: {
-    componentData: { table: { disable: true } },
-  },
   component: Article,
 } satisfies Meta<typeof Article>
 

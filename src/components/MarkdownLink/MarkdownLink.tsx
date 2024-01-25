@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { clsx } from 'clsx'
 import NextLink, { LinkProps } from 'next/link'
 import React, { useMemo } from 'react'
-import { buttonLikeLink, linkIcon, linkText, wrapper } from './Link.css'
+import { buttonLikeLink, linkIcon, linkText, wrapper } from './MarkdownLink.css'
 
-export function Link<RouteType>({
+export function MarkdownLink<RouteType>({
   children,
   className,
   ...props

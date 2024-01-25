@@ -111,7 +111,7 @@ const Page: React.FC<Props> = async ({ params }) => {
     <>
       <Header editing={false} signedIn={signedIn} title={title} />
       <Main>
-        <Article article={article} componentData={{}} links={links} />
+        <Article article={article} links={links} />
       </Main>
       <Footer />
     </>

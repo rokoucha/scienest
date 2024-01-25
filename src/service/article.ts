@@ -1,4 +1,3 @@
-import { ComponentData } from '../components/Article'
 import { Article, ArticleList } from '../model/article'
 import { Scope } from '../model/scope'
 import { parse } from '../parser/markdown'
@@ -78,11 +77,5 @@ export class ArticleService {
 
   async deleteOne(id: string): Promise<void> {
     await this.#repository.deleteOne(id)
-  }
-
-  async getComponentData(signedIn = false): Promise<ComponentData> {
-    return {
-      articles: await this.findMany({ signedIn }),
-    }
   }
 }

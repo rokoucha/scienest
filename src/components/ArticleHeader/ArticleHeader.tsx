@@ -1,10 +1,10 @@
 import React from 'react'
-import { History } from '../../../model/history'
-import { Link } from '../../../model/link'
-import { Scope } from '../../../model/scope'
-import { Toc } from '../../../parser/markdown'
-import { Heading } from '../Markdown/Heading'
-import { MarkdownRenderer } from '../Markdown/MarkdownRenderer'
+import { History } from '../../model/history'
+import { Link } from '../../model/link'
+import { Scope } from '../../model/scope'
+import { Toc } from '../../parser/markdown'
+import { MarkdownHeading } from '../MarkdownHeading'
+import { MarkdownRenderer } from '../MarkdownRenderer'
 import {
   headingTitle,
   historiesList,
@@ -56,7 +56,7 @@ export const ArticleHeader: React.FC<ArticleHeaderProps> = ({
       options={{
         overrides: {
           h1: {
-            component: Heading,
+            component: MarkdownHeading,
             props: {
               className: headingTitle,
               level: 1,

@@ -2,14 +2,6 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { ArticleContent } from './ArticleContent'
 
 export default {
-  args: {
-    componentData: {
-      articles: [],
-    },
-  },
-  argTypes: {
-    componentData: { table: { disable: true } },
-  },
   component: ArticleContent,
 } satisfies Meta<typeof ArticleContent>
 
