@@ -1,2 +1,3 @@
 export type { LinkProps as MarkdownLinkProps } from 'next/link'
-export { MarkdownLink as MarkdownLink } from './MarkdownLink'
+export { ExternalLink } from './ExternalLink'
+export { MarkdownLink } from './MarkdownLink'

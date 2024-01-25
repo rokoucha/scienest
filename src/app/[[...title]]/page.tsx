@@ -7,7 +7,7 @@ import { Article } from '../../components/Article'
 import { Footer } from '../../components/Footer'
 import { Header } from '../../components/Header'
 import { Main } from '../../components/Main'
-import { TwitterCardLoader } from '../../components/TwitterCard'
+import { TwitterCardLoader } from '../../components/TwitterCardLink'
 import { Scope } from '../../model/scope'
 
 export const runtime = 'edge'

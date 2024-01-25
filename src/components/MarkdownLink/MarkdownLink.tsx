@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { clsx } from 'clsx'
 import Link, { LinkProps } from 'next/link'
 import React, { useMemo } from 'react'
-import { TwitterCard } from '../TwitterCard'
+import { TwitterCardLink } from '../TwitterCardLink'
 import { ButtonLikeLink } from './ButtonLikeLink'
 import { linkIcon, linkText, wrapper } from './MarkdownLink.css'
 
@@ -63,7 +63,7 @@ export function MarkdownLink<RouteType>({
     url.pathname.split('/').at(2) === 'status' &&
     url.pathname.split('/').at(3) !== undefined
   ) {
-    return <TwitterCard tweetId={url.pathname.split('/').at(3)!} />
+    return <TwitterCardLink url={url.href} />
   }
 
   return (

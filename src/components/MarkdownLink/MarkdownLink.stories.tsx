@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { TwitterCardLoader } from '../TwitterCard'
+import { TwitterCardLoader } from '../TwitterCardLink'
 import { MarkdownLink } from './MarkdownLink'
 
 export default {
