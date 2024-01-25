@@ -1,10 +1,10 @@
 'use client'
 
 import React, { useEffect, useRef } from 'react'
-import { stubWrapper } from './TwitterCard.css'
+import { stubLoadingText, stubWrapper } from './TwitterCard.css'
 
 function createTwitterCardStubHTML(url: string): string {
-  return `<blockquote class="twitter-tweet ${stubWrapper}"><p>Loading...</p><a href="${url}"></a></blockquote>`
+  return `<blockquote class="twitter-tweet ${stubWrapper}"><p class="${stubLoadingText}">Loading...</p><a href="${url}"></a></blockquote>`
 }
 
 export type TwitterCardProps = Readonly<{
