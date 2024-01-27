@@ -10,6 +10,7 @@ export const articles = sqliteTable('articles', {
   title: text('title').notNull().unique(),
   description: text('description'),
   latestContentId: text('latest_content_id'),
+  thumbnailId: text('thumbnail_id'),
   createdAt: text('created_at')
     .notNull()
     .$defaultFn(() => new Date().toISOString()),
@@ -51,3 +52,22 @@ export const articleLinks = sqliteTable(
     fromTo: primaryKey({ columns: [t.from, t.to] }),
   }),
 )
+
+export const thumbnails = sqliteTable('thumbnails', {
+  id: text('id')
+    .primaryKey()
+    .$defaultFn(() => nanoid()),
+  articleId: text('article_id')
+    .notNull()
+    .unique()
+    .references(() => articles.id, {
+      onDelete: 'cascade',
+    }),
+  url: text('url'),
+  createdAt: text('created_at')
+    .notNull()
+    .$defaultFn(() => new Date().toISOString()),
+  updatedAt: text('updated_at')
+    .notNull()
+    .$defaultFn(() => new Date().toISOString()),
+})
