@@ -13,6 +13,7 @@ export const Primary: StoryObj<typeof Article> = {
       scope: 'Public',
       title: 'index',
       description: 'description',
+      thumbnailUrl: null,
       toc: [
         {
           id: 'first',
@@ -82,6 +83,7 @@ export const Primary: StoryObj<typeof Article> = {
       scope: Scope.Public,
       title: `Article ${i}`,
       description: 'Article Description',
+      thumbnailUrl: null,
       links: [
         { title: 'Link1', linked: true },
         { title: 'Link2', linked: true },
@@ -100,6 +102,7 @@ export const WithoutContent: StoryObj<typeof Article> = {
       scope: 'Public',
       title: 'index',
       description: null,
+      thumbnailUrl: null,
       toc: [],
       heading: '# index',
       content: null,
@@ -114,6 +117,7 @@ export const WithoutContent: StoryObj<typeof Article> = {
       scope: Scope.Public,
       title: `Article ${i}`,
       description: 'Article Description',
+      thumbnailUrl: null,
       links: [
         { title: 'Link1', linked: true },
         { title: 'Link2', linked: true },

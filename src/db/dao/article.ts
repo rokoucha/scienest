@@ -120,6 +120,7 @@ export class ArticleDAO {
     scope: Scope,
     title: string,
     description: string | null,
+    thumbnailId: string | null,
     latestContentId: string,
   ) {
     return this.#db

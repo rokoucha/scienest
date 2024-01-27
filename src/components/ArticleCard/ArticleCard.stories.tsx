@@ -13,6 +13,7 @@ export const Primary: StoryObj<typeof ArticleCard> = {
       scope: Scope.Public,
       title: 'Article Title',
       description: 'Article Description',
+      thumbnailUrl: null,
       links: [
         { title: 'Link1', linked: true },
         { title: 'Link2', linked: true },

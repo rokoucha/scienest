@@ -7,6 +7,16 @@ export const wrapper = style({
   borderWidth: '1px',
 })
 
+export const thumbnail = style({
+  borderTopLeftRadius: '0.5rem',
+  borderTopRightRadius: '0.5rem',
+  display: 'block',
+  height: '10rem',
+  marginInline: 'auto',
+  objectFit: 'cover',
+  width: '100%',
+})
+
 export const thumbnailAlt = style({
   display: 'block',
   fontSize: '7rem',

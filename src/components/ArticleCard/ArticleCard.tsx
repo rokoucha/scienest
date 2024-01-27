@@ -9,6 +9,7 @@ import {
   link,
   linkList,
   linkedLink,
+  thumbnail,
   thumbnailAlt,
   titleText,
   unlinkedLink,
@@ -27,7 +28,15 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
   return (
     <article className={clsx(wrapper, className)}>
       <Link href={`/${encodeURIComponent(article.title)}`}>
-        <span className={thumbnailAlt}>📄</span>
+        {article.thumbnailUrl ? (
+          <img
+            alt={article.title}
+            className={thumbnail}
+            src={article.thumbnailUrl}
+          />
+        ) : (
+          <span className={thumbnailAlt}>📄</span>
+        )}
       </Link>
       <div className={container}>
         <header>

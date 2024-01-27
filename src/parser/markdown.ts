@@ -195,6 +195,56 @@ function collectLinks(tokens: Token[]): string[] {
     .filter((l): l is string => l !== null)
 }
 
+function collectImages(tokens: Token[]): string[] {
+  return (tokens as TokenWithoutGeneric[])
+    .flatMap((t) => {
+      switch (t.type) {
+        case 'space':
+        case 'code':
+        case 'hr':
+        case 'html':
+        case 'def':
+        case 'escape':
+        case 'codespan':
+        case 'br': {
+          return null
+        }
+
+        case 'heading':
+        case 'blockquote':
+        case 'list_item':
+        case 'paragraph':
+        case 'text':
+        case 'link':
+        case 'strong':
+        case 'em':
+        case 'del': {
+          return collectImages(t.tokens ?? [])
+        }
+
+        case 'image': {
+          return t.href
+        }
+
+        case 'table': {
+          return collectImages([
+            ...t.header.flatMap((t) => t.tokens),
+            ...t.rows.flatMap((r) => r.flatMap((t) => t.tokens)),
+          ])
+        }
+
+        case 'list': {
+          return collectImages(t.items.flatMap((i) => i.tokens))
+        }
+
+        default: {
+          throw new Error(`Unknown token: ${t satisfies never}`)
+        }
+      }
+    })
+    .filter((l): l is string => l !== null)
+}
+
 function pageLinksFromTokens(tokens: Token[]): string[] {
   return [
     ...new Set(
@@ -216,6 +266,7 @@ function pageLinksFromTokens(tokens: Token[]): string[] {
 export function parse(src: string): {
   title: string
   description: string | null
+  thumbnailUrl: string | null
   toc: Toc
   heading: string
   content: string
@@ -236,6 +287,7 @@ export function parse(src: string): {
     title: tokenToPlain(titleToken),
     description:
       descriptionTokens.length > 0 ? tokensToPlain(descriptionTokens) : null,
+    thumbnailUrl: collectImages(contentTokens).at(0) ?? null,
     toc: parseHeadings(contentTokens),
     heading: tokenToRaw(titleToken),
     content: tokensToRaw(contentTokens),

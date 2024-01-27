@@ -3,6 +3,7 @@ import { Database, db } from '../db/connection'
 import { ArticleDAO } from '../db/dao/article'
 import { ArticleLinkDAO } from '../db/dao/articleLink'
 import { ContentDAO } from '../db/dao/content'
+import { ThumbnailDAO } from '../db/dao/thumbnail'
 import { Article, ArticleList, ArticleListItem } from '../model/article'
 import { Scope } from '../model/scope'
 import { Toc } from '../model/toc'
@@ -14,17 +15,20 @@ export class ArticleRepository {
   #artcileDAO: ArticleDAO
   #articleLinkDAO: ArticleLinkDAO
   #contentDAO: ContentDAO
+  #thumbnailDAO: ThumbnailDAO
 
   constructor(
     database?: Database,
     articleDAO?: ArticleDAO,
     articleLinkDAO?: ArticleLinkDAO,
     contentDAO?: ContentDAO,
+    thumbnailDAO?: ThumbnailDAO,
   ) {
     this.#db = database ?? db
     this.#artcileDAO = articleDAO ?? new ArticleDAO(this.#db)
     this.#articleLinkDAO = articleLinkDAO ?? new ArticleLinkDAO(this.#db)
     this.#contentDAO = contentDAO ?? new ContentDAO(this.#db)
+    this.#thumbnailDAO = thumbnailDAO ?? new ThumbnailDAO(this.#db)
   }
 
   public async findOneByTitle({
@@ -43,12 +47,14 @@ export class ArticleRepository {
       scopes,
     )
     const links = await this.#articleLinkDAO.findManyByArticleId(a.id)
+    const thumbnail = await this.#thumbnailDAO.findOneByArticleId(a.id)
 
     const article = {
       id: a.id,
       scope: a.scope,
       title: a.title,
       description: a.description,
+      thumbnailUrl: thumbnail?.url ?? null,
       toc: a.toc,
       heading: a.heading,
       content: a.content,
@@ -85,12 +91,16 @@ export class ArticleRepository {
     const links = await this.#articleLinkDAO.findManyByArticleIds(
       a.map((x) => x.id),
     )
+    const thumbnails = await this.#thumbnailDAO.findManyByArticleIds(
+      a.map((x) => x.id),
+    )
 
     const articles = a.map((a) => ({
       id: a.id,
       scope: a.scope,
       title: a.title,
       description: a.description,
+      thumbnailUrl: thumbnails.find((t) => t.articleId === a.id)?.url ?? null,
       links: links
         .filter((l) => l.articleId === a.id)
         .map(({ articleId, ...l }) => l),
@@ -113,6 +123,7 @@ export class ArticleRepository {
     {
       content,
       description,
+      thumbnailUrl,
       heading,
       links,
       raw,
@@ -122,6 +133,7 @@ export class ArticleRepository {
     }: {
       content: string
       description: string | null
+      thumbnailUrl: string | null
       heading: string
       links: string[]
       raw: string
@@ -132,12 +144,14 @@ export class ArticleRepository {
   ): Promise<Article> {
     const articleId = id ?? nanoid()
     const contentId = nanoid()
+    const thumbnailId = thumbnailUrl ? nanoid() : null
 
     await this.#artcileDAO.upsertOne(
       articleId,
       scope,
       title,
       description,
+      thumbnailId,
       contentId,
     )
     await this.#contentDAO.insertOne(
@@ -149,6 +163,12 @@ export class ArticleRepository {
       content,
       raw,
     )
+
+    if (thumbnailId) {
+      await this.#thumbnailDAO.upsertOne(thumbnailId, articleId, thumbnailUrl)
+    } else {
+      await this.#thumbnailDAO.deleteOneByArticleId(articleId).catch()
+    }
 
     await this.#articleLinkDAO.deleteManyByArticleId(articleId)
 
