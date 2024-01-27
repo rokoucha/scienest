@@ -48,6 +48,6 @@ export const articleLinks = sqliteTable(
       .$defaultFn(() => new Date().toISOString()),
   },
   (t) => ({
-    fromTo: primaryKey(t.from, t.to),
+    fromTo: primaryKey({ columns: [t.from, t.to] }),
   }),
 )
