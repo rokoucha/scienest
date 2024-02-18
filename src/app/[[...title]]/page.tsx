@@ -24,19 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const article = await articleService.findOneByTitle({ title, signedIn })
   if (!article) {
-    return {
-      title: title,
-      openGraph: {
-        title: title !== 'index' ? title : { absolute: process.env.SITE_NAME },
-        type: 'article',
-        url: `${process.env.BASE_URL}/${encodeURIComponent(
-          title === 'index' ? '' : title,
-        )}`,
-      },
-      twitter: {
-        title: title !== 'index' ? title : { absolute: process.env.SITE_NAME },
-      },
-    }
+    return {}
   }
 
   return {
@@ -64,13 +52,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           ? article.title
           : { absolute: process.env.SITE_NAME },
       description: article.description ?? undefined,
+      images: article.thumbnailUrl ?? undefined,
+      modifiedTime: article.updatedAt,
+      publishedTime: article.createdAt,
+      tags: article.links?.map((l) => l.title),
       type: 'article',
       url: `${process.env.BASE_URL}/${encodeURIComponent(
         article.title === 'index' ? '' : title,
       )}`,
-      publishedTime: article.createdAt,
-      modifiedTime: article.updatedAt,
-      tags: article.links?.map((l) => l.title),
     },
     twitter: {
       title:
