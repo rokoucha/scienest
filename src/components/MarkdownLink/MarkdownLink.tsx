@@ -32,7 +32,8 @@ export function MarkdownLink<RouteType>({
 
   const external = typeof url !== 'string'
 
-  // Old
+  // Old internal has link
+  // [#hoge](/hoge)
   if (
     !external &&
     ((Array.isArray(children) && children.at(0)?.startsWith('#')) ||
@@ -43,7 +44,8 @@ export function MarkdownLink<RouteType>({
     )
   }
 
-  // hash
+  // internal hash link
+  // [](hoge)
   if (inline && !external) {
     return (
       <ButtonLikeLink
@@ -55,7 +57,7 @@ export function MarkdownLink<RouteType>({
     )
   }
 
-  // twitter
+  // twitter card
   if (
     card &&
     external &&
@@ -66,6 +68,7 @@ export function MarkdownLink<RouteType>({
     return <TwitterCardLink url={url.href} />
   }
 
+  // other external link
   return (
     <Link
       className={clsx(className, wrapper)}

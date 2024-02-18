@@ -1,4 +1,4 @@
-import { and, desc, eq, inArray, isNotNull, ne, or } from 'drizzle-orm'
+import { and, desc, eq, inArray, isNotNull, like, ne, or } from 'drizzle-orm'
 import { Scope } from '../../model/scope'
 import { Database } from '../connection'
 import { articleLinks, articles, contents } from '../schema'
@@ -51,6 +51,27 @@ export class ArticleDAO {
         and(
           inArray(articles.scope, scopes),
           containsIndex ? undefined : ne(articles.title, 'index'),
+        ),
+      )
+      .orderBy(desc(articles.createdAt))
+      .all()
+  }
+
+  searchManyByTitle(query: string, scopes: Scope[]) {
+    return this.#db
+      .select({
+        id: articles.id,
+        scope: articles.scope,
+        title: articles.title,
+        description: articles.description,
+        createdAt: articles.createdAt,
+        updatedAt: articles.updatedAt,
+      })
+      .from(articles)
+      .where(
+        and(
+          inArray(articles.scope, scopes),
+          like(articles.title, `%${query}%`),
         ),
       )
       .orderBy(desc(articles.createdAt))

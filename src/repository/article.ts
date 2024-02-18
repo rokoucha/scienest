@@ -118,6 +118,47 @@ export class ArticleRepository {
     return articles
   }
 
+  public async searchManyByTitle({
+    query,
+    scopes,
+  }: {
+    query: string
+    scopes: Scope[]
+  }): Promise<ArticleList> {
+    const a = await this.#artcileDAO.searchManyByTitle(query, scopes)
+    if (a.length === 0) {
+      return []
+    }
+    const links = await this.#articleLinkDAO.findManyByArticleIds(
+      a.map((x) => x.id),
+    )
+    const thumbnails = await this.#thumbnailDAO.findManyByArticleIds(
+      a.map((x) => x.id),
+    )
+
+    const articles = a.map((a) => ({
+      id: a.id,
+      scope: a.scope,
+      title: a.title,
+      description: a.description,
+      thumbnailUrl: thumbnails.find((t) => t.articleId === a.id)?.url ?? null,
+      links: links
+        .filter((l) => l.articleId === a.id)
+        .map(({ articleId, ...l }) => l),
+      createdAt: a.createdAt,
+      updatedAt: a.updatedAt,
+    }))
+
+    const ctx = { errors: [] }
+    if (!$array(ArticleListItem)(articles, ctx)) {
+      throw new Error(
+        `Invalid article list: ${JSON.stringify(ctx.errors, null, 2)}`,
+      )
+    }
+
+    return articles
+  }
+
   public async upsertOne(
     id: string | null,
     {

@@ -53,6 +53,19 @@ export class ArticleService {
     })
   }
 
+  async searchManyByTitle({
+    query,
+    signedIn = false,
+  }: {
+    query: string
+    signedIn?: boolean | undefined
+  }): Promise<ArticleList> {
+    return this.#repository.searchManyByTitle({
+      query,
+      scopes: this.#listableScopes(signedIn),
+    })
+  }
+
   async createOrUpdateOne(
     id: string | null,
     { scope, raw }: Pick<Article, 'scope' | 'raw'>,

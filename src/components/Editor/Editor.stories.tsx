@@ -7,6 +7,6 @@ export default {
 
 export const Primary: StoryObj<typeof Editor> = {
   args: {
-    title: 'index',
+    raw: '',
   },
 }

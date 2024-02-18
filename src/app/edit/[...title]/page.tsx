@@ -1,11 +1,13 @@
 import { Metadata } from 'next'
 import React from 'react'
+import { saveArticle } from '../../../actions/article'
 import { articleService } from '../../../app'
 import { auth } from '../../../auth'
 import { Editor } from '../../../components/Editor'
 import { Footer } from '../../../components/Footer'
 import { Header } from '../../../components/Header'
 import { Main } from '../../../components/Main'
+import { Scope } from '../../../model/scope'
 
 export const runtime = 'edge'
 
@@ -38,12 +40,29 @@ const Page: React.FC<Props> = async ({ params }) => {
     <>
       <Header editing={true} signedIn={signedIn} title={title} />
       <Main>
-        <Editor
-          id={article?.id}
-          raw={article?.raw}
-          scope={article?.scope}
-          title={title}
-        />
+        <div>
+          <form action={saveArticle}>
+            <input name="id" type="hidden" defaultValue={article?.id ?? ''} />
+            <div>
+              <label htmlFor="scope">公開範囲</label>
+              <select
+                id="scope"
+                name="scope"
+                defaultValue={article?.scope ?? Scope.Private}
+              >
+                <option value={Scope.Public}>公開</option>
+                <option value={Scope.Protected}>限定公開</option>
+                <option value={Scope.Private}>非公開</option>
+              </select>
+            </div>
+            <div>
+              <Editor raw={article?.raw ?? `# ${title}`} />
+            </div>
+            <div>
+              <button type="submit">Save</button>
+            </div>
+          </form>
+        </div>
       </Main>
       <Footer />
     </>
