@@ -54,10 +54,11 @@ export const descriptionText = style({
 
 export const linkList = style({
   display: 'flex',
+  flexWrap: 'wrap',
+  gap: '0.5rem',
   listStyleType: 'none',
   margin: 0,
   padding: 0,
-  gap: '0.5rem',
 })
 
 export const link = style({

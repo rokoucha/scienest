@@ -14,13 +14,19 @@ export const Primary: StoryObj<typeof ArticleCard> = {
       title: 'Article Title',
       description: 'Article Description',
       thumbnailUrl: null,
-      links: [
-        { title: 'Link1', linked: true },
-        { title: 'Link2', linked: true },
-        { title: 'Link3', linked: false },
-      ],
+      links: Array(10)
+        .fill(null)
+        .map((_, i) => ({
+          linked: i % 2 === 0,
+          title: `Link ${i + 1}`,
+        })),
       createdAt: '2021-01-01T00:00:00.000Z',
       updatedAt: '2021-01-01T00:00:00.000Z',
     },
   },
+  render: (props) => (
+    <div style={{ width: 'calc((768px - 1.5rem * 2) / 2)' }}>
+      <ArticleCard {...props} />
+    </div>
+  ),
 }
