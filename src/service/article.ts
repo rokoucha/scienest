@@ -1,6 +1,6 @@
 import { Article, ArticleList } from '../model/article'
-import { Scope } from '../model/scope'
 import { parse } from '../parser/markdown'
+import { accessableScopes, listableScopes } from '../permission'
 import { ArticleRepository } from '../repository/article'
 
 const reserverdTitles = ['new', 'edit', 'auth']
@@ -12,18 +12,6 @@ export class ArticleService {
     this.#repository = repository ?? new ArticleRepository()
   }
 
-  #accessableScopes(signedIn: boolean): Scope[] {
-    return signedIn
-      ? [Scope.Public, Scope.Protected, Scope.Private]
-      : [Scope.Public, Scope.Protected]
-  }
-
-  #listableScopes(signedIn: boolean): Scope[] {
-    return signedIn
-      ? [Scope.Public, Scope.Protected, Scope.Private]
-      : [Scope.Public]
-  }
-
   async findOneByTitle({
     signedIn = false,
     title,
@@ -32,7 +20,7 @@ export class ArticleService {
     title: string
   }): Promise<Article | null> {
     return this.#repository.findOneByTitle({
-      scopes: this.#accessableScopes(signedIn),
+      scopes: accessableScopes(signedIn),
       title,
     })
   }
@@ -49,7 +37,7 @@ export class ArticleService {
     return this.#repository.findMany({
       containsRoot,
       link,
-      scopes: this.#listableScopes(signedIn),
+      scopes: listableScopes(signedIn),
     })
   }
 
@@ -62,7 +50,7 @@ export class ArticleService {
   }): Promise<ArticleList> {
     return this.#repository.searchManyByTitle({
       query,
-      scopes: this.#listableScopes(signedIn),
+      scopes: listableScopes(signedIn),
     })
   }
 

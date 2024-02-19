@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 import React from 'react'
-import { articleService } from '../../app'
+import { articleService, thumbnailService } from '../../app'
 import { auth } from '../../auth'
 import { Article } from '../../components/Article'
 import { Footer } from '../../components/Footer'
@@ -27,6 +27,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {}
   }
 
+  const favicon = await thumbnailService.findOneByTitle({ title: 'index' })
+
   return {
     ...(article.title !== 'index' && { title: article.title }),
     description: article.description,
@@ -46,6 +48,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         ],
       },
     },
+    icons: favicon ?? undefined,
     openGraph: {
       title:
         article.title !== 'index'
