@@ -63,11 +63,16 @@ export function tokenToPlain(token: Token): string {
     case 'blockquote':
     case 'list_item':
     case 'paragraph':
-    case 'link':
     case 'strong':
     case 'em':
     case 'del': {
       return tokensToPlain(t.tokens ?? [])
+    }
+
+    case 'link': {
+      return t.text === '' && t.tokens.length === 0
+        ? t.href
+        : tokensToPlain(t.tokens ?? [])
     }
 
     case 'table': {
@@ -88,7 +93,10 @@ export function tokenToPlain(token: Token): string {
 }
 
 export function tokensToPlain(tokens: Token[]): string {
-  return tokens.map((t) => tokenToPlain(t)).join(' ')
+  return tokens
+    .map((t) => tokenToPlain(t))
+    .filter((t) => !t.match(/^\s*$/))
+    .join(' ')
 }
 
 function parseHeadings(tokens: Token[]): Toc {
@@ -276,17 +284,22 @@ export function parse(src: string): {
   const lex = lexer.lex(src)
 
   const titleToken = lex.at(0)
-  const descriptionTokens = lex.slice(1, 3)
   const contentTokens = lex.slice(1)
 
   if (titleToken === undefined) {
     throw new Error('No title found')
   }
 
+  const description =
+    contentTokens.length > 0 ? tokensToPlain(contentTokens) : null
+
   return {
     title: tokenToPlain(titleToken),
-    description:
-      descriptionTokens.length > 0 ? tokensToPlain(descriptionTokens) : null,
+    description: description
+      ? description.length > 32
+        ? description.slice(0, 32).trimEnd() + '…'
+        : description
+      : null,
     thumbnailUrl: collectImages(contentTokens).at(0) ?? null,
     toc: parseHeadings(contentTokens),
     heading: tokenToRaw(titleToken),
