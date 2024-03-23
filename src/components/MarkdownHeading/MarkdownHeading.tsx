@@ -8,13 +8,15 @@ export type MarkdownHeadingProps = Readonly<
   }
 >
 
-export const MarkdownHeading: React.FC<MarkdownHeadingProps> = React.forwardRef(
-  ({ children, level, ...props }, ref) =>
-    React.createElement(
-      `h${level}`,
-      { ...props, ref },
-      <a className={clsx(inner, hash[level])} href={`#${props.id}`}>
-        {children}
-      </a>,
-    ),
+export const MarkdownHeading = React.forwardRef<
+  HTMLAnchorElement,
+  MarkdownHeadingProps
+>(({ children, level, ...props }, ref) =>
+  React.createElement(
+    `h${level}`,
+    { ...props, ref },
+    <a className={clsx(inner, hash[level])} href={`#${props.id}`}>
+      {children}
+    </a>,
+  ),
 )
