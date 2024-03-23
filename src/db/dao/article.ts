@@ -3,6 +3,8 @@ import { Scope } from '../../model/scope'
 import { Database } from '../connection'
 import { articleLinks, articles, contents } from '../schema'
 
+const SORT_COLUMN = articles.updatedAt
+
 export class ArticleDAO {
   #db: Database
 
@@ -53,7 +55,7 @@ export class ArticleDAO {
           containsIndex ? undefined : ne(articles.title, 'index'),
         ),
       )
-      .orderBy(desc(articles.createdAt))
+      .orderBy(desc(SORT_COLUMN))
       .all()
   }
 
@@ -74,7 +76,7 @@ export class ArticleDAO {
           like(articles.title, `%${query}%`),
         ),
       )
-      .orderBy(desc(articles.createdAt))
+      .orderBy(desc(SORT_COLUMN))
       .all()
   }
 
@@ -107,7 +109,7 @@ export class ArticleDAO {
         ),
       )
       .groupBy(articles.id)
-      .orderBy(desc(articles.createdAt))
+      .orderBy(desc(SORT_COLUMN))
       .all()
   }
 
@@ -119,7 +121,7 @@ export class ArticleDAO {
       })
       .from(articles)
       .where(inArray(articles.title, titles))
-      .orderBy(desc(articles.createdAt))
+      .orderBy(desc(SORT_COLUMN))
       .all()
   }
 
