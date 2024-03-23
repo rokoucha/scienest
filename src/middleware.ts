@@ -14,5 +14,5 @@ export const middleware = auth((req: NextAuthRequest): any => {
 })
 
 export const config = {
-  matcher: ['/edit/:slug*'],
+  matcher: ['/admin/:path*', '/edit/:slug*'],
 }
