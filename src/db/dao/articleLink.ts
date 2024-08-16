@@ -1,4 +1,5 @@
 import { eq, inArray, isNull, sql } from 'drizzle-orm'
+import { arrayChunk } from '../../array'
 import { Database } from '../connection'
 import { articleLinks, articles } from '../schema'
 
@@ -22,18 +23,26 @@ export class ArticleLinkDAO {
       .all()
   }
 
-  findManyByArticleIds(articleIds: string[]) {
-    return this.#db
-      .select({
-        title: sql<string>`coalesce(${articles.title}, ${articleLinks.title})`,
-        linked: sql`${articleLinks.to} is not null`.mapWith(Boolean),
-        articleId: articleLinks.from,
-      })
-      .from(articleLinks)
-      .leftJoin(articles, eq(articleLinks.to, articles.id))
-      .where(inArray(articleLinks.from, articleIds))
-      .orderBy(articles.title)
-      .all()
+  async findManyByArticleIds(articleIds: string[]) {
+    const chunks = arrayChunk(articleIds, 80) // max 100 parameters
+
+    const a = await Promise.all(
+      chunks.map((ids) =>
+        this.#db
+          .select({
+            title: sql<string>`coalesce(${articles.title}, ${articleLinks.title})`,
+            linked: sql`${articleLinks.to} is not null`.mapWith(Boolean),
+            articleId: articleLinks.from,
+          })
+          .from(articleLinks)
+          .leftJoin(articles, eq(articleLinks.to, articles.id))
+          .where(inArray(articleLinks.from, ids))
+          .orderBy(articles.title)
+          .all(),
+      ),
+    )
+
+    return a.flat().toSorted((a, b) => a.title.localeCompare(b.title))
   }
 
   findManyPseudoLinks() {
