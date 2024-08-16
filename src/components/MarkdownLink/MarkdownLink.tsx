@@ -11,8 +11,7 @@ export function MarkdownLink<RouteType>({
   children,
   className,
   ...props
-}: React.AnchorHTMLAttributes<HTMLAnchorElement> &
-  LinkProps<RouteType>): React.ReactNode {
+}: LinkProps<RouteType>): React.ReactNode {
   const inline = useMemo<boolean>(() => {
     return !Boolean(Array.isArray(children) ? children.at(0) : children)
   }, [children])
