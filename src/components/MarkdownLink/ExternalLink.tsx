@@ -9,7 +9,8 @@ export function ExternalLink<RouteType>({
   children,
   className,
   ...props
-}: LinkProps<RouteType>): React.ReactNode {
+}: React.AnchorHTMLAttributes<HTMLAnchorElement> &
+  LinkProps<RouteType>): React.ReactNode {
   return (
     <Link
       className={clsx(className, wrapper)}
